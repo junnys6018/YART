@@ -28,3 +28,5 @@
 #include "math/ray.h"
 #include "math/boundingbox.h"
 #include "math/util.h"
+#include "math/matrix.h"
+#include "math/transform.h"

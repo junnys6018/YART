@@ -6,13 +6,7 @@ int main(int argc, char** argv)
 {
 	yart::Initialize();
 	
-	Bounds2i b({0, 0}, {2, 3});
-
-	for (Vector2i p : b)
-	{
-		LOG_INFO("{}", p);
-	}
-
+	Transform t = LookAt({0, 0, 0}, {3, 3, 3}, {2, 2, 2});
 	std::cin.get();
 	return 0;
 }
