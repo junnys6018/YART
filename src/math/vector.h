@@ -18,6 +18,12 @@ namespace yart
 			ASSERT(!HasNaNs());
 		}
 
+		Vector3(T arg)
+			: x(arg), y(arg), z(arg)
+		{
+			ASSERT(!HasNaNs());
+		}
+
 		T& operator[](int i)
 		{
 			ASSERT(i >= 0 && i <= 2);
@@ -35,13 +41,13 @@ namespace yart
 
 		Vector3<T> operator+(const Vector3<T>& other) const
 		{
-			ASSERT(!other.HasNaNs);
+			ASSERT(!other.HasNaNs());
 			return Vector3<T>(x + other.x, y + other.y, z + other.z);
 		}
 
 		Vector3<T>& operator+=(const Vector3<T>& other)
 		{
-			ASSERT(!other.HasNaNs);
+			ASSERT(!other.HasNaNs());
 			x += other.x;
 			y += other.y;
 			z += other.z;
@@ -50,13 +56,13 @@ namespace yart
 
 		Vector3<T> operator-(const Vector3<T>& other) const
 		{
-			ASSERT(!other.HasNaNs);
+			ASSERT(!other.HasNaNs());
 			return Vector3<T>(x - other.x, y - other.y, z - other.z);
 		}
 
 		Vector3<T>& operator-=(const Vector3<T>& other)
 		{
-			ASSERT(!other.HasNaNs);
+			ASSERT(!other.HasNaNs());
 			x -= other.x;
 			y -= other.y;
 			z -= other.z;
@@ -98,6 +104,11 @@ namespace yart
 			return Vector3<T>(-x, -y, -z);
 		}
 
+		bool operator==(const Vector3<T>& other) const
+		{
+			return x == other.x && y == other.y && z == other.z;
+		}
+
 		Float NormSquared() const
 		{
 			return (Float)Dot(*this, *this);
@@ -132,6 +143,13 @@ namespace yart
 	public:
 		T x, y, z;
 	};
+
+	// Partial specialization for integer type
+	template <>
+	bool Vector3<int>::HasNaNs() const
+	{
+		return false;
+	}
 
 	template <typename T>
 	std::ostream& operator<<(std::ostream& out, const Vector3<T>& other)
@@ -168,7 +186,7 @@ namespace yart
 	template <typename T>
 	inline T Dot(const Vector3<T>& u, const Vector3<T>& v)
 	{
-		return u.x * v.x + u.y + v.y + u.z * v.z;
+		return u.x * v.x + u.y * v.y + u.z * v.z;
 	}
 
 	template <typename T>
@@ -238,7 +256,13 @@ namespace yart
 		return (Dot(normal, vec) < 0) ? -normal : normal;
 	}
 
-	typedef Vector3<float> Vector3f;
+	template <typename T>
+	Float Distance(const Vector3<T>& v1, const Vector3<T>& v2)
+	{
+		return (v1 - v2).Norm();
+	}
+
+	typedef Vector3<Float> Vector3f;
 	typedef Vector3<int> Vector3i;
 
 	template <typename T>
@@ -256,7 +280,13 @@ namespace yart
 			ASSERT(!HasNaNs());
 		}
 
-		explicit Vector2(const Vector3<T> other)
+		Vector2(T arg)
+			: x(arg), y(arg)
+		{
+			ASSERT(!HasNaNs());
+		}
+
+		constexpr explicit Vector2(const Vector3<T> other)
 			: x(other.x), y(other.y)
 		{
 			ASSERT(!other.HasNaNs());
@@ -277,13 +307,13 @@ namespace yart
 
 		Vector2<T> operator+(const Vector2<T>& other) const
 		{
-			ASSERT(!other.HasNaNs);
+			ASSERT(!other.HasNaNs());
 			return Vector2<T>(x + other.x, y + other.y);
 		}
 
 		Vector2<T>& operator+=(const Vector2<T>& other)
 		{
-			ASSERT(!other.HasNaNs);
+			ASSERT(!other.HasNaNs());
 			x += other.x;
 			y += other.y;
 			return *this;
@@ -291,13 +321,13 @@ namespace yart
 
 		Vector2<T> operator-(const Vector2<T>& other) const
 		{
-			ASSERT(!other.HasNaNs);
+			ASSERT(!other.HasNaNs());
 			return Vector2<T>(x - other.x, y - other.y);
 		}
 
 		Vector2<T>& operator-=(const Vector2<T>& other)
 		{
-			ASSERT(!other.HasNaNs);
+			ASSERT(!other.HasNaNs());
 			x -= other.x;
 			y -= other.y;
 			return *this;
@@ -337,6 +367,11 @@ namespace yart
 			return Vector2<T>(-x, -y);
 		}
 
+		bool operator==(const Vector2<T>& other) const
+		{
+			return x == other.x && y == other.y;
+		}
+
 		Float NormSquared() const
 		{
 			return (Float)Dot(*this, *this);
@@ -372,6 +407,13 @@ namespace yart
 		T x, y;
 	};
 
+	// Partial specialization for integer type
+	template <>
+	bool Vector2<int>::HasNaNs() const
+	{
+		return false;
+	}
+
 	template <typename T>
 	std::ostream& operator<<(std::ostream& out, const Vector2<T>& other)
 	{
@@ -406,7 +448,7 @@ namespace yart
 	template <typename T>
 	inline T Dot(const Vector2<T>& u, const Vector2<T>& v)
 	{
-		return u.x * v.x + u.y + v.y ;
+		return u.x * v.x + u.y + v.y;
 	}
 
 	template <typename T>
@@ -451,6 +493,12 @@ namespace yart
 		return (1 - t) * u + t * v;
 	}
 
-	typedef Vector2<float> Vector2f;
+	template <typename T>
+	Float Distance(const Vector2<T>& v1, const Vector2<T>& v2)
+	{
+		return (v1 - v2).Norm();
+	}
+
+	typedef Vector2<Float> Vector2f;
 	typedef Vector2<int> Vector2i;
 }

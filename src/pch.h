@@ -19,6 +19,12 @@
 #include <unordered_set>
 #include <vector>
 
+#include "core/yart.h"
 #include "core/assert.h"
 #include "core/log.h"
 #include "core/yart.h"
+
+#include "math/vector.h"
+#include "math/ray.h"
+#include "math/boundingbox.h"
+#include "math/util.h"
