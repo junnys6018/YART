@@ -21,3 +21,4 @@
 
 #include "core/assert.h"
 #include "core/log.h"
+#include "core/yart.h"
