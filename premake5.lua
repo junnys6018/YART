@@ -28,14 +28,16 @@ kind "ConsoleApp"
 
 	includedirs
 	{
-
+		"src"
 	}
 	
 	filter "configurations:Debug"
 		optimize "Debug"
+		defines "CONFIGURATION_DEBUG"
 
 	filter "configurations:Release"
 		optimize "On"
+		defines "CONFIGURATION_RELEASE"
 
 	filter "system:windows"
 		defines { "_CRT_SECURE_NO_WARNINGS", "PLATFORM_WINDOWS" }
