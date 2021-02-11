@@ -2,7 +2,7 @@
 
 int main(int argc, char** argv)
 {
-	ASSERT(3 == 2);
+	yart::Log::Initialize();
 
 	std::cout << "Hello World!" << std::endl;
 	std::cin.get();

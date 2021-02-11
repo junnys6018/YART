@@ -28,7 +28,8 @@ kind "ConsoleApp"
 
 	includedirs
 	{
-		"src"
+		"src",
+		"vendor/spdlog/include"
 	}
 	
 	filter "configurations:Debug"

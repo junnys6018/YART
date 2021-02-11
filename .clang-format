@@ -8,3 +8,6 @@ AllowShortIfStatementsOnASingleLine: false
 IndentCaseLabels: false
 ColumnLimit: 0
 PointerAlignment: Left
+AccessModifierOffset: -4
+FixNamespaceComments: false
+NamespaceIndentation: All
