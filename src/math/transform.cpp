@@ -158,4 +158,24 @@ namespace yart
 		return det < 0;
 	}
 
+	Bounds3f Transform::AppBB(const Bounds3f& bb) const 
+	{ 
+		const Transform& M = *this;
+		Vector3f base = M.AppVec(bb.m_MinBound);
+
+		Vector3f x = M.AppVec(bb.Diagonal() * Vector3f{1, 0, 0});
+		Vector3f y = M.AppVec(bb.Diagonal() * Vector3f{0, 1, 0});
+		Vector3f z = M.AppVec(bb.Diagonal() * Vector3f{0, 0, 1});
+
+		Bounds3f ret(base);
+		ret = Union(ret, base + x);
+		ret = Union(ret, base + y);
+		ret = Union(ret, base + z);
+		ret = Union(ret, base + x + y);
+		ret = Union(ret, base + x + z);
+		ret = Union(ret, base + y + z);
+		ret = Union(ret, base + x + y + z);
+		return ret;
+	}
+
 }

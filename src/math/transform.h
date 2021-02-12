@@ -70,6 +70,9 @@ namespace yart
 							  m_Inv.m[0][2] * x + m_Inv.m[1][2] * y + m_Inv.m[2][2] * z);
 		}
 
+		// Apply transform to bounding box
+		Bounds3f AppBB(const Bounds3f& bb) const;
+
 	private:
 		Matrix4x4 m_Mat, m_Inv;
 	};

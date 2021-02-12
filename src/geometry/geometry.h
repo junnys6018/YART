@@ -2,7 +2,7 @@
 
 namespace yart
 {
-	class Shape
+	class AbstractGeometry
 	{
 	
 	};

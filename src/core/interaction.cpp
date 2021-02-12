@@ -7,9 +7,9 @@ namespace yart
 										   const Vector2f& uv, const Vector3f& wo,
 										   const Vector3f& dpdu, const Vector3f& dpdv,
 										   const Vector3f& dndu, const Vector3f& dndv, Float time,
-										   const Shape* shape)
-		: Interaction(point, Normalize(Cross(dpdu, dpdv)), ptError, wo, time), m_uv(uv), m_dpdu(dpdu),
-		  m_dpdv(dpdv), m_dndu(dndu), m_dndv(dndv), m_Shape(shape)
+										   const AbstractGeometry* geometry)
+		: Interaction(point, Normalize(Cross(dpdu, dpdv)), ptError, wo, time), m_uv(uv),
+		  m_dpdu(dpdu), m_dpdv(dpdv), m_dndu(dndu), m_dndv(dndv), m_Geometry(geometry)
 	{
 		m_Shading.m_Normal = m_Normal;
 		m_Shading.m_dpdu = dpdu;

@@ -27,7 +27,7 @@ namespace yart
 	public:
 		SurfaceInteraction(const Vector3f& point, const Vector3f& ptError, const Vector2f& uv, const Vector3f& wo,
 						   const Vector3f& dpdu, const Vector3f& dpdv, const Vector3f& dndu, const Vector3f& dndv,
-						   Float time, const Shape* shape);
+						   Float time, const AbstractGeometry* geometry);
 
 		void SetShadingGeometry(const Vector3f& dpdu, const Vector3f& dpdv, const Vector3f& dndu,
 								const Vector3f& dndv, bool orientationIsAuthoritative);
@@ -41,8 +41,8 @@ namespace yart
 		// partial derivatives of the normal vector w.r.t u and v
 		Vector3f m_dndu, m_dndv;
 
-		// Reference to the shape the point lies on
-		const Shape* m_Shape;
+		// Reference to the geometry the point lies on
+		const AbstractGeometry* m_Geometry;
 
 		// second instance of geometry data that represents peturbed values
 		struct
