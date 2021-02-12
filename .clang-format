@@ -11,6 +11,6 @@ PointerAlignment: Left
 AccessModifierOffset: -4
 FixNamespaceComments: false
 NamespaceIndentation: All
-ColumnLimit: 100
+ColumnLimit: 115
 AllowShortBlocksOnASingleLine: Never
 AllowShortFunctionsOnASingleLine: None
