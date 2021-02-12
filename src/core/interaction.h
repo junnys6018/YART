@@ -3,9 +3,14 @@
 
 namespace yart
 {
+	// Forward declaration to avoid circular dependancy
+	class AbstractGeometry;
+
 	class Interaction
 	{
 	public:
+		Interaction() = default;
+
 		Interaction(const Vector3f& point, const Vector3f& normal, const Vector3f& ptError, const Vector3f& wo, Float time)
 			: m_Point(point), m_Normal(normal), m_PtError(ptError), m_wo(wo), m_Time(time)
 		{
@@ -25,6 +30,8 @@ namespace yart
 	class SurfaceInteraction : public Interaction
 	{
 	public:
+		SurfaceInteraction() = default; 
+
 		SurfaceInteraction(const Vector3f& point, const Vector3f& ptError, const Vector2f& uv, const Vector3f& wo,
 						   const Vector3f& dpdu, const Vector3f& dpdv, const Vector3f& dndu, const Vector3f& dndv,
 						   Float time, const AbstractGeometry* geometry);

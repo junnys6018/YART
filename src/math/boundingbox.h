@@ -76,7 +76,7 @@ namespace yart
 							  yart::Lerp(t.z, m_MinBound.z, m_MaxBound.z));
 		}
 
-		// Returns the continuous position of a point relative to the corners of the box,
+		// Returns the interpolated position of a point relative to the corners of the box,
 		// e.g. a point at the minimum corner has offset (0,0,0), a point in the middle of the box has offset (0.5,0.5,0.5)
 		Vector3<T> Offset(const Vector3<T>& p) const
 		{
@@ -95,6 +95,65 @@ namespace yart
 		{
 			center = (m_MinBound + m_MaxBound) / 2;
 			radius = Inside(center, *this) ? Distance(center, m_MaxBound) : 0;
+		}
+
+		bool IntersectRay(const Ray& ray, Float& t1, Float& t2) const
+		{
+			t1 = 0;
+			t2 = ray.m_Tmax;
+
+			// For each axis aligned "slab"
+			for (int i = 0; i < 3; ++i)
+			{
+				Float invRayDir = 1 / ray.d[i];
+				Float tNear = (m_MinBound[i] - ray.o[i]) * invRayDir;
+				Float tFar = (m_MaxBound[i] - ray.o[i]) * invRayDir;
+
+				if (tNear > tFar)
+					std::swap(tNear, tFar);
+
+				tFar *= 1 + 2 * gamma(3);
+
+				t1 = tNear > t1 ? tNear : t1;
+				t2 = tFar < t2 ? tFar : t2;
+				if (t1 > t2)
+					return false;
+			}
+
+			return true;
+		}
+
+		// Optimised overload of IntersectRay() that avoids the std::swap and inverse calculation
+		bool IntersectRay(const Ray& ray, const Vector3f& invRayDir, const int dirIsNeg[3]) const
+		{
+			const Bounds3f& bounds = *this;
+			// Check for ray intersection against x and y slabs
+			Float tMin = (bounds[dirIsNeg[0]].x - ray.o.x) * invRayDir.x;
+			Float tMax = (bounds[1 - dirIsNeg[0]].x - ray.o.x) * invRayDir.x;
+			Float tyMin = (bounds[dirIsNeg[1]].y - ray.o.y) * invRayDir.y;
+			Float tyMax = (bounds[1 - dirIsNeg[1]].y - ray.o.y) * invRayDir.y;
+
+			tMax *= 1 + 2 * gamma(3);
+			tyMax *= 1 + 2 * gamma(3);
+			if (tMin > tyMax || tyMin > tMax)
+				return false;
+			if (tyMin > tMin)
+				tMin = tyMin;
+			if (tyMax < tMax)
+				tMax = tyMax;
+
+			// Check for ray intersection against z slab
+			Float tzMin = (bounds[dirIsNeg[2]].z - ray.o.z) * invRayDir.z;
+			Float tzMax = (bounds[1 - dirIsNeg[2]].z - ray.o.z) * invRayDir.z;
+
+			tzMax *= 1 + 2 * gamma(3);
+			if (tMin > tzMax || tzMin > tMax)
+				return false;
+			if (tzMin > tMin)
+				tMin = tzMin;
+			if (tzMax < tMax)
+				tMax = tzMax;
+			return (tMin < ray.m_Tmax) && (tMax > 0);
 		}
 
 	public:
@@ -374,13 +433,13 @@ namespace yart
 	{
 		// Normally, the ending point is at the minimum x value and one past
 		// the last valid y value.
-		Vector2i pEnd(b.m_MinBound.x, b.m_MaxBound.y);
+		Vector2i end(b.m_MinBound.x, b.m_MaxBound.y);
 		// However, if the bounds are degenerate, override the end point to
 		// equal the start point so that any attempt to iterate over the bounds
 		// exits out immediately.
 		if (b.m_MinBound.x >= b.m_MaxBound.x || b.m_MinBound.y >= b.m_MaxBound.y)
-			pEnd = b.m_MinBound;
-		return Bounds2iIterator(b, pEnd);
+			end = b.m_MinBound;
+		return Bounds2iIterator(b, end);
 	}
 
 }

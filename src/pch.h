@@ -7,7 +7,6 @@
 #include <iostream>
 #include <memory>
 #include <utility>
-#define _USE_MATH_DEFINES
 #include <cmath>
 
 #include <array>
@@ -19,16 +18,8 @@
 #include <unordered_set>
 #include <vector>
 
-#include "core/yart.h"
 #include "core/assert.h"
 #include "core/log.h"
 #include "core/yart.h"
 
-#include "math/vector.h"
-#include "math/ray.h"
-#include "math/boundingbox.h"
-#include "math/util.h"
-#include "math/matrix.h"
-#include "math/transform.h"
-
-#include "geometry/geometry.h"
+#include "math/__math__.h"

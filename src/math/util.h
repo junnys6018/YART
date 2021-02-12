@@ -4,6 +4,7 @@
 namespace yart
 {
 	static constexpr Float ShadowEpsilon = 0.0001;
+	static constexpr Float Epsilon = std::numeric_limits<Float>::epsilon();
 	static constexpr Float Pi = 3.14159265358979323846;
 	static constexpr Float InvPi = 0.31830988618379067154;
 	static constexpr Float Inv2Pi = 0.15915494309189533577;
@@ -13,13 +14,18 @@ namespace yart
 	static constexpr Float Sqrt2 = 1.41421356237309504880;
 
 	template <typename T>
-	T Lerp(T t, T a, T b)
+	constexpr T Lerp(T t, T a, T b)
 	{
 		return (1 - t) * a + t * b;
 	}
 
-	inline Float Radians(Float deg)
+	constexpr inline Float Radians(Float deg)
 	{
 		return (Pi / 180) * deg;
+	}
+
+	constexpr inline Float gamma(int n)
+	{
+		return (n * Epsilon) / (1 - n * Epsilon);
 	}
 }

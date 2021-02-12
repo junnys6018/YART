@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "interaction.h"
+#include "geometry/geometry.h"
 
 namespace yart
 {
