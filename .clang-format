@@ -11,3 +11,4 @@ PointerAlignment: Left
 AccessModifierOffset: -4
 FixNamespaceComments: false
 NamespaceIndentation: All
+ColumnLimit: 100

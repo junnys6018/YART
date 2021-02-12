@@ -109,6 +109,11 @@ namespace yart
 			return x == other.x && y == other.y && z == other.z;
 		}
 
+		bool operator!=(const Vector3<T>& other) const
+		{
+			return !(*this == other);
+		}
+
 		Float NormSquared() const
 		{
 			return (Float)Dot(*this, *this);
@@ -370,6 +375,11 @@ namespace yart
 		bool operator==(const Vector2<T>& other) const
 		{
 			return x == other.x && y == other.y;
+		}
+
+		bool operator!=(const Vector2<T>& other) const
+		{
+			return !(*this == other);
 		}
 
 		Float NormSquared() const
