@@ -24,7 +24,9 @@ namespace yart
 
 	public:
 		Vector3f m_Point, m_Normal, m_PtError, m_wo;
-		Float m_Time;
+		Float m_Time = 0.0f;
+
+		// TODO Medium interface (see 2.10 and 11.3.1)
 	};
 
 	class SurfaceInteraction : public Interaction
@@ -49,7 +51,7 @@ namespace yart
 		Vector3f m_dndu, m_dndv;
 
 		// Reference to the geometry the point lies on
-		const AbstractGeometry* m_Geometry;
+		const AbstractGeometry* m_Geometry = nullptr;
 
 		// second instance of geometry data that represents peturbed values
 		struct

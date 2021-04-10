@@ -28,4 +28,17 @@ namespace yart
 	{
 		return (n * Epsilon) / (1 - n * Epsilon);
 	}
+
+	template <typename T> 
+	constexpr inline T Clamp(T val, T min, T max)
+	{
+		if (val < min)
+			return min;
+		if (val > max)
+			return max;
+		return val;
+	}
+
+	// Solves the quadratic equation a*t^2 + b*t + c = 0, returns false if no solutions exist
+	bool Quadratic(Float a, Float b, Float c, Float* t1, Float* t2);
 }

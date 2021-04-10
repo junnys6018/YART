@@ -15,6 +15,7 @@ namespace yart
 
 	Transform Translate(const Vector3f& delta)
 	{
+		// clang-format off
 		Matrix4x4 mat(1, 0, 0, delta.x,
 					  0, 1, 0, delta.y,
 					  0, 0, 1, delta.z,
@@ -23,20 +24,22 @@ namespace yart
 					  0, 1, 0, -delta.y,
 					  0, 0, 1, -delta.z,
 					  0, 0, 0, 1);
+		// clang-format on
 		return Transform(mat, inv);
 	}
 
 	Transform Scale(const Vector3f& scale)
 	{
-
+		// clang-format off
 		Matrix4x4 mat(scale.x, 0, 0, 0,
-					  0, scale.y, 0, 0,
+					  0	,scale.y, 0, 0,
 					  0, 0, scale.z, 0,
 					  0, 0, 0, 1);
 		Matrix4x4 inv(1 / scale.x, 0, 0, 0,
 					  0, 1 / scale.y, 0, 0,
 					  0, 0, 1 / scale.z, 0,
 					  0, 0, 0, 1);
+		// clang-format on
 		return Transform(mat, inv);
 	}
 
@@ -44,8 +47,12 @@ namespace yart
 	{
 		Float sinTheta = std::sin(Radians(theta));
 		Float cosTheta = std::cos(Radians(theta));
-		Matrix4x4 m(1, 0, 0, 0, 0, cosTheta, -sinTheta, 0, 0, sinTheta, cosTheta, 0,
+		// clang-format off
+		Matrix4x4 m(1, 0, 0, 0,
+					0, cosTheta, -sinTheta, 0,
+					0, sinTheta, cosTheta, 0,
 					0, 0, 0, 1);
+		// clang-format on
 		return Transform(m, Transpose(m));
 	}
 
@@ -53,8 +60,12 @@ namespace yart
 	{
 		Float sinTheta = std::sin(Radians(theta));
 		Float cosTheta = std::cos(Radians(theta));
-		Matrix4x4 m(cosTheta, 0, sinTheta, 0, 0, 1, 0, 0, -sinTheta, 0, cosTheta, 0,
+		// clang-format off
+		Matrix4x4 m(cosTheta, 0, sinTheta, 0,
+					0, 1, 0, 0,
+					-sinTheta, 0, cosTheta, 0,
 					0, 0, 0, 1);
+		// clang-format on
 		return Transform(m, Transpose(m));
 	}
 
@@ -62,8 +73,12 @@ namespace yart
 	{
 		Float sinTheta = std::sin(Radians(theta));
 		Float cosTheta = std::cos(Radians(theta));
-		Matrix4x4 m(cosTheta, -sinTheta, 0, 0, sinTheta, cosTheta, 0, 0, 0, 0, 1, 0,
+		// clang-format off
+		Matrix4x4 m(cosTheta, -sinTheta, 0, 0,
+					sinTheta, cosTheta, 0, 0,
+					0, 0, 1, 0,
 					0, 0, 0, 1);
+		// clang-format on
 		return Transform(m, Transpose(m));
 	}
 
@@ -105,11 +120,10 @@ namespace yart
 		Vector3f dir = Normalize(look - pos);
 		if (Cross(Normalize(up), dir).NormSquared() == 0)
 		{
-			LOG_ERROR(
-				"\"up\" vector ({}, {}, {}) and viewing direction ({}, {}, {}) "
-				"passed to LookAt are pointing in the same direction.  Using "
-				"the identity transformation.",
-				up.x, up.y, up.z, dir.x, dir.y, dir.z);
+			LOG_ERROR("\"up\" vector ({}, {}, {}) and viewing direction ({}, {}, {}) "
+					  "passed to LookAt are pointing in the same direction.  Using "
+					  "the identity transformation.",
+					  up.x, up.y, up.z, dir.x, dir.y, dir.z);
 			return Transform();
 		}
 		Vector3f right = Normalize(Cross(Normalize(up), dir));
@@ -151,15 +165,14 @@ namespace yart
 
 	bool Transform::SwapsHandedness() const
 	{
-		Float det =
-			m_Mat.m[0][0] * (m_Mat.m[1][1] * m_Mat.m[2][2] - m_Mat.m[1][2] * m_Mat.m[2][1]) -
-			m_Mat.m[0][1] * (m_Mat.m[1][0] * m_Mat.m[2][2] - m_Mat.m[1][2] * m_Mat.m[2][0]) +
-			m_Mat.m[0][2] * (m_Mat.m[1][0] * m_Mat.m[2][1] - m_Mat.m[1][1] * m_Mat.m[2][0]);
+		Float det = m_Mat.m[0][0] * (m_Mat.m[1][1] * m_Mat.m[2][2] - m_Mat.m[1][2] * m_Mat.m[2][1]) -
+					m_Mat.m[0][1] * (m_Mat.m[1][0] * m_Mat.m[2][2] - m_Mat.m[1][2] * m_Mat.m[2][0]) +
+					m_Mat.m[0][2] * (m_Mat.m[1][0] * m_Mat.m[2][1] - m_Mat.m[1][1] * m_Mat.m[2][0]);
 		return det < 0;
 	}
 
-	Bounds3f Transform::AppBB(const Bounds3f& bb) const 
-	{ 
+	Bounds3f Transform::AppBB(const Bounds3f& bb) const
+	{
 		const Transform& M = *this;
 		Vector3f base = M.AppVec(bb.m_MinBound);
 

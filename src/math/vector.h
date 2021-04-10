@@ -166,8 +166,8 @@ namespace yart
 
 	template <typename T> inline Vector3<T> Cross(const Vector3<T>& u, const Vector3<T>& v)
 	{
-		double ux = u.x, uy = u.y, uz = u.z;
-		double vx = v.x, vy = v.y, vz = v.z;
+		T ux = u.x, uy = u.y, uz = u.z;
+		T vx = v.x, vy = v.y, vz = v.z;
 		return Vector3<T>((uy * vz) - (uz * vy), (uz * vx) - (ux * vz), (ux * vy) - (uy * vx));
 	}
 

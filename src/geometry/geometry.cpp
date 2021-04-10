@@ -10,8 +10,6 @@ namespace yart
 
 	bool AbstractGeometry::IntersectRay(const Ray& ray, bool testAlphaTexture) const
 	{
-		Float tHit;
-		SurfaceInteraction surfaceInt;
-		return IntersectRay(ray, tHit, surfaceInt, testAlphaTexture);
+		return IntersectRay(ray, nullptr, nullptr, testAlphaTexture);
 	}
 }

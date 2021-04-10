@@ -1,5 +1,6 @@
 #pragma once
 #include "pch.h"
+#include "core/interaction.h"
 
 namespace yart
 {
@@ -72,6 +73,44 @@ namespace yart
 
 		// Apply transform to bounding box
 		Bounds3f AppBB(const Bounds3f& bb) const;
+
+		// Apple transform to ray
+		Ray AppRay(const Ray& ray) const
+		{
+			// TODO: offset ray origin to edge of error bounds
+			Vector3f o = this->AppPt(ray.o);
+			Vector3f d = this->AppVec(ray.d);
+
+			return Ray(o, d, ray.m_Tmax, ray.m_Time);
+		}
+
+		SurfaceInteraction AppSI(const SurfaceInteraction& si) const 
+		{
+			// TODO: Error bounds
+			const Transform& t = *this;
+			SurfaceInteraction ret;
+
+			ret.m_Point = t.AppPt(si.m_Point);
+			ret.m_Normal = Normalize(t.AppNorm(si.m_Normal));
+			ret.m_PtError = si.m_PtError;
+			ret.m_wo = t.AppVec(si.m_wo);
+			ret.m_Time = si.m_Time;
+			ret.m_uv = si.m_uv;
+			ret.m_dpdu = t.AppVec(si.m_dpdu);
+			ret.m_dpdv = t.AppVec(si.m_dpdv);
+			ret.m_dndv = t.AppNorm(si.m_dndv);
+			ret.m_dndu = t.AppNorm(si.m_dndv);
+			ret.m_Geometry = si.m_Geometry;
+
+			ret.m_Shading.m_Normal = Normalize(t.AppNorm(si.m_Shading.m_Normal));
+			ret.m_Shading.m_Normal = FaceForward(ret.m_Shading.m_Normal, ret.m_Normal);
+			ret.m_Shading.m_dpdu = t.AppVec(si.m_Shading.m_dpdu);
+			ret.m_Shading.m_dpdv = t.AppVec(si.m_Shading.m_dpdv);
+			ret.m_Shading.m_dndv = t.AppNorm(si.m_Shading.m_dndv);
+			ret.m_Shading.m_dndu = t.AppNorm(si.m_Shading.m_dndv);
+
+			return ret;
+		}
 
 	private:
 		Matrix4x4 m_Mat, m_Inv;

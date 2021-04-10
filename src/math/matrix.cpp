@@ -137,7 +137,7 @@ namespace yart
 			}
 
 			// Set $m[icol][icol]$ to one by scaling row _icol_ appropriately
-			Float pivinv = 1. / minv[icol][icol];
+			Float pivinv = 1.0 / minv[icol][icol];
 			minv[icol][icol] = 1.;
 			for (int j = 0; j < 4; j++)
 				minv[icol][j] *= pivinv;

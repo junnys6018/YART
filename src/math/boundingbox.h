@@ -97,10 +97,10 @@ namespace yart
 			radius = Inside(center, *this) ? Distance(center, m_MaxBound) : 0;
 		}
 
-		bool IntersectRay(const Ray& ray, Float& t1, Float& t2) const
+		bool IntersectRay(const Ray& ray, Float* hitt1, Float* hitt2) const
 		{
-			t1 = 0;
-			t2 = ray.m_Tmax;
+			Float t1 = 0;
+			Float t2 = ray.m_Tmax;
 
 			// For each axis aligned "slab"
 			for (int i = 0; i < 3; ++i)
@@ -119,6 +119,11 @@ namespace yart
 				if (t1 > t2)
 					return false;
 			}
+
+			if (hitt1)
+				*hitt1 = t1;
+			if (hitt2)
+				*hitt2 = t2;
 
 			return true;
 		}
