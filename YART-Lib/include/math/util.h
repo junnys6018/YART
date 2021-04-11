@@ -14,6 +14,8 @@ namespace yart
 	static constexpr real PiOver2 = 1.57079632679489661923;
 	static constexpr real PiOver4 = 0.78539816339744830961;
 	static constexpr real Sqrt2 = 1.41421356237309504880;
+	static constexpr real MaxFloat = std::numeric_limits<real>::max();
+	static constexpr real Infinity = std::numeric_limits<real>::infinity();
 #pragma warning(default : 4305)
 
 	template <typename T>
@@ -32,7 +34,7 @@ namespace yart
 		return (n * Epsilon) / (1 - n * Epsilon);
 	}
 
-	template <typename T> 
+	template <typename T>
 	constexpr inline T Clamp(T val, T min, T max)
 	{
 		if (val < min)

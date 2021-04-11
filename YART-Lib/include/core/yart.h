@@ -8,8 +8,5 @@ namespace yart
 	typedef float real;
 #endif
 
-	static constexpr real MaxFloat = std::numeric_limits<real>::max();
-	static constexpr real Infinity = std::numeric_limits<real>::infinity();
-
 	void Initialize();
 }

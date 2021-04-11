@@ -1,7 +1,10 @@
 #include <catch_amalgamated.hpp>
 #include <yart.h>
+#include "testutil.h"
 using namespace yart;
 using namespace Catch;
+
+#pragma warning(disable : 4305)
 
 // Vector3f
 
@@ -31,7 +34,7 @@ TEST_CASE("Vector3f operator[]", "[math][vector]")
 	Vector3f vec(2, 3, 7);
 	CHECK(vec[0] == 2);
 	CHECK(vec[1] == 3);
-	CHECK(vec[3] == 7);
+	CHECK(vec[2] == 7);
 }
 
 TEST_CASE("Vector3f Arithmetic Operations", "[math][vector]")
@@ -97,18 +100,6 @@ TEST_CASE("Vector3f Cross Product", "[math][vector]")
 		Vector3f v4(1, 2, -1);
 		REQUIRE(Cross(v1, v4) == -Cross(v4, v1));
 	}
-}
-
-bool Vector3fAreEqual(const Vector3f& v1, const Vector3f& v2)
-{
-	for (int i = 0; i < 3; i++)
-	{
-		if (v1[i] != Approx(v2[i]))
-		{
-			return false;
-		}
-	}
-	return true;
 }
 
 TEST_CASE("Vector3f Normalize", "[math][vector]")
@@ -220,18 +211,6 @@ TEST_CASE("Vector2f Norm Operations", "[math][vector]")
 	REQUIRE(Norm(vec) == Approx(5));
 }
 
-bool Vector2fAreEqual(const Vector2f& v1, const Vector2f& v2)
-{
-	for (int i = 0; i < 2; i++)
-	{
-		if (v1[i] != Approx(v2[i]))
-		{
-			return false;
-		}
-	}
-	return true;
-}
-
 TEST_CASE("Vector2f Normalize", "[math][vector]")
 {
 	Vector2f v1(3, 1);
@@ -260,3 +239,5 @@ TEST_CASE("Vector2f Misc Functions", "[math][vector]")
 		REQUIRE(Vector2fAreEqual(v3, Vector2f(2, 3)));
 	}
 }
+
+#pragma warning(default : 4305)

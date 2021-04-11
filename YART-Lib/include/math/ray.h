@@ -1,5 +1,6 @@
 #pragma once
 #include "math/vector.h"
+#include "math/util.h"
 
 namespace yart
 {
