@@ -1,4 +1,5 @@
 #pragma once
+#include <iostream>
 #include "core/yart.h"
 #include "core/assert.h"
 
@@ -172,7 +173,11 @@ namespace yart
 		return Vector3<T>((uy * vz) - (uz * vy), (uz * vx) - (ux * vz), (ux * vy) - (uy * vx));
 	}
 
-	template <typename T> inline Vector3<T> Normalize(const Vector3<T>& v) { return v / v.Norm(); }
+	template <typename T> inline Vector3<T> Normalize(const Vector3<T>& v)
+	{
+		ASSERT(v != Vector3f());
+		return v / v.Norm();
+	}
 
 	template <typename T> Vector3<T> Min(const Vector3<T>& p1, const Vector3<T>& p2)
 	{

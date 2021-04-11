@@ -5,7 +5,7 @@ namespace yart
 {
 // Disable double to float truncation warning
 #pragma warning(disable : 4305)
-	static constexpr real ShadowEpsilon = 0.0001;
+	static constexpr real ShadowEpsilon = 0.00001;
 	static constexpr real Epsilon = std::numeric_limits<real>::epsilon();
 	static constexpr real Pi = 3.14159265358979323846;
 	static constexpr real InvPi = 0.31830988618379067154;

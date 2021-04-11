@@ -16,6 +16,7 @@ namespace yart
 	{
 		memcpy(m, mat, 16 * sizeof(real));
 	}
+
 	Matrix4x4::Matrix4x4(real t00, real t01, real t02, real t03,
 						 real t10, real t11, real t12, real t13,
 						 real t20, real t21, real t22, real t23,
