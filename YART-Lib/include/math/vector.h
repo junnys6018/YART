@@ -469,7 +469,7 @@ namespace yart
 	template <typename T>
 	inline T Dot(const Vector2<T>& u, const Vector2<T>& v)
 	{
-		return u.x * v.x + u.y + v.y;
+		return u.x * v.x + u.y * v.y;
 	}
 
 	template <typename T>
@@ -493,7 +493,7 @@ namespace yart
 	template <typename T>
 	inline Vector2<T> Normalize(const Vector2<T>& v)
 	{
-		return v / v.Norm();
+		return v / Norm(v);
 	}
 
 	template <typename T>
