@@ -118,7 +118,7 @@ namespace yart
 
 		// Initialize first three columns of viewing matrix
 		Vector3f dir = Normalize(look - pos);
-		if (Cross(Normalize(up), dir).NormSquared() == 0)
+		if (NormSquared(Cross(Normalize(up), dir)) == 0)
 		{
 			LOG_ERROR("\"up\" vector ({}, {}, {}) and viewing direction ({}, {}, {}) "
 					  "passed to LookAt are pointing in the same direction.  Using "

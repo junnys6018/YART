@@ -17,9 +17,9 @@ namespace yart
 		Ray objSpaceRay = m_WorldToObject->AppRay(ray);
 
 		// Calculate quadratic equation coefficents
-		real a = objSpaceRay.d.NormSquared();
+		real a = NormSquared(objSpaceRay.d);
 		real b = 2 * Dot(objSpaceRay.d, objSpaceRay.o);
-		real c = objSpaceRay.o.NormSquared() - m_Radius * m_Radius;
+		real c = NormSquared(objSpaceRay.o) - m_Radius * m_Radius;
 
 		// Solve quadratic
 		real t1, t2;
@@ -94,9 +94,9 @@ namespace yart
 		Vector3f dpdv2 = -deltaTheta * deltaTheta * pHit;
 
 		// First fundamental forms
-		real E = dpdu.NormSquared();
+		real E = NormSquared(dpdu);
 		real F = Dot(dpdu, dpdv);
-		real G = dpdv.NormSquared();
+		real G = NormSquared(dpdv);
 
 		// Second fundamental forms
 		Vector3f normal = Normalize(Cross(dpdu, dpdv));

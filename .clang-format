@@ -14,3 +14,4 @@ NamespaceIndentation: All
 ColumnLimit: 115
 AllowShortBlocksOnASingleLine: Never
 AllowShortFunctionsOnASingleLine: None
+AlwaysBreakTemplateDeclarations: Yes

@@ -65,8 +65,8 @@ TEST_CASE("Vector3f Arithmetic Operations", "[math][vector]")
 TEST_CASE("Vector3f Norm Operations", "[math][vector]")
 {
 	Vector3f vec(3, 4, 5);
-	REQUIRE(vec.NormSquared() == 50);
-	REQUIRE(vec.Norm() == Approx(std::sqrt(50)));
+	REQUIRE(NormSquared(vec) == 50);
+	REQUIRE(Norm(vec) == Approx(std::sqrt(50)));
 }
 
 TEST_CASE("Vector3f Cross Product", "[math][vector]")
@@ -123,8 +123,8 @@ TEST_CASE("Vector3f Coordinate System", "[math][vector]")
 	CoordinateSystem(v1, v2, v3);
 
 	REQUIRE(Vector3fAreEqual(v1, Normalize(Vector3f(2, 1, -3))));
-	REQUIRE(v2.Norm() == Approx(1));
-	REQUIRE(v3.Norm() == Approx(1));
+	REQUIRE(Norm(v2) == Approx(1));
+	REQUIRE(Norm(v3) == Approx(1));
 
 	REQUIRE(Dot(v1, v2) == 0);
 	REQUIRE(Dot(v1, v3) == 0);
