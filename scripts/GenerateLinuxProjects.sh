@@ -1,3 +1,3 @@
 pushd ../
-vendor/premake5/premake5_linux --os=linux gmake2
+vendor/linux/premake5/premake5 --os=linux gmake2
 popd
