@@ -1,3 +1,3 @@
-[submodule "vendor/spdlog"]
-	path = vendor/spdlog
+[submodule "YART-Lib/vendor/spdlog"]
+	path = YART-Lib/vendor/spdlog
 	url = https://github.com/gabime/spdlog
