@@ -11,12 +11,12 @@ namespace yart
 		{
 		}
 
-		Ray(const Vector3f& o, const Vector3f& d, Float tmax = Infinity, Float time = 0)
+		Ray(const Vector3f& o, const Vector3f& d, real tmax = Infinity, real time = 0)
 			: o(o), d(d), m_Tmax(tmax), m_Time(time)
 		{
 		}
 
-		Vector3f operator()(Float t) const
+		Vector3f operator()(real t) const
 		{
 			return o + d * t;
 		}
@@ -25,8 +25,8 @@ namespace yart
 		Vector3f o;
 		Vector3f d;
 
-		mutable Float m_Tmax;
-		Float m_Time;
+		mutable real m_Tmax;
+		real m_Time;
 	};
 
 	std::ostream& operator<<(std::ostream& out, const Ray& ray)
@@ -45,7 +45,7 @@ namespace yart
 		{
 		}
 
-		RayDifferential(const Vector3f& o, const Vector3f& d, Float tmax = Infinity, Float time = 0)
+		RayDifferential(const Vector3f& o, const Vector3f& d, real tmax = Infinity, real time = 0)
 			: Ray(o, d, tmax, time), m_HasDifferentials(false)
 		{
 		}
@@ -55,7 +55,7 @@ namespace yart
 		{
 		}
 
-		void ScaleDifferentials(Float s)
+		void ScaleDifferentials(real s)
 		{
 			m_xOrigin = o + (m_xOrigin - o) * s;
 			m_yOrigin = o + (m_yOrigin - o) * s;

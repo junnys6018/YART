@@ -11,7 +11,7 @@ namespace yart
 	public:
 		Interaction() = default;
 
-		Interaction(const Vector3f& point, const Vector3f& normal, const Vector3f& ptError, const Vector3f& wo, Float time)
+		Interaction(const Vector3f& point, const Vector3f& normal, const Vector3f& ptError, const Vector3f& wo, real time)
 			: m_Point(point), m_Normal(normal), m_PtError(ptError), m_wo(wo), m_Time(time)
 		{
 		}
@@ -24,7 +24,7 @@ namespace yart
 
 	public:
 		Vector3f m_Point, m_Normal, m_PtError, m_wo;
-		Float m_Time = 0.0f;
+		real m_Time = 0.0f;
 
 		// TODO Medium interface (see 2.10 and 11.3.1)
 	};
@@ -36,7 +36,7 @@ namespace yart
 
 		SurfaceInteraction(const Vector3f& point, const Vector3f& ptError, const Vector2f& uv, const Vector3f& wo,
 						   const Vector3f& dpdu, const Vector3f& dpdv, const Vector3f& dndu, const Vector3f& dndv,
-						   Float time, const AbstractGeometry* geometry);
+						   real time, const AbstractGeometry* geometry);
 
 		void SetShadingGeometry(const Vector3f& dpdu, const Vector3f& dpdv, const Vector3f& dndu,
 								const Vector3f& dndv, bool orientationIsAuthoritative);

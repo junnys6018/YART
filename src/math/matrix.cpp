@@ -5,21 +5,21 @@ namespace yart
 {
 	Matrix4x4::Matrix4x4()
 	{
-		memset(m, 0, 16 * sizeof(Float));
+		memset(m, 0, 16 * sizeof(real));
 		for (int i = 0; i < 4; i++)
 		{
 			m[i][i] = 1;
 		}
 	}
 
-	Matrix4x4::Matrix4x4(const Float mat[4][4])
+	Matrix4x4::Matrix4x4(const real mat[4][4])
 	{
-		memcpy(m, mat, 16 * sizeof(Float));
+		memcpy(m, mat, 16 * sizeof(real));
 	}
-	Matrix4x4::Matrix4x4(Float t00, Float t01, Float t02, Float t03,
-						 Float t10, Float t11, Float t12, Float t13,
-						 Float t20, Float t21, Float t22, Float t23,
-						 Float t30, Float t31, Float t32, Float t33)
+	Matrix4x4::Matrix4x4(real t00, real t01, real t02, real t03,
+						 real t10, real t11, real t12, real t13,
+						 real t20, real t21, real t22, real t23,
+						 real t30, real t31, real t32, real t33)
 	{
 		m[0][0] = t00;
 		m[0][1] = t01;
@@ -91,12 +91,12 @@ namespace yart
 	{
 		int indxc[4], indxr[4];
 		int ipiv[4] = {0, 0, 0, 0};
-		Float minv[4][4];
-		memcpy(minv, mat.m, 4 * 4 * sizeof(Float));
+		real minv[4][4];
+		memcpy(minv, mat.m, 4 * 4 * sizeof(real));
 		for (int i = 0; i < 4; i++)
 		{
 			int irow = 0, icol = 0;
-			Float big = 0.0f;
+			real big = 0.0f;
 			// Choose pivot
 			for (int j = 0; j < 4; j++)
 			{
@@ -108,7 +108,7 @@ namespace yart
 						{
 							if (std::abs(minv[j][k]) >= big)
 							{
-								big = Float(std::abs(minv[j][k]));
+								big = real(std::abs(minv[j][k]));
 								irow = j;
 								icol = k;
 							}
@@ -137,7 +137,7 @@ namespace yart
 			}
 
 			// Set $m[icol][icol]$ to one by scaling row _icol_ appropriately
-			Float pivinv = 1.0 / minv[icol][icol];
+			real pivinv = 1.0 / minv[icol][icol];
 			minv[icol][icol] = 1.;
 			for (int j = 0; j < 4; j++)
 				minv[icol][j] *= pivinv;
@@ -147,7 +147,7 @@ namespace yart
 			{
 				if (j != icol)
 				{
-					Float save = minv[j][icol];
+					real save = minv[j][icol];
 					minv[j][icol] = 0;
 					for (int k = 0; k < 4; k++)
 						minv[j][k] -= minv[icol][k] * save;

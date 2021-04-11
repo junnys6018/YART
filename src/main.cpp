@@ -11,7 +11,7 @@ int main(int argc, char** argv)
 	Bounds3f bb({0, 0, 0}, {10, 10, 10});
 	Ray ray({1, 1, 1}, Normalize(Vector3f{2, 3, 4}));
 
-	Float t1, t2;
+	real t1, t2;
 	LOG_INFO("{}", bb.IntersectRay(ray, &t1, &t2));
 
 	LOG_INFO("{}", t.AppBB(bb));

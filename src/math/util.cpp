@@ -3,7 +3,7 @@
 
 namespace yart
 {
-	bool Quadratic(Float a, Float b, Float c, Float* t1, Float* t2)
+	bool Quadratic(real a, real b, real c, real* t1, real* t2)
 	{
 		// TODO: implement this
 		return false;

@@ -9,7 +9,7 @@ namespace yart
 	public:
 		Transform() = default;
 
-		Transform(const Float mat[4][4])
+		Transform(const real mat[4][4])
 			: m_Mat(mat), m_Inv(Inverse(m_Mat))
 		{
 		}
@@ -118,9 +118,9 @@ namespace yart
 
 	Transform Translate(const Vector3f& delta);
 	Transform Scale(const Vector3f& scale);
-	Transform RotateX(Float theta);
-	Transform RotateY(Float theta);
-	Transform RotateZ(Float theta);
-	Transform Rotate(Float theta, const Vector3f& axis);
+	Transform RotateX(real theta);
+	Transform RotateY(real theta);
+	Transform RotateZ(real theta);
+	Transform Rotate(real theta, const Vector3f& axis);
 	Transform LookAt(const Vector3f& pos, const Vector3f& look, const Vector3f& up);
 }

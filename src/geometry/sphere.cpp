@@ -10,19 +10,19 @@ namespace yart
 		return Bounds3f(Vector3f(-m_Radius, -m_Radius, m_zMin), Vector3f(m_Radius, m_Radius, m_zMax));
 	}
 
-	bool Sphere::IntersectRay(const Ray& ray, Float* tHit, SurfaceInteraction* surfaceInt,
+	bool Sphere::IntersectRay(const Ray& ray, real* tHit, SurfaceInteraction* surfaceInt,
 							  bool testAlphaTexture) const
 	{
 		// TODO: account for floating point error
 		Ray objSpaceRay = m_WorldToObject->AppRay(ray);
 
 		// Calculate quadratic equation coefficents
-		Float a = objSpaceRay.d.NormSquared();
-		Float b = 2 * Dot(objSpaceRay.d, objSpaceRay.o);
-		Float c = objSpaceRay.o.NormSquared() - m_Radius * m_Radius;
+		real a = objSpaceRay.d.NormSquared();
+		real b = 2 * Dot(objSpaceRay.d, objSpaceRay.o);
+		real c = objSpaceRay.o.NormSquared() - m_Radius * m_Radius;
 
 		// Solve quadratic
-		Float t1, t2;
+		real t1, t2;
 		if (!Quadratic(a, b, c, &t1, &t2))
 		{
 			return false;
@@ -35,7 +35,7 @@ namespace yart
 		}
 
 		// Get the time of the first hit
-		Float tShapeHit = t1;
+		real tShapeHit = t1;
 		if (tShapeHit <= 0)
 		{
 			tShapeHit = t2;
@@ -46,7 +46,7 @@ namespace yart
 		// Get the point in object space of the first hit
 		Vector3f pHit = objSpaceRay(tShapeHit);
 
-		Float phi = std::atan2(pHit.y, pHit.x);
+		real phi = std::atan2(pHit.y, pHit.x);
 		if (phi < 0)
 			phi += 2 * Pi;
 
@@ -74,16 +74,16 @@ namespace yart
 		}
 
 		// Find parametric (u,v) representation of hit point
-		Float u = phi / m_PhiMax;
-		Float theta = std::acos(pHit.z / m_Radius);
-		Float deltaTheta = m_ThetaMax - m_ThetaMin;
-		Float v = (theta - m_ThetaMin) / deltaTheta;
+		real u = phi / m_PhiMax;
+		real theta = std::acos(pHit.z / m_Radius);
+		real deltaTheta = m_ThetaMax - m_ThetaMin;
+		real v = (theta - m_ThetaMin) / deltaTheta;
 		
 		// Compute partial derivates dpdu and dpdv
-		Float zRadius = std::sqrt(pHit.x * pHit.x + pHit.y * pHit.y);
-		Float invZRadius = 1 / zRadius;
-		Float cosPhi = pHit.x * invZRadius;
-		Float sinPhi = pHit.y * invZRadius;
+		real zRadius = std::sqrt(pHit.x * pHit.x + pHit.y * pHit.y);
+		real invZRadius = 1 / zRadius;
+		real cosPhi = pHit.x * invZRadius;
+		real sinPhi = pHit.y * invZRadius;
 		Vector3f dpdu(-m_PhiMax * pHit.y, m_PhiMax * pHit.x, 0);
 		Vector3f dpdv = deltaTheta * Vector3f(pHit.z * cosPhi, pHit.z * sinPhi, -m_Radius * std::sin(theta));
 
@@ -94,17 +94,17 @@ namespace yart
 		Vector3f dpdv2 = -deltaTheta * deltaTheta * pHit;
 
 		// First fundamental forms
-		Float E = dpdu.NormSquared();
-		Float F = Dot(dpdu, dpdv);
-		Float G = dpdv.NormSquared();
+		real E = dpdu.NormSquared();
+		real F = Dot(dpdu, dpdv);
+		real G = dpdv.NormSquared();
 
 		// Second fundamental forms
 		Vector3f normal = Normalize(Cross(dpdu, dpdv));
-		Float e = Dot(normal, dpdu2);
-		Float f = Dot(normal, dpduv);
-		Float g = Dot(normal, dpdv2);
+		real e = Dot(normal, dpdu2);
+		real f = Dot(normal, dpduv);
+		real g = Dot(normal, dpdv2);
 
-		Float invEGF2 = 1 / (E * G - F * F);
+		real invEGF2 = 1 / (E * G - F * F);
 		Vector3f dndu = (f * F - e * G) * invEGF2 * dpdu + (e * F - f * E) * invEGF2 * dpdv;
 		Vector3f dndv = (g * F - f * G) * invEGF2 * dpdu + (f * F - g * E) * invEGF2 * dpdv;
 
@@ -117,7 +117,7 @@ namespace yart
 		return true;
 	}
 
-	Float Sphere::SurfaceArea() const
+	real Sphere::SurfaceArea() const
 	{
 		return m_PhiMax * m_Radius * (m_zMax - m_zMin);
 	}

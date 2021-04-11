@@ -9,12 +9,12 @@ namespace yart
 		// Default construct the identity
 		Matrix4x4();
 
-		Matrix4x4(const Float mat[4][4]);
+		Matrix4x4(const real mat[4][4]);
 
-		Matrix4x4(Float t00, Float t01, Float t02, Float t03,
-				  Float t10, Float t11, Float t12, Float t13,
-				  Float t20, Float t21, Float t22, Float t23,
-				  Float t30, Float t31, Float t32, Float t33);
+		Matrix4x4(real t00, real t01, real t02, real t03,
+				  real t10, real t11, real t12, real t13,
+				  real t20, real t21, real t22, real t23,
+				  real t30, real t31, real t32, real t33);
 
 		bool operator==(const Matrix4x4& other) const;
 		bool operator!=(const Matrix4x4& other) const;
@@ -22,7 +22,7 @@ namespace yart
 		Matrix4x4 operator*(const Matrix4x4& other) const;
 
 	public:
-		Float m[4][4];
+		real m[4][4];
 	};
 
 	Matrix4x4 Transpose(const Matrix4x4& mat);

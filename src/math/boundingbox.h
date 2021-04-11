@@ -91,23 +91,23 @@ namespace yart
 		}
 
 		// Returns the center and radius of the smallest sphere that contains the bound
-		void BoundingSphere(Vector3<T>& center, Float& radius) const
+		void BoundingSphere(Vector3<T>& center, real& radius) const
 		{
 			center = (m_MinBound + m_MaxBound) / 2;
 			radius = Inside(center, *this) ? Distance(center, m_MaxBound) : 0;
 		}
 
-		bool IntersectRay(const Ray& ray, Float* hitt1, Float* hitt2) const
+		bool IntersectRay(const Ray& ray, real* hitt1, real* hitt2) const
 		{
-			Float t1 = 0;
-			Float t2 = ray.m_Tmax;
+			real t1 = 0;
+			real t2 = ray.m_Tmax;
 
 			// For each axis aligned "slab"
 			for (int i = 0; i < 3; ++i)
 			{
-				Float invRayDir = 1 / ray.d[i];
-				Float tNear = (m_MinBound[i] - ray.o[i]) * invRayDir;
-				Float tFar = (m_MaxBound[i] - ray.o[i]) * invRayDir;
+				real invRayDir = 1 / ray.d[i];
+				real tNear = (m_MinBound[i] - ray.o[i]) * invRayDir;
+				real tFar = (m_MaxBound[i] - ray.o[i]) * invRayDir;
 
 				if (tNear > tFar)
 					std::swap(tNear, tFar);
@@ -133,10 +133,10 @@ namespace yart
 		{
 			const Bounds3f& bounds = *this;
 			// Check for ray intersection against x and y slabs
-			Float tMin = (bounds[dirIsNeg[0]].x - ray.o.x) * invRayDir.x;
-			Float tMax = (bounds[1 - dirIsNeg[0]].x - ray.o.x) * invRayDir.x;
-			Float tyMin = (bounds[dirIsNeg[1]].y - ray.o.y) * invRayDir.y;
-			Float tyMax = (bounds[1 - dirIsNeg[1]].y - ray.o.y) * invRayDir.y;
+			real tMin = (bounds[dirIsNeg[0]].x - ray.o.x) * invRayDir.x;
+			real tMax = (bounds[1 - dirIsNeg[0]].x - ray.o.x) * invRayDir.x;
+			real tyMin = (bounds[dirIsNeg[1]].y - ray.o.y) * invRayDir.y;
+			real tyMax = (bounds[1 - dirIsNeg[1]].y - ray.o.y) * invRayDir.y;
 
 			tMax *= 1 + 2 * gamma(3);
 			tyMax *= 1 + 2 * gamma(3);
@@ -148,8 +148,8 @@ namespace yart
 				tMax = tyMax;
 
 			// Check for ray intersection against z slab
-			Float tzMin = (bounds[dirIsNeg[2]].z - ray.o.z) * invRayDir.z;
-			Float tzMax = (bounds[1 - dirIsNeg[2]].z - ray.o.z) * invRayDir.z;
+			real tzMin = (bounds[dirIsNeg[2]].z - ray.o.z) * invRayDir.z;
+			real tzMax = (bounds[1 - dirIsNeg[2]].z - ray.o.z) * invRayDir.z;
 
 			tzMax *= 1 + 2 * gamma(3);
 			if (tMin > tzMax || tzMin > tMax)
@@ -225,7 +225,7 @@ namespace yart
 						  b.m_MaxBound + Vector3<T>(delta));
 	}
 
-	typedef Bounds3<Float> Bounds3f;
+	typedef Bounds3<real> Bounds3f;
 	typedef Bounds3<int> Bounds3i;
 
 	template <typename T>
@@ -310,7 +310,7 @@ namespace yart
 		}
 
 		// Returns the center and radius of the smallest circle that contains the bound
-		void BoundingCircle(Vector2<T>& center, Float& radius) const
+		void BoundingCircle(Vector2<T>& center, real& radius) const
 		{
 			center = (m_MinBound + m_MaxBound) / 2;
 			radius = Inside(center, *this) ? Distance(center, m_MaxBound) : 0;
@@ -377,7 +377,7 @@ namespace yart
 						  b.m_MaxBound + Vector2<T>(delta));
 	}
 
-	typedef Bounds2<Float> Bounds2f;
+	typedef Bounds2<real> Bounds2f;
 	typedef Bounds2<int> Bounds2i;
 
 	// Iterate through all the integer coordinates of a bounding box, (excluding maximum extent)

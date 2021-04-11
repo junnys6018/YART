@@ -43,10 +43,10 @@ namespace yart
 		return Transform(mat, inv);
 	}
 
-	Transform RotateX(Float theta)
+	Transform RotateX(real theta)
 	{
-		Float sinTheta = std::sin(Radians(theta));
-		Float cosTheta = std::cos(Radians(theta));
+		real sinTheta = std::sin(Radians(theta));
+		real cosTheta = std::cos(Radians(theta));
 		// clang-format off
 		Matrix4x4 m(1, 0, 0, 0,
 					0, cosTheta, -sinTheta, 0,
@@ -56,10 +56,10 @@ namespace yart
 		return Transform(m, Transpose(m));
 	}
 
-	Transform RotateY(Float theta)
+	Transform RotateY(real theta)
 	{
-		Float sinTheta = std::sin(Radians(theta));
-		Float cosTheta = std::cos(Radians(theta));
+		real sinTheta = std::sin(Radians(theta));
+		real cosTheta = std::cos(Radians(theta));
 		// clang-format off
 		Matrix4x4 m(cosTheta, 0, sinTheta, 0,
 					0, 1, 0, 0,
@@ -69,10 +69,10 @@ namespace yart
 		return Transform(m, Transpose(m));
 	}
 
-	Transform RotateZ(Float theta)
+	Transform RotateZ(real theta)
 	{
-		Float sinTheta = std::sin(Radians(theta));
-		Float cosTheta = std::cos(Radians(theta));
+		real sinTheta = std::sin(Radians(theta));
+		real cosTheta = std::cos(Radians(theta));
 		// clang-format off
 		Matrix4x4 m(cosTheta, -sinTheta, 0, 0,
 					sinTheta, cosTheta, 0, 0,
@@ -82,11 +82,11 @@ namespace yart
 		return Transform(m, Transpose(m));
 	}
 
-	Transform Rotate(Float theta, const Vector3f& axis)
+	Transform Rotate(real theta, const Vector3f& axis)
 	{
 		Vector3f a = Normalize(axis);
-		Float sinTheta = std::sin(Radians(theta));
-		Float cosTheta = std::cos(Radians(theta));
+		real sinTheta = std::sin(Radians(theta));
+		real cosTheta = std::cos(Radians(theta));
 		Matrix4x4 m;
 
 		m.m[0][0] = a.x * a.x + (1 - a.x * a.x) * cosTheta;
@@ -165,7 +165,7 @@ namespace yart
 
 	bool Transform::SwapsHandedness() const
 	{
-		Float det = m_Mat.m[0][0] * (m_Mat.m[1][1] * m_Mat.m[2][2] - m_Mat.m[1][2] * m_Mat.m[2][1]) -
+		real det = m_Mat.m[0][0] * (m_Mat.m[1][1] * m_Mat.m[2][2] - m_Mat.m[1][2] * m_Mat.m[2][1]) -
 					m_Mat.m[0][1] * (m_Mat.m[1][0] * m_Mat.m[2][2] - m_Mat.m[1][2] * m_Mat.m[2][0]) +
 					m_Mat.m[0][2] * (m_Mat.m[1][0] * m_Mat.m[2][1] - m_Mat.m[1][1] * m_Mat.m[2][0]);
 		return det < 0;

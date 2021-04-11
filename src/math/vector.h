@@ -87,14 +87,14 @@ namespace yart
 		Vector3<T> operator/(T s) const
 		{
 			ASSERT(s != 0);
-			Float inv = (Float)1 / s;
+			real inv = (real)1 / s;
 			return *this * inv;
 		}
 
 		Vector3<T>& operator/=(T s)
 		{
 			ASSERT(s != 0);
-			Float inv = (Float)1 / s;
+			real inv = (real)1 / s;
 			*this *= inv;
 			return *this;
 		}
@@ -108,9 +108,9 @@ namespace yart
 
 		bool operator!=(const Vector3<T>& other) const { return !(*this == other); }
 
-		Float NormSquared() const { return (Float)Dot(*this, *this); }
+		real NormSquared() const { return (real)Dot(*this, *this); }
 
-		Float Norm() const { return std::sqrt(NormSquared()); }
+		real Norm() const { return std::sqrt(NormSquared()); }
 
 		T MinComponent() const { return std::min(x, std::min(y, z)); }
 
@@ -199,7 +199,7 @@ namespace yart
 		v3 = Cross(v1, v2);
 	}
 
-	template <typename T> Vector3<T> Lerp(Float t, const Vector3<T>& u, const Vector3<T>& v)
+	template <typename T> Vector3<T> Lerp(real t, const Vector3<T>& u, const Vector3<T>& v)
 	{
 		return (1 - t) * u + t * v;
 	}
@@ -210,12 +210,12 @@ namespace yart
 		return (Dot(normal, vec) < 0) ? -normal : normal;
 	}
 
-	template <typename T> Float Distance(const Vector3<T>& v1, const Vector3<T>& v2)
+	template <typename T> real Distance(const Vector3<T>& v1, const Vector3<T>& v2)
 	{
 		return (v1 - v2).Norm();
 	}
 
-	typedef Vector3<Float> Vector3f;
+	typedef Vector3<real> Vector3f;
 	typedef Vector3<int> Vector3i;
 
 	template <typename T> class Vector2
@@ -301,14 +301,14 @@ namespace yart
 		Vector2<T> operator/(T s) const
 		{
 			ASSERT(s != 0);
-			Float inv = (Float)1 / s;
+			real inv = (real)1 / s;
 			return *this * inv;
 		}
 
 		Vector2<T>& operator/=(T s)
 		{
 			ASSERT(s != 0);
-			Float inv = (Float)1 / s;
+			real inv = (real)1 / s;
 			*this *= inv;
 			return *this;
 		}
@@ -319,9 +319,9 @@ namespace yart
 
 		bool operator!=(const Vector2<T>& other) const { return !(*this == other); }
 
-		Float NormSquared() const { return (Float)Dot(*this, *this); }
+		real NormSquared() const { return (real)Dot(*this, *this); }
 
-		Float Norm() const { return std::sqrt(NormSquared()); }
+		real Norm() const { return std::sqrt(NormSquared()); }
 
 		T MinComponent() const { return std::min(x, y); }
 
@@ -394,16 +394,16 @@ namespace yart
 		v2 = Vector2<T>(-v1.y, v1.x);
 	}
 
-	template <typename T> Vector2<T> Lerp(Float t, const Vector2<T>& u, const Vector2<T>& v)
+	template <typename T> Vector2<T> Lerp(real t, const Vector2<T>& u, const Vector2<T>& v)
 	{
 		return (1 - t) * u + t * v;
 	}
 
-	template <typename T> Float Distance(const Vector2<T>& v1, const Vector2<T>& v2)
+	template <typename T> real Distance(const Vector2<T>& v1, const Vector2<T>& v2)
 	{
 		return (v1 - v2).Norm();
 	}
 
-	typedef Vector2<Float> Vector2f;
+	typedef Vector2<real> Vector2f;
 	typedef Vector2<int> Vector2i;
 }

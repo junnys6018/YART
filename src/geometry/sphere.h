@@ -8,7 +8,7 @@ namespace yart
 	{
 	public:
 		Sphere(const Transform* objectToWorld, const Transform* worldToObject, bool reverseOrientation,
-			   Float radius, Float zMin, Float zMax, Float phiMax)
+			   real radius, real zMin, real zMax, real phiMax)
 			: AbstractGeometry(objectToWorld, worldToObject, reverseOrientation), m_Radius(radius),
 			  m_zMin(Clamp(zMin, -radius, radius)), m_zMax(Clamp(zMax, -radius, radius)),
 			  m_ThetaMin(std::acos(m_zMin / m_Radius)), m_ThetaMax(std::acos(m_zMax / m_Radius)),
@@ -19,14 +19,14 @@ namespace yart
 
 		virtual Bounds3f ObjectBound() const override;
 		// virtual Bounds3f WorldBound() const;
-		virtual bool IntersectRay(const Ray& ray, Float* tHit, SurfaceInteraction* surfaceInt,
+		virtual bool IntersectRay(const Ray& ray, real* tHit, SurfaceInteraction* surfaceInt,
 								  bool testAlphaTexture = true) const override;
 		// virtual bool IntersectRay(const Ray& ray, bool testAlphaTexture = true) const;
-		virtual Float SurfaceArea() const override;
+		virtual real SurfaceArea() const override;
 
 	private:
-		const Float m_Radius;
-		const Float m_zMin, m_zMax;
-		const Float m_ThetaMin, m_ThetaMax, m_PhiMax;
+		const real m_Radius;
+		const real m_zMin, m_zMax;
+		const real m_ThetaMin, m_ThetaMax, m_PhiMax;
 	};
 }
