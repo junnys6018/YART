@@ -12,9 +12,9 @@ int main(int argc, char** argv)
 	Ray ray({1, 1, 1}, Normalize(Vector3f{2, 3, 4}));
 
 	real t1, t2;
-	std::cout << bb.IntersectRay(ray, &t1, &t2);
+	std::cout << bb.IntersectRay(ray, &t1, &t2) << std::endl;
 
-	std::cout << t.AppBB(bb);
+	std::cout << t.AppBB(bb) << std::endl;
 
 	std::cin.get();
 	return 0;

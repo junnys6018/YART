@@ -4,4 +4,3 @@ bin
 bin-int
 *.sln
 *.vcxproj*
-*.exe

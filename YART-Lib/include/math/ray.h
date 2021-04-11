@@ -20,6 +20,12 @@ namespace yart
 		{
 			return o + d * t;
 		}
+		
+		inline friend std::ostream& operator<<(std::ostream& out, const Ray& ray)
+		{
+			out << "{ o: " << ray.o << ", d: " << ray.d << " }";
+			return out;
+		}
 
 	public:
 		Vector3f o;
@@ -28,12 +34,6 @@ namespace yart
 		mutable real m_Tmax;
 		real m_Time;
 	};
-
-	std::ostream& operator<<(std::ostream& out, const Ray& ray)
-	{
-		out << "{ o: " << ray.o << ", d: " << ray.d << " }";
-		return out;
-	}
 
 	// Contains infomation about additional rays offset by a small delta from the original ray
 	// Used by texture sampling algorithms to mitigate aliasing
