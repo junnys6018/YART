@@ -94,10 +94,10 @@ namespace yart
 		}
 
 		// Returns the center and radius of the smallest sphere that contains the bound
-		void BoundingSphere(Vector3<T>& center, real& radius) const
+		void BoundingSphere(Vector3<T>* center, real* radius) const
 		{
-			center = (m_MinBound + m_MaxBound) / 2;
-			radius = Inside(center, *this) ? Distance(center, m_MaxBound) : 0;
+			*center = (m_MinBound + m_MaxBound) / 2;
+			*radius = Inside(center, *this) ? Distance(center, m_MaxBound) : 0;
 		}
 
 		bool IntersectRay(const Ray& ray, real* hitt1, real* hitt2) const
@@ -132,6 +132,8 @@ namespace yart
 		}
 
 		// Optimised overload of IntersectRay() that avoids the std::swap and inverse calculation
+		// Note: If the ray origin in a yz plane and the ray direction is parallel to the yz plane then this function
+		// will return false. If the ray is aligned with the xy or xz plane, then the function will return true
 		bool IntersectRay(const Ray& ray, const Vector3f& invRayDir, const int dirIsNeg[3]) const
 		{
 			const Bounds3f& bounds = *this;
@@ -172,7 +174,7 @@ namespace yart
 	template <typename T>
 	std::ostream& operator<<(std::ostream& out, const Bounds3<T>& bound)
 	{
-		out << "{ min: " << bound.m_MinBound << ", max: " << bound.m_MaxBound << " }";
+		out << "{min: " << bound.m_MinBound << ", max: " << bound.m_MaxBound << "}";
 		return out;
 	}
 
@@ -449,5 +451,4 @@ namespace yart
 			end = b.m_MinBound;
 		return Bounds2iIterator(b, end);
 	}
-
 }

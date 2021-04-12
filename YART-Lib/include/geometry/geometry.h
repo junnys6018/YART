@@ -1,16 +1,15 @@
 #pragma once
-#include "math/transform.h"
+#include "core/interaction.h"
 #include "math/boundingbox.h"
 #include "math/ray.h"
-#include "core/interaction.h"
+#include "math/transform.h"
 
 namespace yart
 {
 	class AbstractGeometry
 	{
 	public:
-		AbstractGeometry(const Transform* objectToWorld, const Transform* worldToObject,
-						 bool reverseOrientation)
+		AbstractGeometry(const Transform* objectToWorld, const Transform* worldToObject, bool reverseOrientation)
 			: m_ObjectToWorld(objectToWorld), m_WorldToObject(worldToObject),
 			  m_ReverseOrientation(reverseOrientation),
 			  m_TransformSwapsHandedness(objectToWorld->SwapsHandedness())
