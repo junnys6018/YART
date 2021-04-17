@@ -5,7 +5,8 @@ namespace yart
 {
 // Disable double to float truncation warning
 #pragma warning(disable : 4305)
-	static constexpr real ShadowEpsilon = 0.00001;
+	static constexpr real ShadowEpsilon = 0.0001;
+	static constexpr real MachineEpsilon = std::numeric_limits<real>::epsilon() * 0.5;
 	static constexpr real Epsilon = std::numeric_limits<real>::epsilon();
 	static constexpr real Pi = 3.14159265358979323846;
 	static constexpr real InvPi = 0.31830988618379067154;
@@ -19,7 +20,7 @@ namespace yart
 #pragma warning(default : 4305)
 
 	template <typename T>
-	constexpr T Lerp(T t, T a, T b)
+	constexpr inline T Lerp(T t, T a, T b)
 	{
 		return (1 - t) * a + t * b;
 	}
@@ -31,7 +32,7 @@ namespace yart
 
 	constexpr inline real gamma(int n)
 	{
-		return (n * Epsilon) / (1 - n * Epsilon);
+		return (n * MachineEpsilon) / (1 - n * MachineEpsilon);
 	}
 
 	template <typename T>
@@ -42,6 +43,60 @@ namespace yart
 		if (val > max)
 			return max;
 		return val;
+	}
+
+	inline uint RealToBits(real v)
+	{
+		uint ui;
+		std::memcpy(&ui, &v, sizeof(real));
+		return ui;
+	}
+
+	inline real BitsToReal(uint bits)
+	{
+		real v;
+		std::memcpy(&v, &bits, sizeof(real));
+		return v;
+	}
+
+	inline real NextFloatUp(real v)
+	{
+		if (std::isinf(v) && v > 0)
+		{
+			return v;
+		}
+		if (v == YART_NEGATIVE_ZERO)
+		{
+			return YART_POSITIVE_ZERO;
+		}
+
+		uint ui = RealToBits(v);
+		if (v >= 0)
+			ui++;
+		else
+			ui--;
+
+		return BitsToReal(ui);
+	}
+
+	inline real NextFloatDown(real v)
+	{
+		if (std::isinf(v) && v < 0)
+		{
+			return v;
+		}
+		if (v == YART_POSITIVE_ZERO)
+		{
+			return YART_NEGATIVE_ZERO;
+		}
+
+		uint ui = RealToBits(v);
+		if (v >= 0)
+			ui--;
+		else
+			ui++;
+
+		return BitsToReal(ui);
 	}
 
 	// Solves the quadratic equation a*t^2 + b*t + c = 0, returns false if no solutions exist
