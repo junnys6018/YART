@@ -5,7 +5,7 @@ namespace yart
 {
 	Matrix4x4::Matrix4x4()
 	{
-		memset(m, 0, 16 * sizeof(real));
+		std::memset(m, 0, 16 * sizeof(real));
 		for (int i = 0; i < 4; i++)
 		{
 			m[i][i] = 1;
@@ -14,7 +14,7 @@ namespace yart
 
 	Matrix4x4::Matrix4x4(const real mat[4][4])
 	{
-		memcpy(m, mat, 16 * sizeof(real));
+		std::memcpy(m, mat, 16 * sizeof(real));
 	}
 
 	Matrix4x4::Matrix4x4(real t00, real t01, real t02, real t03,
@@ -93,7 +93,7 @@ namespace yart
 		int indxc[4], indxr[4];
 		int ipiv[4] = {0, 0, 0, 0};
 		real minv[4][4];
-		memcpy(minv, mat.m, 4 * 4 * sizeof(real));
+		std::memcpy(minv, mat.m, 4 * 4 * sizeof(real));
 		for (int i = 0; i < 4; i++)
 		{
 			int irow = 0, icol = 0;

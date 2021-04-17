@@ -20,9 +20,18 @@ namespace yart
 		// virtual Bounds3f WorldBound() const;
 		virtual bool IntersectRay(const Ray& ray, real* tHit, SurfaceInteraction* surfaceInt,
 								  bool testAlphaTexture = true) const override;
-		// virtual bool IntersectRay(const Ray& ray, bool testAlphaTexture = true) const;
+		virtual bool IntersectRay(const Ray& ray, bool testAlphaTexture = true) const;
 		virtual real SurfaceArea() const override;
 
+	private:
+		struct IntersectionData
+		{
+			real phi;
+			real tShapeHit;
+			Vector3f pHit;
+		};
+		inline bool IntersectRayImplementation(const Ray& ray,
+											   bool testAlphaTexture, IntersectionData* isect) const;
 	private:
 		const real m_Radius;
 		const real m_zMin, m_zMax;
