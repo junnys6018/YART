@@ -6,6 +6,7 @@ namespace yart
 {
 	// Forward declaration to avoid circular dependancy
 	class AbstractGeometry;
+	class AbstractPrimitive;
 
 	class Interaction
 	{
@@ -27,7 +28,7 @@ namespace yart
 		Vector3f m_Point, m_Normal, m_PtError, m_wo;
 		real m_Time = 0.0f;
 
-		// TODO Medium interface (see 2.10 and 11.3.1)
+		// TODO: Medium interface (see 2.10 and 11.3.1)
 	};
 
 	class SurfaceInteraction : public Interaction
@@ -51,8 +52,10 @@ namespace yart
 		// partial derivatives of the normal vector w.r.t u and v
 		Vector3f m_dndu, m_dndv;
 
-		// Reference to the geometry the point lies on
+		// Reference to the geometry and primitive the point lies on
 		const AbstractGeometry* m_Geometry = nullptr;
+		const AbstractPrimitive* m_Primitive = nullptr;
+
 
 		// second instance of geometry data that represents peturbed values
 		struct
