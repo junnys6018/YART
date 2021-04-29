@@ -3,6 +3,19 @@
 using namespace yart;
 using namespace Catch;
 
+bool MatrixAreEqual(const Matrix4x4& m1, const Matrix4x4& m2)
+{
+	for (int i = 0; i < 4; i++)
+	{
+		for (int j = 0; j < 4; j++)
+		{
+			if (m1.m[i][j] != Approx(m2.m[i][j]))
+				return false;
+		}
+	}
+	return true;
+}
+
 TEST_CASE("Matrix Multiply", "[math][matrix]")
 {
 	// clang-format off
@@ -22,13 +35,7 @@ TEST_CASE("Matrix Multiply", "[math][matrix]")
 				  32, 22, 0, -12,
 				  44, 30, 0, -16);
 	// clang-format on
-	for (int i = 0; i < 4; i++)
-	{
-		for (int j = 0; j < 4; j++)
-		{
-			REQUIRE(ans.m[i][j] == Approx(m3.m[i][j]));
-		}
-	}
+	REQUIRE(MatrixAreEqual(ans, m3));
 }
 
 TEST_CASE("Matrix inverse", "[math][matrix]")
@@ -44,13 +51,8 @@ TEST_CASE("Matrix inverse", "[math][matrix]")
 				   0.18518518518518517, -0.2962962962962963, -0.037037037037037035, 0.1111111111111111);
 	// clang-format on
 	Matrix4x4 minv = Inverse(m);
-	for (int i = 0; i < 4; i++)
-	{
-		for (int j = 0; j < 4; j++)
-		{
-			REQUIRE(ans.m[i][j] == Approx(minv.m[i][j]));
-		}
-	}
+
+	REQUIRE(MatrixAreEqual(ans, minv));
 }
 
 TEST_CASE("Matrix transpose", "[math][matrix]")
@@ -62,11 +64,18 @@ TEST_CASE("Matrix transpose", "[math][matrix]")
 				13, 14, 15, 16);
 	// clang-format on
 	Matrix4x4 t = Transpose(m);
+	
+	bool equal = true;
 	for (int i = 0; i < 4; i++)
 	{
 		for (int j = 0; j < 4; j++)
 		{
-			REQUIRE(t.m[i][j] == Approx(m.m[j][i]));
+			if (t.m[i][j] != Approx(m.m[j][i]))
+			{
+				equal = false;
+				break;
+			}
 		}
 	}
+	REQUIRE(equal);
 }
