@@ -1,20 +1,8 @@
 #include <catch_amalgamated.hpp>
 #include <yart.h>
+#include "testutil.h"
 using namespace yart;
 using namespace Catch;
-
-bool MatrixAreEqual(const Matrix4x4& m1, const Matrix4x4& m2)
-{
-	for (int i = 0; i < 4; i++)
-	{
-		for (int j = 0; j < 4; j++)
-		{
-			if (m1.m[i][j] != Approx(m2.m[i][j]))
-				return false;
-		}
-	}
-	return true;
-}
 
 TEST_CASE("Matrix Multiply", "[math][matrix]")
 {

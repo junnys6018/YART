@@ -1,6 +1,7 @@
 // Core
 #include "core/interaction.h"
 #include "core/yart.h"
+#include "core/primitive.h"
 
 // Math
 #include "math/util.h"
@@ -10,6 +11,9 @@
 #include "math/matrix.h"
 #include "math/transform.h"
 
-// Geometr
+// Geometry
 #include "geometry/geometry.h"
 #include "geometry/sphere.h"
+
+// Accelerators
+#include "accelerators/bvh.h"

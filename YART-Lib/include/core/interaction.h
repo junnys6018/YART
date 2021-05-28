@@ -56,7 +56,6 @@ namespace yart
 		const AbstractGeometry* m_Geometry = nullptr;
 		const AbstractPrimitive* m_Primitive = nullptr;
 
-
 		// second instance of geometry data that represents peturbed values
 		struct
 		{
