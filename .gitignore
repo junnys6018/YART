@@ -9,3 +9,6 @@ Makefile
 YART-Lib/Makefile
 YART-Cli/Makefile
 YART-Test/Makefile
+
+compile_commands
+compile_commands.json
