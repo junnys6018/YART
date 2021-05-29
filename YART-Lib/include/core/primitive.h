@@ -36,7 +36,7 @@ namespace yart
 		}
 
 		virtual Bounds3f WorldBound() const override;
-		virtual bool IntersectRay(const Ray& ray, SurfaceInteraction* surfaceInt = nullptr) const override;
+		virtual bool IntersectRay(const Ray& ray, SurfaceInteraction* surfaceInt) const override;
 		virtual bool IntersectRay(const Ray& ray) const override;
 
 	private:
@@ -48,4 +48,9 @@ namespace yart
 	};
 
 	// TODO: TransformPrimitive (section 4.1.2)
+
+	class AbstractAggregate : public AbstractPrimitive
+	{
+		// Override GetAreaLight(), GetMaterial() and ComputeScatteringFunctions() here when implemented
+	};
 }

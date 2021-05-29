@@ -141,7 +141,7 @@ namespace yart
 		// Returns the index of the component with the largest value
 		int MaxDimension() const
 		{
-			return (v.x > v.y) ? ((v.x > v.z) ? 0 : 2) : ((v.y > v.z) ? 1 : 2);
+			return (x > y) ? ((x > z) ? 0 : 2) : ((y > z) ? 1 : 2);
 		}
 
 		bool HasNaNs() const
@@ -155,7 +155,7 @@ namespace yart
 
 	// Partial specialization for integer type
 	template <>
-	bool Vector3<int>::HasNaNs() const
+	inline bool Vector3<int>::HasNaNs() const
 	{
 		return false;
 	}
@@ -416,7 +416,7 @@ namespace yart
 		// Returns the index of the component with the largest value
 		int MaxDimension() const
 		{
-			return (v.x > v.y) ? 0 : 1;
+			return (x > y) ? 0 : 1;
 		}
 
 		bool HasNaNs() const
@@ -430,7 +430,7 @@ namespace yart
 
 	// Partial specialization for integer type
 	template <>
-	bool Vector2<int>::HasNaNs() const
+	inline bool Vector2<int>::HasNaNs() const
 	{
 		return false;
 	}

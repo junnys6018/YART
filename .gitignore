@@ -4,3 +4,8 @@ bin
 bin-int
 *.sln
 *.vcxproj*
+
+Makefile
+YART-Lib/Makefile
+YART-Cli/Makefile
+YART-Test/Makefile

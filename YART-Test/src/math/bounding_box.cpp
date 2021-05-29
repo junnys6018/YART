@@ -69,7 +69,7 @@ TEST_CASE("Bounds2i Iterator", "[math][bounds]")
 	{
 		Bounds2i degen({1, 1}, {1, 1});
 		bool reached = false;
-		for (auto i : degen)
+		for (auto& i : degen)
 		{
 			// Unreachable code
 			reached = true;

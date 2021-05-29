@@ -136,7 +136,7 @@ namespace yart
 		// will return false. If the ray is aligned with the xy or xz plane, then the function will return true
 		bool IntersectRay(const Ray& ray, const Vector3f& invRayDir, const int dirIsNeg[3]) const
 		{
-			const Bounds3f& bounds = *this;
+			const Bounds3<real>& bounds = *this;
 			// Check for ray intersection against x and y slabs
 			real tMin = (bounds[dirIsNeg[0]].x - ray.o.x) * invRayDir.x;
 			real tMax = (bounds[1 - dirIsNeg[0]].x - ray.o.x) * invRayDir.x;
@@ -293,7 +293,7 @@ namespace yart
 			Vector2<T> d = Diagonal();
 			if (d.x > d.y)
 				return 0;
-			return 1
+			return 1;
 		}
 
 		Vector2<T> Lerp(const Vector2<T>& t) const
@@ -415,7 +415,7 @@ namespace yart
 			return !(*this == other);
 		}
 
-		Vector2i operator*() const
+		const Vector2i& operator*() const
 		{
 			return m_Point;
 		}

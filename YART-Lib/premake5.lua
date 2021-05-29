@@ -41,3 +41,9 @@ kind "StaticLib"
 
 	filter "system:linux"
 		defines { "PLATFORM_LINUX" }
+		buildoptions 
+		{
+			"-Wall",
+			"-Wextra",
+			"-pedantic",
+		}

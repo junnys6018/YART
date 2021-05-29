@@ -1,6 +1,10 @@
 #include "pch.h"
 #include "core/memory_util.h"
 
+#if defined(PLATFORM_LINUX)
+#include <malloc.h>
+#endif
+
 namespace yart
 {
 	void* AllocAligned(size_t size)
@@ -8,7 +12,7 @@ namespace yart
 #if defined(PLATFORM_WINDOWS)
 		return _aligned_malloc(size, YART_L1_CACHE_SIZE);
 #elif defined(PLATFORM_LINUX)
-		return memalign(PBRT_L1_CACHE_LINE_SIZE, size);
+		return memalign(YART_L1_CACHE_SIZE, size);
 #endif
 	}
 
