@@ -27,7 +27,7 @@ jobs:
       - name: Upload test artifact
         uses: actions/upload-artifact@v2
         with:
-          name: ${{matrix.configuration}}-YART-Test
+          name: windows-${{matrix.configuration}}-YART-Test
           path: ./bin/${{matrix.configuration}}-windows/YART-Test/YART-Test.exe
       
   test-win:
@@ -41,10 +41,65 @@ jobs:
       - name: Download test artifact
         uses: actions/download-artifact@v2.0.9
         with:
-          name: ${{matrix.configuration}}-YART-Test
+          name: windows-${{matrix.configuration}}-YART-Test
       
       - name: show files
         run: dir
 
       - name: Run Tests
         run: .\YART-Test.exe
+  
+  build-linux:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        configuration: [Debug, Release]
+    
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+      
+      - name: Generate Project files
+        run: scripts/GenerateLinuxProjects.sh
+        
+      - name: Install build tools
+        run: sudo apt-get install g++ make
+        
+        # For some stupid reason premake generates make files with lowercase configuration names
+        # even though the configurations were defined in uppercase in the premake.lua file
+      - name: Build
+        if: ${{matrix.configuration == 'Debug'}}
+        run: make config=debug verbose=true
+
+      - name: Build
+        if: ${{matrix.configuration == 'Release'}}
+        run: make config=release verbose=true
+
+      - name: Upload test artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: linux-${{matrix.configuration}}-YART-Test
+          path: ./bin/${{matrix.configuration}}-linux/YART-Test/YART-Test
+
+  test-linux:
+    needs: build-linux
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        configuration: [Debug, Release]
+        
+    steps:
+      - name: Download test artifact
+        uses: actions/download-artifact@v2.0.9
+        with:
+          name: linux-${{matrix.configuration}}-YART-Test
+
+      - run: ls -laR .
+
+      - name: Make test executable
+        run: chmod +x YART-Test
+
+      - name: Run Tests
+        run: ./YART-Test

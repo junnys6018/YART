@@ -226,7 +226,7 @@ namespace yart
 	template <typename T>
 	inline Vector3<T> Normalize(const Vector3<T>& v)
 	{
-		ASSERT(v != Vector3f());
+		ASSERT(v != Vector3<T>());
 		return v / Norm(v);
 	}
 
@@ -493,6 +493,7 @@ namespace yart
 	template <typename T>
 	inline Vector2<T> Normalize(const Vector2<T>& v)
 	{
+		ASSERT(v != Vector2<T>());
 		return v / Norm(v);
 	}
 
