@@ -12,12 +12,6 @@ namespace yart
 #endif
 	}
 
-	template <typename T>
-	T* AllocAligned(size_t count)
-	{
-		return (T*)AllocAligned(count * sizeof(T));
-	}
-
 	void FreeAligned(void* ptr)
 	{
 		if (!ptr)

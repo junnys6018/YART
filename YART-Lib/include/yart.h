@@ -2,6 +2,7 @@
 #include "core/interaction.h"
 #include "core/yart.h"
 #include "core/primitive.h"
+#include "core/memory_util.h"
 
 // Math
 #include "math/util.h"

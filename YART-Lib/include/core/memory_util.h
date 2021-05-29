@@ -4,8 +4,12 @@
 namespace yart
 {
 	void* AllocAligned(size_t size);
+
 	template<typename T>
-	T* AllocAligned(size_t count);
+	T* AllocAligned(size_t count)
+	{
+		return (T*)AllocAligned(count * sizeof(T));
+	}
 
 	void FreeAligned(void*);
 
@@ -73,13 +77,13 @@ namespace yart
 			{
 				for (int y = 0; y < numY; y++)
 					for (int x = 0; x < numX; x++)
-						(*this)(x, y) = d[y * numX + x];
+						(*this)(x, y) = arr[y * numX + x];
 			}
 		}
 
 		~BlockedArray()
 		{
-			int nAlloc = RoundUp(numX) * RoundUp(numY);
+			int nAlloc = RoundUp(m_NumX) * RoundUp(m_NumY);
 			for (int i = 0 ; i < nAlloc; i++)
 			{
 				m_Data[i].~T();
@@ -122,8 +126,8 @@ namespace yart
 		{
 			int bx = Block(x), by = Block(y);
 			int ox = Offset(x), oy = Offset(y);
-			int offset = BlockSize() * BlockSize() * (m_XBlocks * bx + by);
-			offset += BlockSize() * ox + oy;
+			int offset = BlockSize() * BlockSize() * (m_XBlocks * by + bx);
+			offset += BlockSize() * oy + ox;
 			return m_Data[offset];
 		}
 
