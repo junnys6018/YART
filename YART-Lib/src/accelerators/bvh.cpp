@@ -19,7 +19,7 @@ namespace yart
 		Vector3f m_Center;
 	};
 
-	BVHAccel::BVHAccel(const std::vector<std::shared_ptr<AbstractPrimitive>>& primitives, int maxPrimsInNode,
+	BVHAccel::BVHAccel(const std::vector<Ref<AbstractPrimitive>>& primitives, int maxPrimsInNode,
 					   SplitMethod splitMethod)
 		: m_MaxPrimsInNode(std::min(255, maxPrimsInNode)), m_SplitMethod(splitMethod), m_Primitives(primitives)
 	{

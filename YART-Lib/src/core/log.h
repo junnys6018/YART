@@ -6,6 +6,8 @@
 #include <spdlog/fmt/ostr.h>
 #pragma warning(pop)
 
+#include "core/yart.h"
+
 
 namespace yart
 {
@@ -14,10 +16,10 @@ namespace yart
 	public:
 		static void Initialize();
 
-		static std::shared_ptr<spdlog::logger> GetLogger() { return s_Logger; }
+		static Ref<spdlog::logger> GetLogger() { return s_Logger; }
 
 	private:
-		static std::shared_ptr<spdlog::logger> s_Logger;
+		static Ref<spdlog::logger> s_Logger;
 	};
 }
 

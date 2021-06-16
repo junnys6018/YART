@@ -5,7 +5,7 @@
 
 namespace yart
 {
-	std::shared_ptr<spdlog::logger> Log::s_Logger;
+	Ref<spdlog::logger> Log::s_Logger;
 
 	void Log::Initialize()
 	{
