@@ -78,7 +78,7 @@ namespace yart
 		// Apply transform to bounding box
 		Bounds3f AppBB(const Bounds3f& bb) const;
 
-		// Apple transform to ray
+		// Apply transform to ray
 		Ray AppRay(const Ray& ray) const
 		{
 			// TODO: offset ray origin to edge of error bounds

@@ -20,16 +20,12 @@ namespace yart
 
 		//virtual void ComputeScatteringFuctions(SurfaceInteraction* surfaceInt, MemoryArena& arena,
 		//									   TransportMode mode, bool allowMultipleLobes) const = 0;
-
-
-	public:
-		const AbstractPrimitive* m_HitPrimitive = nullptr;
 	};
 
 	class GeometricPrimitive : public AbstractPrimitive
 	{
 	public:
-		GeometricPrimitive(const std::shared_ptr<AbstractGeometry>& geometry) 
+		GeometricPrimitive(const Ref<AbstractGeometry>& geometry) 
 			: m_Geometry(geometry)
 		{
 
@@ -40,7 +36,7 @@ namespace yart
 		virtual bool IntersectRay(const Ray& ray) const override;
 
 	private:
-		std::shared_ptr<AbstractGeometry> m_Geometry;
+		Ref<AbstractGeometry> m_Geometry;
 		//std::shared_ptr<Material> m_Material;
 		//std::shared_ptr<AreaLight> m_Light;
 
