@@ -35,15 +35,131 @@ namespace yart
 		{
 			return m_BVHTree[0].m_Bounds;
 		}
+		return Bounds3f{};
 	}
 
 	bool BVHAccelerator::IntersectRay(const Ray& ray, SurfaceInteraction* surfaceInt) const
 	{
-		return false;
+		if (!m_BVHTree)
+		{
+			return false;
+		}
+		bool hit = false;
+		Vector3f invRayDir{1 / ray.d.x, 1 / ray.d.y, 1 / ray.d.z};
+		int dirIsNeg[3] = {invRayDir.x < 0, invRayDir.y < 0, invRayDir.z < 0};
+
+		int unvisitedOffset = 0, currentNodeOffset = 0;
+		int unvisitedNodes[64]; // Acts as a stack for DFS traveral
+		while (true)
+		{
+			const BVHLinearNode* node = &m_BVHTree[currentNodeOffset];
+
+			if (node->m_Bounds.IntersectRay(ray, invRayDir, dirIsNeg))
+			{
+				if (node->IsInteriorNode())
+				{
+					if (dirIsNeg[node->m_SplitAxis])
+					{
+						unvisitedNodes[unvisitedOffset++] = currentNodeOffset + 1;
+						currentNodeOffset = node->m_SecondChildOffset;
+					}
+					else
+					{
+						unvisitedNodes[unvisitedOffset++] = node->m_SecondChildOffset;
+						currentNodeOffset = currentNodeOffset + 1;
+					}
+				}
+				else
+				{
+					for (int i = 0; i < node->m_NumPrimitives; i++)
+					{
+						if (m_Primitives[node->m_FirstPrimOffset + i]->IntersectRay(ray, surfaceInt))
+						{
+							hit = true;
+						}
+					}
+					if (unvisitedOffset == 0)
+					{
+						break;
+					}
+					currentNodeOffset = unvisitedNodes[--unvisitedOffset];
+				}
+			}
+			else
+			{
+				if (unvisitedOffset == 0)
+				{
+					break;
+				}
+				else
+				{
+					currentNodeOffset = unvisitedNodes[--unvisitedOffset];
+				}
+			}
+		}
+
+		return hit;
 	}
 
 	bool BVHAccelerator::IntersectRay(const Ray& ray) const
 	{
+		if (!m_BVHTree)
+		{
+			return false;
+		}
+		Vector3f invRayDir{1 / ray.d.x, 1 / ray.d.y, 1 / ray.d.z};
+		int dirIsNeg[3] = {invRayDir.x < 0, invRayDir.y < 0, invRayDir.z < 0};
+
+		int unvisitedOffset = 0, currentNodeOffset = 0;
+		int unvisitedNodes[64]; // Acts as a stack for DFS traveral
+		while (true)
+		{
+			const BVHLinearNode* node = &m_BVHTree[currentNodeOffset];
+
+			if (node->m_Bounds.IntersectRay(ray, invRayDir, dirIsNeg))
+			{
+				if (node->IsInteriorNode())
+				{
+					if (dirIsNeg[node->m_SplitAxis])
+					{
+						unvisitedNodes[unvisitedOffset++] = currentNodeOffset + 1;
+						currentNodeOffset = node->m_SecondChildOffset;
+					}
+					else
+					{
+						unvisitedNodes[unvisitedOffset++] = node->m_SecondChildOffset;
+						currentNodeOffset = currentNodeOffset + 1;
+					}
+				}
+				else
+				{
+					for (int i = 0; i < node->m_NumPrimitives; i++)
+					{
+						if (m_Primitives[node->m_FirstPrimOffset + i]->IntersectRay(ray))
+						{
+							return true;
+						}
+					}
+					if (unvisitedOffset == 0)
+					{
+						break;
+					}
+					currentNodeOffset = unvisitedNodes[--unvisitedOffset];
+				}
+			}
+			else
+			{
+				if (unvisitedOffset == 0)
+				{
+					break;
+				}
+				else
+				{
+					currentNodeOffset = unvisitedNodes[--unvisitedOffset];
+				}
+			}
+		}
+
 		return false;
 	}
 
@@ -119,14 +235,15 @@ namespace yart
 			}
 		};
 
-		std::vector<TaggedBuildNode> unvistedNodes;
+		std::vector<TaggedBuildNode> unvisitedNodes;
+		unvisitedNodes.reserve(64);
 
-		unvistedNodes.push_back({-1, root});
+		unvisitedNodes.push_back({-1, root});
 
-		while (unvistedNodes.size() != 0)
+		while (unvisitedNodes.size() != 0)
 		{
-			TaggedBuildNode node = unvistedNodes.back();
-			unvistedNodes.pop_back();
+			TaggedBuildNode node = unvisitedNodes.back();
+			unvisitedNodes.pop_back();
 
 			if (node.parentOffset != -1)
 			{
@@ -137,8 +254,8 @@ namespace yart
 
 			if (node->IsInteriorNode())
 			{
-				unvistedNodes.push_back({offset, node->m_Children[0]});
-				unvistedNodes.push_back({-1, node->m_Children[1]});
+				unvisitedNodes.push_back({offset, node->m_Children[1]});
+				unvisitedNodes.push_back({-1, node->m_Children[0]});
 			}
 		}
 
