@@ -10,7 +10,7 @@ namespace yart
 		// SAH,
 		// HLBVH,
 		Middle,
-		// EqualCounts,
+		EqualCounts,
 		COUNT
 	};
 

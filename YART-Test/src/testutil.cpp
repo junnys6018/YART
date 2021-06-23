@@ -37,3 +37,8 @@ bool MatrixAreEqual(const Matrix4x4& m1, const Matrix4x4& m2)
 	}
 	return true;
 }
+
+bool Bounds3fAreEqual(const Bounds3f& b1, const Bounds3f& b2)
+{
+	return Vector3fAreEqual(b1.m_MinBound, b2.m_MinBound) && Vector3fAreEqual(b1.m_MaxBound, b2.m_MaxBound);
+}

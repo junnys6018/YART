@@ -1,2 +1,2 @@
-Test BVH, Sphere
+Test Sphere
 Error handling
