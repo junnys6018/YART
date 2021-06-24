@@ -5,7 +5,7 @@ namespace yart
 {
 	void* AllocAligned(size_t size);
 
-	template<typename T>
+	template <typename T>
 	T* AllocAligned(size_t count)
 	{
 		return (T*)AllocAligned(count * sizeof(T));
@@ -19,7 +19,6 @@ namespace yart
 		MemoryArena(size_t blockSize = 262144) // 256 kB
 			: m_BlockSize(blockSize)
 		{
-		
 		}
 
 		~MemoryArena()
@@ -33,7 +32,7 @@ namespace yart
 		}
 
 		void* Alloc(size_t nBytes);
-		template<typename T>
+		template <typename T>
 		T* Alloc(size_t count = 1, bool runConstructor = true)
 		{
 			T* ret = (T*)Alloc(count * sizeof(T));
@@ -58,7 +57,7 @@ namespace yart
 	};
 
 	// Cache friendly generic 2d array
-	template<typename T, int log2BlockSize>
+	template <typename T, int log2BlockSize>
 	class BlockedArray
 	{
 	public:
@@ -84,7 +83,7 @@ namespace yart
 		~BlockedArray()
 		{
 			int nAlloc = RoundUp(m_NumX) * RoundUp(m_NumY);
-			for (int i = 0 ; i < nAlloc; i++)
+			for (int i = 0; i < nAlloc; i++)
 			{
 				m_Data[i].~T();
 			}
@@ -102,9 +101,9 @@ namespace yart
 			return (x + BlockSize() - 1) & ~(BlockSize() - 1);
 		}
 
-		int XSize() const 
+		int XSize() const
 		{
-			return m_NumX;	
+			return m_NumX;
 		}
 
 		int YSize() const
@@ -112,7 +111,7 @@ namespace yart
 			return m_NumY;
 		}
 
-		int Block(int a) const 
+		int Block(int a) const
 		{
 			return a >> log2BlockSize;
 		}
@@ -135,6 +134,7 @@ namespace yart
 		{
 			return const_cast<BlockedArray<T, log2BlockSize>>(*this)(x, y);
 		}
+
 	private:
 		T* m_Data;
 		const int m_NumX, m_NumY, m_XBlocks;

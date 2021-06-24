@@ -1,16 +1,17 @@
 // Core
 #include "core/interaction.h"
-#include "core/yart.h"
-#include "core/primitive.h"
 #include "core/memory_util.h"
+#include "core/primitive.h"
+#include "core/spectrum.h"
+#include "core/yart.h"
 
 // Math
-#include "math/util.h"
-#include "math/vector.h"
-#include "math/ray.h"
 #include "math/boundingbox.h"
 #include "math/matrix.h"
+#include "math/ray.h"
 #include "math/transform.h"
+#include "math/util.h"
+#include "math/vector.h"
 
 // Geometry
 #include "geometry/geometry.h"
