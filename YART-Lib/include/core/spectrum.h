@@ -1,4 +1,5 @@
 #pragma once
+#include <algorithm>
 #include <array>
 #include <cmath>
 
@@ -8,12 +9,14 @@
 
 namespace yart
 {
+	// TODO: use C++20 concepts here
 	template <typename Spectrum>
-	inline Spectrum Lerp(real t, const Spectrum& s1, const Spectrum& s2)
+	inline Spectrum sLerp(real t, const Spectrum& s1, const Spectrum& s2)
 	{
 		return (1 - t) * s1 + t * s2;
 	}
 
+	// Represents an SPD in the form of a linear combination of basis functions
 	template <size_t dimensions>
 	class BasisSpectrum
 	{
@@ -101,5 +104,50 @@ namespace yart
 
 	protected:
 		std::array<real, dimensions> m_Coefficients;
+	};
+
+	void SortSpectrumSamples(real* lambda, real* values, int n);
+	real AverageSpectrumSamples(const real* lambda, const real* values, int n, real lambdaStart, real lambdaEnd);
+
+	static constexpr const int s_SampledLambdaStart = 400;
+	static constexpr const int s_SampledLambdaEnd = 700;
+	static constexpr const int s_NumSpectralSamples = 60;
+
+	// Samples are evenly spaced in the range [400, 700]
+	class SampledSpectrum : public BasisSpectrum<s_NumSpectralSamples>
+	{
+	public:
+		SampledSpectrum(real v = 0) : BasisSpectrum(v)
+		{
+		}
+
+		static SampledSpectrum FromSamples(const real* lambda, const real* values, int n)
+		{
+			std::vector<real> sortedLambda(lambda, lambda + n);
+			std::vector<real> sortedValues(values, values + n);
+
+			SortSpectrumSamples(sortedLambda.data(), sortedValues.data(), n);
+
+			return FromSortedSamples(sortedLambda.data(), sortedValues.data(), n);
+		}
+
+		static SampledSpectrum FromSortedSamples(const real* lambda, const real* values, int n)
+		{
+			SampledSpectrum ret;
+			for (int i = 0; i < s_NumSpectralSamples; i++)
+			{
+				// calculate range of wavelengths the ith sample represents
+				real lambdaStart =
+					Lerp((real)i / (real)s_NumSpectralSamples, (real)s_SampledLambdaStart, (real)s_SampledLambdaEnd);
+				real lambdaEnd =
+					Lerp((real)(i + 1) / (real)s_NumSpectralSamples, (real)s_SampledLambdaStart, (real)s_SampledLambdaEnd);
+
+				ret.m_Coefficients[i] = AverageSpectrumSamples(lambda, values, n, lambdaStart, lambdaEnd);
+			}
+
+			return ret;
+		}
+
+	private:
 	};
 }

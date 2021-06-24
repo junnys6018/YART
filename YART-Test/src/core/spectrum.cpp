@@ -14,7 +14,7 @@ bool SpectrumAreEqual(const Spectrum& s1, const Spectrum& s2)
 	return true;
 }
 
-TEST_CASE("BasisSpectrum Constructor", "[spectrum][basis_spectrum]")
+TEST_CASE("BasisSpectrum Constructor", "[spectrum][BasisSpectrum]")
 {
 	SECTION("Default")
 	{
@@ -46,7 +46,7 @@ TEST_CASE("BasisSpectrum Constructor", "[spectrum][basis_spectrum]")
 	}
 }
 
-TEST_CASE("BasisSpectrum operations", "[spectrum][basis_spectrum]")
+TEST_CASE("BasisSpectrum operations", "[spectrum][BasisSpectrum]")
 {
 	Spectrum s1, s2;
 	for (int i = 0; i < Spectrum::s_Dimensions; i++)
@@ -101,8 +101,68 @@ TEST_CASE("BasisSpectrum operations", "[spectrum][basis_spectrum]")
 
 	SECTION("Lerp")
 	{
-		Spectrum s3 = Lerp(0.5, s1, s2);
+		Spectrum s3 = sLerp(0.5, s1, s2);
 
 		CHECK(SpectrumAreEqual(s3, Spectrum{Spectrum::s_Dimensions / 2}));
 	}
+}
+
+TEST_CASE("SortSpectrumSamples() function", "[spectrum][SortSpectrumSamples]")
+{
+	std::vector<real> lambda = {6, 2, 5, 4, 1, 3};
+	std::vector<real> values = {0.6, 0.2, 0.5, 0.4, 0.1, 0.3};
+
+	SortSpectrumSamples(lambda.data(), values.data(), lambda.size());
+
+	bool passed = true;
+	for (int i = 0; i < lambda.size(); i++)
+	{
+		if (lambda[i] != Approx(i + 1))
+			passed = false;
+
+		if (values[i] != Approx(0.1 * (i + 1)))
+			passed = false;
+	}
+
+	REQUIRE(passed);
+}
+
+TEST_CASE("AverageSpectrumSamples() edge cases", "[spectrum][AverageSpectrumSamples]")
+{
+	std::vector<real> lambda = {1, 2, 3, 4, 5, 6};
+	std::vector<real> values = {2, 4, 7, 4, 7, 3};
+
+	SECTION("Out of bounds range")
+	{
+		real val = AverageSpectrumSamples(lambda.data(), values.data(), 6, -1, 0);
+		REQUIRE(val == Approx(2));
+
+		val = AverageSpectrumSamples(lambda.data(), values.data(), 6, 8, 9);
+		REQUIRE(val == Approx(3));
+	}
+
+	SECTION("Single Sample")
+	{
+		real r = 6;
+		real val = AverageSpectrumSamples(&r, &r, 1, 5, 7);
+		REQUIRE(r == Approx(val));
+	}
+}
+
+TEST_CASE("AverageSpectrumSamples() function", "[spectrum][AverageSpectrumSamples]")
+{
+	std::vector<real> lambda = {1, 2, 3, 4, 5, 6};
+	std::vector<real> values = {2, 4, 7, 4, 7, 3};
+
+	real val = AverageSpectrumSamples(lambda.data(), values.data(), 6, 0, 1.5);
+	REQUIRE(val == Approx(3.25 / 1.5));
+
+	val = AverageSpectrumSamples(lambda.data(), values.data(), 6, 5.5, 7);
+	REQUIRE(val == Approx(5 / 1.5));
+
+	val = AverageSpectrumSamples(lambda.data(), values.data(), 6, -1, 8);
+	REQUIRE(val == Approx(34.5 / 9));
+
+	val = AverageSpectrumSamples(lambda.data(), values.data(), 6, 2.5, 4);
+	REQUIRE(val == Approx(8.625 / 1.5));
 }
