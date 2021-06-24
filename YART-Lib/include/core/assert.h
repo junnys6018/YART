@@ -7,8 +7,6 @@
 	#elif defined(PLATFORM_LINUX)
 		#include <signal.h>
 		#define YART_DEBUGBREAK() raise(SIGTRAP)
-	#else
-		#error unknown platform
 	#endif
 
 	#define ASSERT(x) { if (!(x)) { YART_DEBUGBREAK(); } }

@@ -13,7 +13,11 @@ namespace yart
 #endif
 
 #if !defined(PLATFORM_WINDOWS) && !defined(PLATFORM_LINUX)
-#error Unknown Platform!
+#error Unknown platform
+#endif
+
+#if !defined(CONFIGURATION_DEBUG) && !defined(CONFIGURATION_RELEASE)
+#error Unknown configuration
 #endif
 
 	void Initialize();
