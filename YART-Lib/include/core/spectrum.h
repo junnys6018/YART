@@ -28,6 +28,10 @@ namespace yart
 			m_Coefficients.fill(c);
 		}
 
+		BasisSpectrum(const std::array<real, dimensions>& coefficients) : m_Coefficients(coefficients)
+		{
+		}
+
 		BasisSpectrum& operator+=(const BasisSpectrum& other)
 		{
 			ASSERT(!other.HasNaNs());
@@ -139,11 +143,101 @@ namespace yart
 		return xyz;
 	}
 
+	class RGBSpectrum : public BasisSpectrum<3>
+	{
+	public:
+		RGBSpectrum(real c = 0) : BasisSpectrum(c)
+		{
+		}
+		RGBSpectrum(const std::array<real, 3>& rgb) : BasisSpectrum(rgb)
+		{
+		}
+
+		std::array<real, 3> ToXYZ() const
+		{
+			std::array<real, 3> rgb = ToRGB();
+			return RGBToXYZ(rgb);
+		}
+
+		static RGBSpectrum FromXYZ(const std::array<real, 3>& xyz)
+		{
+			std::array<real, 3> rgb = XYZToRGB(xyz);
+			return FromRGB(rgb);
+		}
+
+		std::array<real, 3> ToRGB() const
+		{
+			return m_Coefficients;
+		}
+
+		static RGBSpectrum FromRGB(const std::array<real, 3>& rgb)
+		{
+			RGBSpectrum ret;
+			ret.m_Coefficients = rgb;
+			return ret;
+		}
+
+		const RGBSpectrum& ToRGBSpectrum() const
+		{
+			return *this;
+		}
+
+		real CieY() const
+		{
+			return 0.212671f * m_Coefficients[0] + 0.715160f * m_Coefficients[1] + 0.072169f * m_Coefficients[2];
+		}
+
+		static RGBSpectrum FromSamples(const real* lambda, const real* values, int n)
+		{
+			std::vector<real> sortedLambda(lambda, lambda + n);
+			std::vector<real> sortedValues(values, values + n);
+
+			SortSpectrumSamples(sortedLambda.data(), sortedValues.data(), n);
+
+			return FromSortedSamples(sortedLambda.data(), sortedValues.data(), n);
+		}
+
+		static RGBSpectrum FromSortedSamples(const real* lambda, const real* values, int n)
+		{
+			std::array<real, 3> xyz{0, 0, 0};
+
+			for (int i = 0; i < s_NumCIESamples; i++)
+			{
+				real sample = InterpolateSpectrumSamples(lambda, values, n, CIE_LAMBDA[i]);
+				xyz[0] += CIE_X[i] * sample;
+				xyz[1] += CIE_Y[i] * sample;
+				xyz[2] += CIE_Z[i] * sample;
+			}
+			real scale =
+				((real)s_SampledLambdaEnd - (real)s_SampledLambdaStart) / ((real)s_NumSpectralSamples * s_CIELuminanceFactor);
+			xyz[0] *= scale;
+			xyz[1] *= scale;
+			xyz[2] *= scale;
+
+			return FromXYZ(xyz);
+		}
+
+	private:
+		static real InterpolateSpectrumSamples(const real* lambda, const real* values, int n, real t)
+		{
+			if (t <= lambda[0])
+				return values[0];
+			if (t >= lambda[n - 1])
+				return values[n - 1];
+
+			int i = 0;
+			while (lambda[i + 1] < t)
+				i++;
+
+			return Lerp((t - lambda[i]) / (lambda[i + 1] - lambda[i]), values[i], values[i + 1]);
+		}
+	};
+
 	// Samples are evenly spaced in the range [400, 700]
 	class SampledSpectrum : public BasisSpectrum<s_NumSpectralSamples>
 	{
 	public:
-		SampledSpectrum(real v = 0) : BasisSpectrum(v)
+		SampledSpectrum(real c = 0) : BasisSpectrum(c)
 		{
 		}
 
@@ -166,10 +260,26 @@ namespace yart
 			return xyz;
 		}
 
+		static SampledSpectrum FromXYZ(const std::array<real, 3>& xyz)
+		{
+			// TODO
+		}
+
 		std::array<real, 3> ToRGB() const
 		{
 			std::array<real, 3> xyz = ToXYZ();
 			return XYZToRGB(xyz);
+		}
+
+		static SampledSpectrum FromRGB(const std::array<real, 3>& xyz)
+		{
+			// TODO
+		}
+
+		RGBSpectrum ToRGBSpectrum() const
+		{
+			std::array<real, 3> rgb = ToRGB();
+			return RGBSpectrum{rgb};
 		}
 
 		real CieY() const
