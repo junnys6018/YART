@@ -1,6 +1,6 @@
 // Core
 #include "core/interaction.h"
-#include "core/memory_util.h"
+#include "core/memoryutil.h"
 #include "core/primitive.h"
 #include "core/spectrum.h"
 #include "core/yart.h"

@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "core/memory_util.h"
+#include "core/memoryutil.h"
 
 #if defined(PLATFORM_LINUX)
 #include <malloc.h>
