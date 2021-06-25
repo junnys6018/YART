@@ -143,6 +143,11 @@ namespace yart
 		return Transform(Inverse(cameraToWorld), cameraToWorld);
 	}
 
+	Transform Orthographic(real zNear, real zFar)
+	{
+		return Scale({1, 1, 1 / (zFar - zNear)}) * Translate({0, 0, -zNear});
+	}
+
 	Transform Transform::operator*(const Transform& other) const
 	{
 		return Transform(m_Mat * other.m_Mat, other.m_Inv * m_Inv);

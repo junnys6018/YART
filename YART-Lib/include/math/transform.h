@@ -52,7 +52,7 @@ namespace yart
 
 		// Apply transform to point
 		template <typename T>
-		Vector3<T> AppPt(const Vector3<T>& pt) const
+		Vector3<T> AppPoint(const Vector3<T>& pt) const
 		{
 			T x = pt.x, y = pt.y, z = pt.z;
 			T xp = m_Mat.m[0][0] * x + m_Mat.m[0][1] * y + m_Mat.m[0][2] * z + m_Mat.m[0][3];
@@ -82,7 +82,7 @@ namespace yart
 		Ray AppRay(const Ray& ray) const
 		{
 			// TODO: offset ray origin to edge of error bounds
-			Vector3f o = this->AppPt(ray.o);
+			Vector3f o = this->AppPoint(ray.o);
 			Vector3f d = this->AppVec(ray.d);
 
 			return Ray(o, d, ray.m_Tmax, ray.m_Time);
@@ -94,7 +94,7 @@ namespace yart
 			const Transform& t = *this;
 			SurfaceInteraction ret;
 
-			ret.m_Point = t.AppPt(si.m_Point);
+			ret.m_Point = t.AppPoint(si.m_Point);
 			ret.m_Normal = Normalize(t.AppNorm(si.m_Normal));
 			ret.m_PtError = si.m_PtError;
 			ret.m_wo = t.AppVec(si.m_wo);
@@ -127,4 +127,5 @@ namespace yart
 	Transform RotateZ(real theta);
 	Transform Rotate(real theta, const Vector3f& axis);
 	Transform LookAt(const Vector3f& pos, const Vector3f& look, const Vector3f& up);
+	Transform Orthographic(real zNear, real zFar);
 }
