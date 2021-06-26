@@ -1,4 +1,5 @@
 #pragma once
+#include "core/assert.h"
 
 namespace yart
 {
