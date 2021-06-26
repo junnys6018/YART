@@ -16,6 +16,11 @@ namespace yart
 	static constexpr real Sqrt2 = 1.41421356237309504880;
 	static constexpr real MaxFloat = std::numeric_limits<real>::max();
 	static constexpr real Infinity = std::numeric_limits<real>::infinity();
+#if defined(USE_DOUBLE_PRECISION_FLOAT)
+	static constexpr real OneMinusEpsilon = 0x1.fffffffffffffp-1;
+#else
+	static constexpr real OneMinusEpsilon = 0x1.fffffep-1;
+#endif
 #pragma warning(default : 4305)
 
 	template <typename T>
@@ -29,7 +34,7 @@ namespace yart
 		return (Pi / 180) * deg;
 	}
 
-	constexpr inline real gamma(int n)
+	constexpr inline real gamma(i32 n)
 	{
 		return (n * Epsilon) / (1 - n * Epsilon);
 	}

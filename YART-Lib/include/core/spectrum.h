@@ -1,6 +1,7 @@
 #pragma once
 #include <algorithm>
 #include <array>
+#include <vector>
 #include <cmath>
 
 #include "core/assert.h"
@@ -17,11 +18,11 @@ namespace yart
 	}
 
 	// Represents an SPD in the form of a linear combination of basis functions
-	template <size_t dimensions>
+	template <u64 dimensions>
 	class BasisSpectrum
 	{
 	public:
-		static constexpr int s_Dimensions = dimensions;
+		static constexpr i32 s_Dimensions = dimensions;
 
 		BasisSpectrum(real c = 0)
 		{
@@ -35,7 +36,7 @@ namespace yart
 		BasisSpectrum& operator+=(const BasisSpectrum& other)
 		{
 			ASSERT(!other.HasNaNs());
-			for (int i = 0; i < dimensions; i++)
+			for (i32 i = 0; i < dimensions; i++)
 				m_Coefficients[i] += other.m_Coefficients[i];
 
 			return *this;
@@ -52,25 +53,25 @@ namespace yart
 		friend BasisSpectrum operator*(real r, const BasisSpectrum& s)
 		{
 			BasisSpectrum ret;
-			for (int i = 0; i < dimensions; i++)
+			for (i32 i = 0; i < dimensions; i++)
 				ret[i] = r * s.m_Coefficients[i];
 
 			return ret;
 		}
 
-		real& operator[](int i)
+		real& operator[](i32 i)
 		{
 			return m_Coefficients[i];
 		}
 
-		real operator[](int i) const
+		real operator[](i32 i) const
 		{
 			return m_Coefficients[i];
 		}
 
 		bool IsBlack() const
 		{
-			for (int i = 0; i < dimensions; i++)
+			for (i32 i = 0; i < dimensions; i++)
 				if (m_Coefficients[i] != 0)
 					return false;
 
@@ -81,7 +82,7 @@ namespace yart
 		{
 			ASSERT(!s.HasNaNs());
 			BasisSpectrum ret;
-			for (int i = 0; i < dimensions; i++)
+			for (i32 i = 0; i < dimensions; i++)
 				ret.m_Coefficients[i] = std::sqrt(s.m_Coefficients[i]);
 
 			return ret;
@@ -91,7 +92,7 @@ namespace yart
 		{
 			ASSERT(!s.HasNaNs());
 			BasisSpectrum ret;
-			for (int i = 0; i < dimensions; i++)
+			for (i32 i = 0; i < dimensions; i++)
 				ret.m_Coefficients[i] = Clamp(s.m_Coefficients[i], min, max);
 
 			return ret;
@@ -99,7 +100,7 @@ namespace yart
 
 		bool HasNaNs() const
 		{
-			for (int i = 0; i < dimensions; i++)
+			for (i32 i = 0; i < dimensions; i++)
 				if (std::isnan(m_Coefficients[i]))
 					return true;
 
@@ -110,15 +111,15 @@ namespace yart
 		std::array<real, dimensions> m_Coefficients;
 	};
 
-	void SortSpectrumSamples(real* lambda, real* values, int n);
-	real AverageSpectrumSamples(const real* lambda, const real* values, int n, real lambdaStart, real lambdaEnd);
+	void SortSpectrumSamples(real* lambda, real* values, i32 n);
+	real AverageSpectrumSamples(const real* lambda, const real* values, i32 n, real lambdaStart, real lambdaEnd);
 
-	static constexpr int s_SampledLambdaStart = 400;
-	static constexpr int s_SampledLambdaEnd = 700;
-	static constexpr int s_NumSpectralSamples = 60;
+	static constexpr i32 s_SampledLambdaStart = 400;
+	static constexpr i32 s_SampledLambdaEnd = 700;
+	static constexpr i32 s_NumSpectralSamples = 60;
 
 	// CIE X, Y, Z look up tables
-	static constexpr int s_NumCIESamples = 471;
+	static constexpr i32 s_NumCIESamples = 471;
 	extern const real CIE_X[s_NumCIESamples];
 	extern const real CIE_Y[s_NumCIESamples];
 	extern const real CIE_Z[s_NumCIESamples];
@@ -187,7 +188,7 @@ namespace yart
 			return 0.212671f * m_Coefficients[0] + 0.715160f * m_Coefficients[1] + 0.072169f * m_Coefficients[2];
 		}
 
-		static RGBSpectrum FromSamples(const real* lambda, const real* values, int n)
+		static RGBSpectrum FromSamples(const real* lambda, const real* values, i32 n)
 		{
 			std::vector<real> sortedLambda(lambda, lambda + n);
 			std::vector<real> sortedValues(values, values + n);
@@ -197,11 +198,11 @@ namespace yart
 			return FromSortedSamples(sortedLambda.data(), sortedValues.data(), n);
 		}
 
-		static RGBSpectrum FromSortedSamples(const real* lambda, const real* values, int n)
+		static RGBSpectrum FromSortedSamples(const real* lambda, const real* values, i32 n)
 		{
 			std::array<real, 3> xyz{0, 0, 0};
 
-			for (int i = 0; i < s_NumCIESamples; i++)
+			for (i32 i = 0; i < s_NumCIESamples; i++)
 			{
 				real sample = InterpolateSpectrumSamples(lambda, values, n, CIE_LAMBDA[i]);
 				xyz[0] += CIE_X[i] * sample;
@@ -218,14 +219,14 @@ namespace yart
 		}
 
 	private:
-		static real InterpolateSpectrumSamples(const real* lambda, const real* values, int n, real t)
+		static real InterpolateSpectrumSamples(const real* lambda, const real* values, i32 n, real t)
 		{
 			if (t <= lambda[0])
 				return values[0];
 			if (t >= lambda[n - 1])
 				return values[n - 1];
 
-			int i = 0;
+			i32 i = 0;
 			while (lambda[i + 1] < t)
 				i++;
 
@@ -244,7 +245,7 @@ namespace yart
 		std::array<real, 3> ToXYZ() const
 		{
 			std::array<real, 3> xyz{0, 0, 0};
-			for (int i = 0; i < s_NumSpectralSamples; i++)
+			for (i32 i = 0; i < s_NumSpectralSamples; i++)
 			{
 				xyz[0] += X.m_Coefficients[i] * m_Coefficients[i];
 				xyz[1] += Y.m_Coefficients[i] * m_Coefficients[i];
@@ -285,7 +286,7 @@ namespace yart
 		real CieY() const
 		{
 			real y = 0;
-			for (int i = 0; i < s_NumSpectralSamples; i++)
+			for (i32 i = 0; i < s_NumSpectralSamples; i++)
 			{
 				y += Y.m_Coefficients[i] * m_Coefficients[i];
 			}
@@ -297,7 +298,7 @@ namespace yart
 			return y;
 		}
 
-		static SampledSpectrum FromSamples(const real* lambda, const real* values, int n)
+		static SampledSpectrum FromSamples(const real* lambda, const real* values, i32 n)
 		{
 			std::vector<real> sortedLambda(lambda, lambda + n);
 			std::vector<real> sortedValues(values, values + n);
@@ -307,10 +308,10 @@ namespace yart
 			return FromSortedSamples(sortedLambda.data(), sortedValues.data(), n);
 		}
 
-		static SampledSpectrum FromSortedSamples(const real* lambda, const real* values, int n)
+		static SampledSpectrum FromSortedSamples(const real* lambda, const real* values, i32 n)
 		{
 			SampledSpectrum ret;
-			for (int i = 0; i < s_NumSpectralSamples; i++)
+			for (i32 i = 0; i < s_NumSpectralSamples; i++)
 			{
 				// calculate range of wavelengths the ith sample covers
 				real lambdaStart =

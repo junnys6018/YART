@@ -8,8 +8,8 @@ namespace yart
 {
 	struct CameraSample
 	{
-		Vector2f m_FilmPoint;
-		Vector2f m_LensPoint;
+		Vector2f m_FilmPoint; // In Raster Space coordinates
+		Vector2f m_LensPoint; // In [0, 1) x [0, 1)
 	};
 
 	class AbstractCamera
@@ -60,7 +60,7 @@ namespace yart
 						 Film* film)
 			: AbstractCamera(cameraToWorld, film), m_CameraToScreen(cameraToScreen)
 		{
-			m_ScreenToRaster = Scale({film->m_Resolution.x, film->m_Resolution.y, 1}) *
+			m_ScreenToRaster = Scale({(real)film->m_Resolution.x, (real)film->m_Resolution.y, 1}) *
 							   Scale({1 / (screenWindow.m_MaxBound.x - screenWindow.m_MinBound.x),
 									  1 / (screenWindow.m_MaxBound.y - screenWindow.m_MinBound.y), 1}) *
 							   Translate({-screenWindow.m_MinBound.x, -screenWindow.m_MaxBound.y, 0});

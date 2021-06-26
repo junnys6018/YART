@@ -6,7 +6,7 @@ namespace yart
 	Matrix4x4::Matrix4x4()
 	{
 		std::memset(m, 0, 16 * sizeof(real));
-		for (int i = 0; i < 4; i++)
+		for (i32 i = 0; i < 4; i++)
 		{
 			m[i][i] = 1;
 		}
@@ -45,9 +45,9 @@ namespace yart
 
 	bool Matrix4x4::operator==(const Matrix4x4& other) const
 	{
-		for (int i = 0; i < 4; i++)
+		for (i32 i = 0; i < 4; i++)
 		{
-			for (int j = 0; j < 4; j++)
+			for (i32 j = 0; j < 4; j++)
 			{
 				if (m[i][j] != other.m[i][j])
 				{
@@ -65,9 +65,9 @@ namespace yart
 	Matrix4x4 Matrix4x4::operator*(const Matrix4x4& other) const
 	{
 		Matrix4x4 ret;
-		for (int i = 0; i < 4; i++)
+		for (i32 i = 0; i < 4; i++)
 		{
-			for (int j = 0; j < 4; j++)
+			for (i32 j = 0; j < 4; j++)
 			{
 				ret.m[i][j] = m[i][0] * other.m[0][j] +
 							  m[i][1] * other.m[1][j] +
@@ -90,20 +90,20 @@ namespace yart
 	// Use Gauss–Jordan elimination
 	Matrix4x4 Inverse(const Matrix4x4& mat)
 	{
-		int indxc[4], indxr[4];
-		int ipiv[4] = {0, 0, 0, 0};
+		i32 indxc[4], indxr[4];
+		i32 ipiv[4] = {0, 0, 0, 0};
 		real minv[4][4];
 		std::memcpy(minv, mat.m, 4 * 4 * sizeof(real));
-		for (int i = 0; i < 4; i++)
+		for (i32 i = 0; i < 4; i++)
 		{
-			int irow = 0, icol = 0;
+			i32 irow = 0, icol = 0;
 			real big = 0.0f;
 			// Choose pivot
-			for (int j = 0; j < 4; j++)
+			for (i32 j = 0; j < 4; j++)
 			{
 				if (ipiv[j] != 1)
 				{
-					for (int k = 0; k < 4; k++)
+					for (i32 k = 0; k < 4; k++)
 					{
 						if (ipiv[k] == 0)
 						{
@@ -126,7 +126,7 @@ namespace yart
 			// Swap rows _irow_ and _icol_ for pivot
 			if (irow != icol)
 			{
-				for (int k = 0; k < 4; ++k)
+				for (i32 k = 0; k < 4; ++k)
 					std::swap(minv[irow][k], minv[icol][k]);
 			}
 			indxr[i] = irow;
@@ -140,27 +140,27 @@ namespace yart
 			// Set $m[icol][icol]$ to one by scaling row _icol_ appropriately
 			real pivinv = (real)1.0 / minv[icol][icol];
 			minv[icol][icol] = 1.;
-			for (int j = 0; j < 4; j++)
+			for (i32 j = 0; j < 4; j++)
 				minv[icol][j] *= pivinv;
 
 			// Subtract this row from others to zero out their columns
-			for (int j = 0; j < 4; j++)
+			for (i32 j = 0; j < 4; j++)
 			{
 				if (j != icol)
 				{
 					real save = minv[j][icol];
 					minv[j][icol] = 0;
-					for (int k = 0; k < 4; k++)
+					for (i32 k = 0; k < 4; k++)
 						minv[j][k] -= minv[icol][k] * save;
 				}
 			}
 		}
 		// Swap columns to reflect permutation
-		for (int j = 3; j >= 0; j--)
+		for (i32 j = 3; j >= 0; j--)
 		{
 			if (indxr[j] != indxc[j])
 			{
-				for (int k = 0; k < 4; k++)
+				for (i32 k = 0; k < 4; k++)
 					std::swap(minv[k][indxr[j]], minv[k][indxc[j]]);
 			}
 		}

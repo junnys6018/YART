@@ -14,11 +14,11 @@ namespace yart
 		COUNT
 	};
 
-	extern const char* const SplitMethodNames[static_cast<int>(SplitMethod::COUNT)];
+	extern const char* const SplitMethodNames[static_cast<i32>(SplitMethod::COUNT)];
 
 	struct BVHBuildNode
 	{
-		void InitLeaf(int firstPrimOffset, int numPrimitives, const Bounds3f& bounds)
+		void InitLeaf(i32 firstPrimOffset, i32 numPrimitives, const Bounds3f& bounds)
 		{
 			m_FirstPrimOffset = firstPrimOffset;
 			m_NumPrimitives = numPrimitives;
@@ -26,7 +26,7 @@ namespace yart
 			m_Children[0] = m_Children[1] = nullptr;
 		}
 
-		void InitInterior(int splitAxis, BVHBuildNode* c1, BVHBuildNode* c2)
+		void InitInterior(i32 splitAxis, BVHBuildNode* c1, BVHBuildNode* c2)
 		{
 			m_Children[0] = c1;
 			m_Children[1] = c2;
@@ -42,7 +42,7 @@ namespace yart
 
 		Bounds3f m_Bounds;
 		BVHBuildNode* m_Children[2];
-		int m_SplitAxis, m_FirstPrimOffset, m_NumPrimitives;
+		i32 m_SplitAxis, m_FirstPrimOffset, m_NumPrimitives;
 	};
 
 	struct BVHLinearNode
@@ -67,22 +67,22 @@ namespace yart
 		Bounds3f m_Bounds;
 		union
 		{
-			int m_FirstPrimOffset;	 // Leaf node
-			int m_SecondChildOffset; // Interior node
+			i32 m_FirstPrimOffset;	 // Leaf node
+			i32 m_SecondChildOffset; // Interior node
 		};
-		uint16_t m_NumPrimitives; // 0: Interior node
-		uint8_t m_SplitAxis;
+		u16 m_NumPrimitives; // 0: Interior node
+		u8 m_SplitAxis;
 	};
 
 	struct BVHPrimitiveInfo
 	{
 		BVHPrimitiveInfo() = default;
-		BVHPrimitiveInfo(size_t primitiveNumber, const Bounds3f& bounds)
+		BVHPrimitiveInfo(u64 primitiveNumber, const Bounds3f& bounds)
 			: m_PrimitiveNumber(primitiveNumber), m_Bounds(bounds), m_Center((real)0.5 * (bounds.m_MinBound + bounds.m_MaxBound))
 		{
 		}
 
-		size_t m_PrimitiveNumber;
+		u64 m_PrimitiveNumber;
 		Bounds3f m_Bounds;
 		Vector3f m_Center;
 	};
@@ -90,7 +90,7 @@ namespace yart
 	class BVHAccelerator : public AbstractAggregate
 	{
 	public:
-		BVHAccelerator(const std::vector<Ref<AbstractPrimitive>>& primitives, int maxPrimsInNode, SplitMethod splitMethod);
+		BVHAccelerator(const std::vector<Ref<AbstractPrimitive>>& primitives, i32 maxPrimsInNode, SplitMethod splitMethod);
 		~BVHAccelerator()
 		{
 			if (m_BVHTree)
@@ -104,15 +104,15 @@ namespace yart
 		virtual bool IntersectRay(const Ray& ray) const override;
 
 	private:
-		const int m_MaxPrimsInNode;
+		const i32 m_MaxPrimsInNode;
 		const SplitMethod m_SplitMethod;
 		std::vector<Ref<AbstractPrimitive>> m_Primitives;
 		BVHLinearNode* m_BVHTree = nullptr;
 
 	private:
-		BVHBuildNode* RecursiveBuild(MemoryArena& arena, std::vector<BVHPrimitiveInfo>& primitiveInfo, int start, int end,
-									 int* totalNodes, std::vector<Ref<AbstractPrimitive>>& orderedPrimitives);
-		BVHLinearNode* FlattenBVHTree(BVHBuildNode* root, int totalNodes);
+		BVHBuildNode* RecursiveBuild(MemoryArena& arena, std::vector<BVHPrimitiveInfo>& primitiveInfo, i32 start, i32 end,
+									 i32* totalNodes, std::vector<Ref<AbstractPrimitive>>& orderedPrimitives);
+		BVHLinearNode* FlattenBVHTree(BVHBuildNode* root, i32 totalNodes);
 	};
 
 }

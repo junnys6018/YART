@@ -7,7 +7,7 @@
 
 namespace yart
 {
-	void* AllocAligned(size_t size)
+	void* AllocAligned(u64 size)
 	{
 #if defined(PLATFORM_WINDOWS)
 		return _aligned_malloc(size, YART_L1_CACHE_SIZE);
@@ -29,7 +29,7 @@ namespace yart
 #endif
 	}
 
-	void* MemoryArena::Alloc(size_t nBytes)
+	void* MemoryArena::Alloc(u64 nBytes)
 	{
 		// Round up nBytes to closest multiple of 16
 		nBytes = ((nBytes + 15) & (~15));
@@ -59,7 +59,7 @@ namespace yart
 			if (!m_CurrentBlock)
 			{
 				m_CurrentBlockSize = std::max(nBytes, m_BlockSize);
-				m_CurrentBlock = AllocAligned<uint8_t>(m_CurrentBlockSize);
+				m_CurrentBlock = AllocAligned<u8>(m_CurrentBlockSize);
 			}
 			m_BlockOffset = 0;
 		}

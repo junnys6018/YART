@@ -27,18 +27,18 @@ namespace yart
 		{
 		}
 
-		Vector3<T>& operator[](int i)
+		Vector3<T>& operator[](i32 i)
 		{
 			ASSERT(i == 0 || i == 1);
 			return (i == 0) ? m_MinBound : m_MaxBound;
 		}
 
-		const Vector3<T>& operator[](int i) const
+		const Vector3<T>& operator[](i32 i) const
 		{
 			return const_cast<Bounds3<T>*>(this)->operator[](i);
 		}
 
-		Vector3<T> Corner(int corner) const
+		Vector3<T> Corner(i32 corner) const
 		{
 			return Vector3<T>((*this)[(corner & 1)].x, (*this)[(corner & 2) ? 1 : 0].y, (*this)[(corner & 4) ? 1 : 0].z);
 		}
@@ -61,7 +61,7 @@ namespace yart
 		}
 
 		// Returns the index of which of the three axis is longest
-		int MaximumExtent() const
+		i32 MaximumExtent() const
 		{
 			Vector3<T> d = Diagonal();
 			if (d.x > d.y && d.x > d.z)
@@ -106,7 +106,7 @@ namespace yart
 			real t2 = ray.m_Tmax;
 
 			// For each axis aligned "slab"
-			for (int i = 0; i < 3; ++i)
+			for (i32 i = 0; i < 3; ++i)
 			{
 				real invRayDir = 1 / ray.d[i];
 				real tNear = (m_MinBound[i] - ray.o[i]) * invRayDir;
@@ -134,7 +134,7 @@ namespace yart
 		// Optimised overload of IntersectRay() that avoids the std::swap and inverse calculation
 		// Note: If the ray origin in a yz plane and the ray direction is parallel to the yz plane then this function
 		// will return false. If the ray is aligned with the xy or xz plane, then the function will return true
-		bool IntersectRay(const Ray& ray, const Vector3f& invRayDir, const int dirIsNeg[3]) const
+		bool IntersectRay(const Ray& ray, const Vector3f& invRayDir, const i32 dirIsNeg[3]) const
 		{
 			const Bounds3<real>& bounds = *this;
 			// Check for ray intersection against x and y slabs
@@ -231,7 +231,7 @@ namespace yart
 	}
 
 	typedef Bounds3<real> Bounds3f;
-	typedef Bounds3<int> Bounds3i;
+	typedef Bounds3<i32> Bounds3i;
 
 	template <typename T>
 	class Bounds2
@@ -254,18 +254,18 @@ namespace yart
 		{
 		}
 
-		Vector2<T>& operator[](int i)
+		Vector2<T>& operator[](i32 i)
 		{
 			ASSERT(i == 0 || i == 1);
 			return (i == 0) ? m_MinBound : m_MaxBound;
 		}
 
-		const Vector2<T>& operator[](int i) const
+		const Vector2<T>& operator[](i32 i) const
 		{
 			return const_cast<Bounds2<T>*>(this)->operator[](i);
 		}
 
-		Vector2<T> Corner(int corner) const
+		Vector2<T> Corner(i32 corner) const
 		{
 			return Vector2<T>((*this)[(corner & 1)].x, (*this)[(corner & 2) ? 1 : 0].y);
 		}
@@ -288,7 +288,7 @@ namespace yart
 		}
 
 		// Returns the index of which of the two axis is longest
-		int MaximumExtent() const
+		i32 MaximumExtent() const
 		{
 			Vector2<T> d = Diagonal();
 			if (d.x > d.y)
@@ -383,7 +383,7 @@ namespace yart
 	}
 
 	typedef Bounds2<real> Bounds2f;
-	typedef Bounds2<int> Bounds2i;
+	typedef Bounds2<i32> Bounds2i;
 
 	// Iterate through all the integer coordinates of a bounding box, (excluding maximum extent)
 	class Bounds2iIterator : public std::forward_iterator_tag
@@ -398,7 +398,7 @@ namespace yart
 			return *this;
 		}
 
-		Bounds2iIterator operator++(int)
+		Bounds2iIterator operator++(i32)
 		{
 			Bounds2iIterator old = *this;
 			Advance();

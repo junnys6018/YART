@@ -1,2 +1,2 @@
-Test Sphere
+Test Sphere, orthographic camera
 Error handling

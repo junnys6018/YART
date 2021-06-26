@@ -7,7 +7,7 @@ namespace yart
 	// const char* const SplitMethodNames[] = {"SAH", "HLBVH", "Middle", "EqualCounts"};
 	const char* const SplitMethodNames[] = {"Middle"};
 
-	BVHAccelerator::BVHAccelerator(const std::vector<Ref<AbstractPrimitive>>& primitives, int maxPrimsInNode,
+	BVHAccelerator::BVHAccelerator(const std::vector<Ref<AbstractPrimitive>>& primitives, i32 maxPrimsInNode,
 								   SplitMethod splitMethod)
 		: m_MaxPrimsInNode(std::min(255, maxPrimsInNode)), m_SplitMethod(splitMethod), m_Primitives(primitives)
 	{
@@ -16,13 +16,13 @@ namespace yart
 
 
 		std::vector<BVHPrimitiveInfo> primitiveInfo(primitives.size());
-		for (size_t i = 0; i < primitives.size(); i++)
+		for (u64 i = 0; i < primitives.size(); i++)
 		{
 			primitiveInfo[i] = {i, primitives[i]->WorldBound()};
 		}
 
 		MemoryArena arena(1024 * 1024);
-		int totalNodes = 0;
+		i32 totalNodes = 0;
 		std::vector<Ref<AbstractPrimitive>> orderedPrimitives;
 		BVHBuildNode* root = RecursiveBuild(arena, primitiveInfo, 0, primitives.size(), &totalNodes, orderedPrimitives);
 		m_Primitives.swap(orderedPrimitives);
@@ -44,10 +44,10 @@ namespace yart
 
 		bool hit = false;
 		Vector3f invRayDir{1 / ray.d.x, 1 / ray.d.y, 1 / ray.d.z};
-		int dirIsNeg[3] = {invRayDir.x < 0, invRayDir.y < 0, invRayDir.z < 0};
+		i32 dirIsNeg[3] = {invRayDir.x < 0, invRayDir.y < 0, invRayDir.z < 0};
 
-		int unvisitedOffset = 0, currentNodeOffset = 0;
-		int unvisitedNodes[64]; // Acts as a stack for DFS traveral
+		i32 unvisitedOffset = 0, currentNodeOffset = 0;
+		i32 unvisitedNodes[64]; // Acts as a stack for DFS traveral
 		while (true)
 		{
 			const BVHLinearNode* node = &m_BVHTree[currentNodeOffset];
@@ -69,7 +69,7 @@ namespace yart
 				}
 				else
 				{
-					for (int i = 0; i < node->m_NumPrimitives; i++)
+					for (i32 i = 0; i < node->m_NumPrimitives; i++)
 						if (m_Primitives[node->m_FirstPrimOffset + i]->IntersectRay(ray, surfaceInt))
 							hit = true;
 
@@ -97,10 +97,10 @@ namespace yart
 			return false;
 
 		Vector3f invRayDir{1 / ray.d.x, 1 / ray.d.y, 1 / ray.d.z};
-		int dirIsNeg[3] = {invRayDir.x < 0, invRayDir.y < 0, invRayDir.z < 0};
+		i32 dirIsNeg[3] = {invRayDir.x < 0, invRayDir.y < 0, invRayDir.z < 0};
 
-		int unvisitedOffset = 0, currentNodeOffset = 0;
-		int unvisitedNodes[64]; // Acts as a stack for DFS traveral
+		i32 unvisitedOffset = 0, currentNodeOffset = 0;
+		i32 unvisitedNodes[64]; // Acts as a stack for DFS traveral
 		while (true)
 		{
 			const BVHLinearNode* node = &m_BVHTree[currentNodeOffset];
@@ -122,7 +122,7 @@ namespace yart
 				}
 				else
 				{
-					for (int i = 0; i < node->m_NumPrimitives; i++)
+					for (i32 i = 0; i < node->m_NumPrimitives; i++)
 						if (m_Primitives[node->m_FirstPrimOffset + i]->IntersectRay(ray))
 							return true;
 
@@ -144,36 +144,36 @@ namespace yart
 		return false;
 	}
 
-	BVHBuildNode* BVHAccelerator::RecursiveBuild(MemoryArena& arena, std::vector<BVHPrimitiveInfo>& primitiveInfo, int start,
-												 int end, int* totalNodes, std::vector<Ref<AbstractPrimitive>>& orderedPrimitives)
+	BVHBuildNode* BVHAccelerator::RecursiveBuild(MemoryArena& arena, std::vector<BVHPrimitiveInfo>& primitiveInfo, i32 start,
+												 i32 end, i32* totalNodes, std::vector<Ref<AbstractPrimitive>>& orderedPrimitives)
 	{
 		BVHBuildNode* node = arena.Alloc<BVHBuildNode>();
 		(*totalNodes)++;
 
 		Bounds3f totalBound;
-		for (int i = start; i < end; i++)
+		for (i32 i = start; i < end; i++)
 		{
 			totalBound = Union(totalBound, primitiveInfo[i].m_Bounds);
 		}
 
-		int numPrimitives = end - start;
+		i32 numPrimitives = end - start;
 		if (numPrimitives == 1)
 		{
-			int firstPrimOffset = orderedPrimitives.size();
-			int primitiveNumber = primitiveInfo[start].m_PrimitiveNumber;
+			i32 firstPrimOffset = orderedPrimitives.size();
+			i32 primitiveNumber = primitiveInfo[start].m_PrimitiveNumber;
 			orderedPrimitives.push_back(m_Primitives[primitiveNumber]);
 			node->InitLeaf(firstPrimOffset, 1, totalBound);
 		}
 		else
 		{
 			Bounds3f centroidBounds;
-			for (int i = start; i < end; i++)
+			for (i32 i = start; i < end; i++)
 			{
 				centroidBounds = Union(centroidBounds, primitiveInfo[i].m_Center);
 			}
 
-			int axis = centroidBounds.MaximumExtent();
-			int mid = (start + end) / 2;
+			i32 axis = centroidBounds.MaximumExtent();
+			i32 mid = (start + end) / 2;
 			switch (m_SplitMethod)
 			{
 			case SplitMethod::Middle:
@@ -213,14 +213,14 @@ namespace yart
 		return node;
 	}
 
-	BVHLinearNode* BVHAccelerator::FlattenBVHTree(BVHBuildNode* root, int totalNodes)
+	BVHLinearNode* BVHAccelerator::FlattenBVHTree(BVHBuildNode* root, i32 totalNodes)
 	{
 		BVHLinearNode* BVHTree = AllocAligned<BVHLinearNode>(totalNodes);
-		int offset = 0;
+		i32 offset = 0;
 
 		struct TaggedBuildNode
 		{
-			int parentOffset;
+			i32 parentOffset;
 			BVHBuildNode* node;
 
 			BVHBuildNode* operator->()

@@ -4,23 +4,23 @@
 
 namespace yart
 {
-	void SortSpectrumSamples(real* lambda, real* values, int n)
+	void SortSpectrumSamples(real* lambda, real* values, i32 n)
 	{
 		std::vector<std::pair<real, real>> sort;
 		sort.reserve(n);
-		for (int i = 0; i < n; i++)
+		for (i32 i = 0; i < n; i++)
 			sort.emplace_back(lambda[i], values[i]);
 
 		std::sort(sort.begin(), sort.end());
 
-		for (int i = 0; i < n; i++)
+		for (i32 i = 0; i < n; i++)
 		{
 			lambda[i] = sort[i].first;
 			values[i] = sort[i].second;
 		}
 	}
 
-	real AverageSpectrumSamples(const real* lambda, const real* values, int n, real lambdaStart, real lambdaEnd)
+	real AverageSpectrumSamples(const real* lambda, const real* values, i32 n, real lambdaStart, real lambdaEnd)
 	{
 		ASSERT(lambdaStart <= lambdaEnd);
 		// Handle case with out of bounds range or single sample provided
@@ -41,11 +41,11 @@ namespace yart
 			sum += values[n - 1] * (lambdaEnd - lambda[n - 1]);
 
 		// Advance to first relavant wavelength segment
-		int i = 0;
+		i32 i = 0;
 		while (lambdaStart > lambda[i + 1])
 			i++;
 
-		auto lerp = [lambda, values](real t, int i) -> real {
+		auto lerp = [lambda, values](real t, i32 i) -> real {
 			return Lerp((t - lambda[i]) / (lambda[i + 1] - lambda[i]), values[i], values[i + 1]);
 		};
 

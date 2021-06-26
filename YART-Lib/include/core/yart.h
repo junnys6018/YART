@@ -3,9 +3,9 @@
 namespace yart
 {
 #if defined(USE_DOUBLE_PRECISION_FLOAT)
-	typedef double real;
+	using real = double;
 #else
-	typedef float real;
+	using real = float;
 #endif
 
 #ifndef YART_L1_CACHE_SIZE
@@ -19,6 +19,15 @@ namespace yart
 #if !defined(CONFIGURATION_DEBUG) && !defined(CONFIGURATION_RELEASE)
 #error Unknown configuration
 #endif
+
+	using i8 = int8_t;
+	using u8 = uint8_t;
+	using i16 = int16_t;
+	using u16 = uint16_t;
+	using i32 = int32_t;
+	using u32 = uint32_t;
+	using i64 = int64_t;
+	using u64 = uint64_t;
 
 	void Initialize();
 

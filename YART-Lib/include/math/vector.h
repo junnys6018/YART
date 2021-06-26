@@ -23,7 +23,13 @@ namespace yart
 			ASSERT(!HasNaNs());
 		}
 
-		T& operator[](int i)
+		template <typename U>
+		explicit Vector3(const Vector3<U>& vec) : x(vec.x), y(vec.y), z(vec.z)
+		{
+			ASSERT(!HasNaNs());
+		}
+
+		T& operator[](i32 i)
 		{
 			ASSERT(i >= 0 && i <= 2);
 			if (i == 0)
@@ -33,7 +39,7 @@ namespace yart
 			return z;
 		}
 
-		T operator[](int i) const
+		T operator[](i32 i) const
 		{
 			return const_cast<Vector3<T>*>(this)->operator[](i);
 		}
@@ -139,7 +145,7 @@ namespace yart
 		}
 
 		// Returns the index of the component with the largest value
-		int MaxDimension() const
+		i32 MaxDimension() const
 		{
 			return (x > y) ? ((x > z) ? 0 : 2) : ((y > z) ? 1 : 2);
 		}
@@ -155,7 +161,7 @@ namespace yart
 
 	// Partial specialization for integer type
 	template <>
-	inline bool Vector3<int>::HasNaNs() const
+	inline bool Vector3<i32>::HasNaNs() const
 	{
 		return false;
 	}
@@ -242,7 +248,7 @@ namespace yart
 	}
 
 	template <typename T>
-	Vector3<T> Permute(const Vector3<T>& v, int x, int y, int z)
+	Vector3<T> Permute(const Vector3<T>& v, i32 x, i32 y, i32 z)
 	{
 		return Vector3<T>(v[x], v[y], v[z]);
 	}
@@ -279,7 +285,7 @@ namespace yart
 	}
 
 	typedef Vector3<real> Vector3f;
-	typedef Vector3<int> Vector3i;
+	typedef Vector3<i32> Vector3i;
 
 	template <typename T>
 	class Vector2
@@ -299,12 +305,18 @@ namespace yart
 			ASSERT(!HasNaNs());
 		}
 
+		template <typename U>
+		explicit Vector2(const Vector2<U>& vec) : x(vec.x), y(vec.y)
+		{
+			ASSERT(!HasNaNs());
+		}
+
 		constexpr explicit Vector2(const Vector3<T> other) : x(other.x), y(other.y)
 		{
 			ASSERT(!other.HasNaNs());
 		}
 
-		T& operator[](int i)
+		T& operator[](i32 i)
 		{
 			ASSERT(i >= 0 && i <= 1);
 			if (i == 0)
@@ -312,7 +324,7 @@ namespace yart
 			return y;
 		}
 
-		T operator[](int i) const
+		T operator[](i32 i) const
 		{
 			return const_cast<Vector2<T>*>(this)->operator[](i);
 		}
@@ -414,7 +426,7 @@ namespace yart
 		}
 
 		// Returns the index of the component with the largest value
-		int MaxDimension() const
+		i32 MaxDimension() const
 		{
 			return (x > y) ? 0 : 1;
 		}
@@ -430,7 +442,7 @@ namespace yart
 
 	// Partial specialization for integer type
 	template <>
-	inline bool Vector2<int>::HasNaNs() const
+	inline bool Vector2<i32>::HasNaNs() const
 	{
 		return false;
 	}
@@ -509,7 +521,7 @@ namespace yart
 	}
 
 	template <typename T>
-	Vector2<T> Permute(const Vector2<T>& v, int x, int y)
+	Vector2<T> Permute(const Vector2<T>& v, i32 x, i32 y)
 	{
 		return Vector2<T>(v[x], v[y]);
 	}
@@ -534,5 +546,5 @@ namespace yart
 	}
 
 	typedef Vector2<real> Vector2f;
-	typedef Vector2<int> Vector2i;
+	typedef Vector2<i32> Vector2i;
 }
