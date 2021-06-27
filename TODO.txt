@@ -1,2 +1,8 @@
-Test Sphere, orthographic camera
+Test:
+	Sphere
+	orthographic camera
+	rng
+	StratifiedSampler
+	filters
+	
 Error handling
