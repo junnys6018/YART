@@ -1,8 +1,8 @@
 #pragma once
 #include "core/yart.h"
 #include "math/ray.h"
-#include "math/vector.h"
 #include "math/util.h"
+#include "math/vector.h"
 
 namespace yart
 {
@@ -11,19 +11,21 @@ namespace yart
 	{
 	public:
 		// Default construct an empty box
-		Bounds3()
-			: m_MinBound(std::numeric_limits<T>::max()), m_MaxBound(std::numeric_limits<T>::lowest())
+		Bounds3() : m_MinBound(std::numeric_limits<T>::max()), m_MaxBound(std::numeric_limits<T>::lowest())
 		{
 		}
 
 		// Construct a bound that encloses a single point
-		Bounds3(const Vector3<T>& p)
-			: m_MinBound(p), m_MaxBound(p)
+		Bounds3(const Vector3<T>& p) : m_MinBound(p), m_MaxBound(p)
 		{
 		}
 
-		Bounds3(const Vector3<T>& p1, const Vector3<T>& p2)
-			: m_MinBound(Min(p1, p2)), m_MaxBound(Max(p1, p2))
+		Bounds3(const Vector3<T>& p1, const Vector3<T>& p2) : m_MinBound(Min(p1, p2)), m_MaxBound(Max(p1, p2))
+		{
+		}
+
+		template <typename U>
+		explicit Bounds3(const Bounds3<U>& bound) : m_MinBound(bound.m_MinBound), m_MaxBound(bound.m_MaxBound)
 		{
 		}
 
@@ -74,8 +76,7 @@ namespace yart
 
 		Vector3<T> Lerp(const Vector3<T>& t) const
 		{
-			return Vector3<T>(yart::Lerp(t.x, m_MinBound.x, m_MaxBound.x),
-							  yart::Lerp(t.y, m_MinBound.y, m_MaxBound.y),
+			return Vector3<T>(yart::Lerp(t.x, m_MinBound.x, m_MaxBound.x), yart::Lerp(t.y, m_MinBound.y, m_MaxBound.y),
 							  yart::Lerp(t.z, m_MinBound.z, m_MaxBound.z));
 		}
 
@@ -209,8 +210,7 @@ namespace yart
 	template <typename T>
 	bool Inside(const Vector3<T>& p, const Bounds3<T>& b)
 	{
-		return (p.x >= b.m_MinBound.x && p.x <= b.m_MaxBound.x &&
-				p.y >= b.m_MinBound.y && p.y <= b.m_MaxBound.y &&
+		return (p.x >= b.m_MinBound.x && p.x <= b.m_MaxBound.x && p.y >= b.m_MinBound.y && p.y <= b.m_MaxBound.y &&
 				p.z >= b.m_MinBound.z && p.z <= b.m_MaxBound.z);
 	}
 
@@ -218,16 +218,14 @@ namespace yart
 	template <typename T>
 	bool InsideExclusive(const Vector3<T>& p, const Bounds3<T>& b)
 	{
-		return (p.x >= b.m_MinBound.x && p.x < b.m_MaxBound.x &&
-				p.y >= b.m_MinBound.y && p.y < b.m_MaxBound.y &&
+		return (p.x >= b.m_MinBound.x && p.x < b.m_MaxBound.x && p.y >= b.m_MinBound.y && p.y < b.m_MaxBound.y &&
 				p.z >= b.m_MinBound.z && p.z < b.m_MaxBound.z);
 	}
 
 	template <typename T, typename U>
 	inline Bounds3<T> Expand(const Bounds3<T>& b, U delta)
 	{
-		return Bounds3<T>(b.m_MinBound - Vector3<T>(delta),
-						  b.m_MaxBound + Vector3<T>(delta));
+		return Bounds3<T>(b.m_MinBound - Vector3<T>(delta), b.m_MaxBound + Vector3<T>(delta));
 	}
 
 	typedef Bounds3<real> Bounds3f;
@@ -238,19 +236,21 @@ namespace yart
 	{
 	public:
 		// Default construct an empty box
-		Bounds2()
-			: m_MinBound(std::numeric_limits<T>::max()), m_MaxBound(std::numeric_limits<T>::lowest())
+		Bounds2() : m_MinBound(std::numeric_limits<T>::max()), m_MaxBound(std::numeric_limits<T>::lowest())
 		{
 		}
 
 		// Construct a bound that encloses a single point
-		Bounds2(const Vector2<T>& p)
-			: m_MinBound(p), m_MaxBound(p)
+		Bounds2(const Vector2<T>& p) : m_MinBound(p), m_MaxBound(p)
 		{
 		}
 
-		Bounds2(const Vector2<T>& p1, const Vector2<T>& p2)
-			: m_MinBound(Min(p1, p2)), m_MaxBound(Max(p1, p2))
+		Bounds2(const Vector2<T>& p1, const Vector2<T>& p2) : m_MinBound(Min(p1, p2)), m_MaxBound(Max(p1, p2))
+		{
+		}
+
+		template <typename U>
+		explicit Bounds2(const Bounds2<U>& bound) : m_MinBound(bound.m_MinBound), m_MaxBound(bound.m_MaxBound)
 		{
 		}
 
@@ -298,8 +298,7 @@ namespace yart
 
 		Vector2<T> Lerp(const Vector2<T>& t) const
 		{
-			return Vector2<T>(yart::Lerp(t.x, m_MinBound.x, m_MaxBound.x),
-							  yart::Lerp(t.y, m_MinBound.y, m_MaxBound.y));
+			return Vector2<T>(yart::Lerp(t.x, m_MinBound.x, m_MaxBound.x), yart::Lerp(t.y, m_MinBound.y, m_MaxBound.y));
 		}
 
 		// Returns the continuous position of a point relative to the corners of the box,
@@ -363,23 +362,20 @@ namespace yart
 	template <typename T>
 	bool Inside(const Vector2<T>& p, const Bounds2<T>& b)
 	{
-		return (p.x >= b.m_MinBound.x && p.x <= b.m_MaxBound.x &&
-				p.y >= b.m_MinBound.y && p.y <= b.m_MaxBound.y);
+		return (p.x >= b.m_MinBound.x && p.x <= b.m_MaxBound.x && p.y >= b.m_MinBound.y && p.y <= b.m_MaxBound.y);
 	}
 
 	// Do not consider points on the upper boundary to be inside the bounds. Useful for integer-typed bounds
 	template <typename T>
 	bool InsideExclusive(const Vector2<T>& p, const Bounds2<T>& b)
 	{
-		return (p.x >= b.m_MinBound.x && p.x < b.m_MaxBound.x &&
-				p.y >= b.m_MinBound.y && p.y < b.m_MaxBound.y);
+		return (p.x >= b.m_MinBound.x && p.x < b.m_MaxBound.x && p.y >= b.m_MinBound.y && p.y < b.m_MaxBound.y);
 	}
 
 	template <typename T, typename U>
 	inline Bounds2<T> Expand(const Bounds2<T>& b, U delta)
 	{
-		return Bounds2<T>(b.m_MinBound - Vector2<T>(delta),
-						  b.m_MaxBound + Vector2<T>(delta));
+		return Bounds2<T>(b.m_MinBound - Vector2<T>(delta), b.m_MaxBound + Vector2<T>(delta));
 	}
 
 	typedef Bounds2<real> Bounds2f;
@@ -389,8 +385,9 @@ namespace yart
 	class Bounds2iIterator : public std::forward_iterator_tag
 	{
 	public:
-		Bounds2iIterator(const Bounds2i& b, const Vector2i& pt)
-			: m_Point(pt), m_Bounds(&b) {}
+		Bounds2iIterator(const Bounds2i& b, const Vector2i& pt) : m_Point(pt), m_Bounds(&b)
+		{
+		}
 
 		Bounds2iIterator operator++()
 		{

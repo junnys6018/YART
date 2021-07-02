@@ -49,6 +49,20 @@ namespace yart
 		return val;
 	}
 
+	inline ureal RealToBits(real v)
+	{
+		ureal ui;
+		std::memcpy(&ui, &v, sizeof(real));
+		return ui;
+	}
+
+	inline real BitsToReal(ureal bits)
+	{
+		real v;
+		std::memcpy(&v, &bits, sizeof(real));
+		return v;
+	}
+
 	// Solves the quadratic equation a*t^2 + b*t + c = 0, returns false if no solutions exist
 	bool Quadratic(real a, real b, real c, real* t1, real* t2);
 }
