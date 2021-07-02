@@ -263,6 +263,7 @@ namespace yart
 
 		static SampledSpectrum FromXYZ(const std::array<real, 3>& xyz)
 		{
+			ASSERT(false);
 			// TODO
 		}
 
@@ -274,6 +275,7 @@ namespace yart
 
 		static SampledSpectrum FromRGB(const std::array<real, 3>& xyz)
 		{
+			ASSERT(false);
 			// TODO
 		}
 

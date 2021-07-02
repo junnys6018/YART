@@ -90,7 +90,7 @@ namespace yart
 					curState = curState * curMult + curPlus;
 					distance |= theBit;
 				}
-				ASSERT(m_State & theBit == curState & theBit);
+				ASSERT((m_State & theBit) == (curState & theBit));
 				theBit <<= 1;
 				curPlus = (curMult + 1ULL) * curPlus;
 				curMult *= curMult;

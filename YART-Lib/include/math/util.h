@@ -1,5 +1,6 @@
 #pragma once
 #include "core/yart.h"
+#include <cstring>
 
 namespace yart
 {
