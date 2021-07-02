@@ -3,7 +3,7 @@
 #include "camera.h"
 namespace yart
 {
-	class OrthographicCamera : public ProjectiveCamera
+	class OrthographicCamera final : public ProjectiveCamera
 	{
 	public:
 		OrthographicCamera(const Transform& cameraToWorld, const Bounds2f& screenWindow, Film* film)
@@ -20,6 +20,7 @@ namespace yart
 			ray->o = m_CameraToWorld.AppPoint(cameraPoint);
 			ray->d = m_CameraToWorld.AppVec(Vector3f{0, 0, 1});
 		}
+
 	private:
 		Vector3f m_dxCamera, m_dyCamera; // To be used in GenerateRayDifferential()
 	};

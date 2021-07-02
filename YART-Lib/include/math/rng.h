@@ -9,14 +9,14 @@ namespace yart
 
 	// Adapted from https://github.com/mmp/pbrt-v3/blob/master/src/core/rng.h
 	// See https://www.pcg-random.org/
-	class RNG
+	class PCG32Random
 	{
 	public:
-		RNG() : m_State(YART_PCG32_DEFAULT_STATE), m_Inc(YART_PCG32_DEFAULT_STREAM)
+		PCG32Random() : m_State(YART_PCG32_DEFAULT_STATE), m_Inc(YART_PCG32_DEFAULT_STREAM)
 		{
 		}
 
-		RNG(u64 sequenceIndex)
+		PCG32Random(u64 sequenceIndex)
 		{
 			SetSequence(sequenceIndex);
 		}
@@ -79,7 +79,7 @@ namespace yart
 			m_State = accMult * m_State + accPlus;
 		}
 
-		i64 operator-(const RNG& other) const
+		i64 operator-(const PCG32Random& other) const
 		{
 			ASSERT(m_Inc == other.m_Inc);
 			u64 curMult = YART_PCG32_MULT, curPlus = m_Inc, curState = other.m_State, theBit = 1u, distance = 0u;

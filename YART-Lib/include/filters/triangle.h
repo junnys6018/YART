@@ -3,7 +3,7 @@
 
 namespace yart
 {
-	class TriangleFilter : public Filter
+	class TriangleFilter final : public Filter
 	{
 	public:
 		TriangleFilter(const Vector2f& radius) : Filter(radius)

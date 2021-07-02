@@ -87,7 +87,7 @@ namespace yart
 		Vector3f m_Center;
 	};
 
-	class BVHAccelerator : public AbstractAggregate
+	class BVHAccelerator final : public AbstractAggregate
 	{
 	public:
 		BVHAccelerator(const std::vector<Ref<AbstractPrimitive>>& primitives, i32 maxPrimsInNode, SplitMethod splitMethod);

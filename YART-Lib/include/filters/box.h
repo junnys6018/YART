@@ -3,7 +3,7 @@
 
 namespace yart
 {
-	class BoxFilter : public Filter
+	class BoxFilter final : public Filter
 	{
 	public:
 		BoxFilter(const Vector2f& radius) : Filter(radius)

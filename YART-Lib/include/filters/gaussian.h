@@ -3,7 +3,7 @@
 
 namespace yart
 {
-	class GaussianFilter : public Filter
+	class GaussianFilter final : public Filter
 	{
 	public:
 		GaussianFilter(const Vector2f& radius, real alpha)

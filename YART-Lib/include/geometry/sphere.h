@@ -3,11 +3,11 @@
 
 namespace yart
 {
-	class Sphere : public AbstractGeometry
+	class Sphere final : public AbstractGeometry
 	{
 	public:
-		Sphere(const Transform* objectToWorld, const Transform* worldToObject, bool reverseOrientation,
-			   real radius, real zMin, real zMax, real phiMax)
+		Sphere(const Transform* objectToWorld, const Transform* worldToObject, bool reverseOrientation, real radius, real zMin,
+			   real zMax, real phiMax)
 			: AbstractGeometry(objectToWorld, worldToObject, reverseOrientation), m_Radius(radius),
 			  m_zMin(Clamp(zMin, -radius, radius)), m_zMax(Clamp(zMax, -radius, radius)),
 			  m_ThetaMin(std::acos(m_zMin / m_Radius)), m_ThetaMax(std::acos(m_zMax / m_Radius)),
@@ -30,8 +30,8 @@ namespace yart
 			real tShapeHit;
 			Vector3f pHit;
 		};
-		inline bool IntersectRayImplementation(const Ray& ray,
-											   bool testAlphaTexture, IntersectionData* isect) const;
+		inline bool IntersectRayImplementation(const Ray& ray, bool testAlphaTexture, IntersectionData* isect) const;
+
 	private:
 		const real m_Radius;
 		const real m_zMin, m_zMax;
