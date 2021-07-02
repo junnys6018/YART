@@ -17,7 +17,7 @@ namespace yart
 		virtual Vector2f Get2D() = 0;
 		CameraSample GetCameraSample(const Vector2i& rasterPoint);
 		virtual bool StartNextSample();
-		virtual Scope<AbstractSampler> Clone(i32 seed) = 0;
+		virtual Scope<AbstractSampler> Clone(u64 seed) = 0;
 		virtual bool SetSampleIndex(i64 index);
 
 	public:
@@ -26,5 +26,16 @@ namespace yart
 	protected:
 		Vector2i m_CurrentPixel;
 		i64 m_CurrentPixelSampleIndex;
+	};
+
+	class PCG32Sampler : public AbstractSampler
+	{
+	public:
+		PCG32Sampler(i64 samplesPerPixel, u64 seed) : AbstractSampler(samplesPerPixel), m_RNG(seed)
+		{
+		}
+
+	protected:
+		PCG32Random m_RNG;
 	};
 }

@@ -3,6 +3,7 @@ Test:
 	orthographic camera
 	rng
 	StratifiedSampler
+	IndependantSampler
 	filters
 	
 Error handling
