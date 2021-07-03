@@ -1,4 +1,3 @@
-#include "pch.h"
 #include "math/transform.h"
 
 namespace yart

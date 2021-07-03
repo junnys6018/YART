@@ -1,4 +1,3 @@
-#include "pch.h"
 #include "math/matrix.h"
 
 namespace yart
@@ -87,7 +86,7 @@ namespace yart
 						 mat.m[0][3], mat.m[1][3], mat.m[2][3], mat.m[3][3]);
 	}
 
-	// Use Gauss–Jordan elimination
+	// Use Gaussï¿½Jordan elimination
 	Matrix4x4 Inverse(const Matrix4x4& mat)
 	{
 		i32 indxc[4], indxr[4];

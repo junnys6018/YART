@@ -18,17 +18,14 @@ jobs:
       - name: Generate Project files
         run: scripts/GenerateWindowsProjects.bat
         
-      - name: Add MSBuild to PATH
-        uses: microsoft/setup-msbuild@v1.0.2
-        
       - name: Build
-        run: msbuild /m /p:Configuration=${{matrix.configuration}} .
+        run: cmake --build build --config ${{matrix.configuration}}
         
       - name: Upload test artifact
         uses: actions/upload-artifact@v2
         with:
           name: windows-${{matrix.configuration}}-YART-Test
-          path: ./bin/${{matrix.configuration}}-windows/YART-Test/YART-Test.exe
+          path: ./build/YART-Test/${{matrix.configuration}}/YART-Test.exe
       
   test-win:
     needs: build-win
@@ -64,24 +61,14 @@ jobs:
       - name: Generate Project files
         run: scripts/GenerateLinuxProjects.sh
         
-      - name: Install build tools
-        run: sudo apt-get install g++ make
+      - name: Build
+        run: cmake --build build/${{matrix.configuration}}
         
-        # For some stupid reason premake generates make files with lowercase configuration names
-        # even though the configurations were defined in uppercase in the premake.lua file
-      - name: Build
-        if: ${{matrix.configuration == 'Debug'}}
-        run: make config=debug verbose=true
-
-      - name: Build
-        if: ${{matrix.configuration == 'Release'}}
-        run: make config=release verbose=true
-
       - name: Upload test artifact
         uses: actions/upload-artifact@v2
         with:
           name: linux-${{matrix.configuration}}-YART-Test
-          path: ./bin/${{matrix.configuration}}-linux/YART-Test/YART-Test
+          path: ./build/${{matrix.configuration}}/YART-Test/YART-Test
 
   test-linux:
     needs: build-linux

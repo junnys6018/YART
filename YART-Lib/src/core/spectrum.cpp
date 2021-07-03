@@ -1,5 +1,3 @@
-#include "pch.h"
-
 #include "core/spectrum.h"
 
 namespace yart

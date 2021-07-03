@@ -1,4 +1,3 @@
-#include "pch.h"
 #include "yart.h"
 
 using namespace yart;

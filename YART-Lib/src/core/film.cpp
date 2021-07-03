@@ -1,5 +1,3 @@
-#include "pch.h"
-
 #include "core/film.h"
 #include "core/yart.h"
 

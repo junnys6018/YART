@@ -1,4 +1,3 @@
-#include "pch.h"
 #include "core/yart.h"
 #include "core/spectrum.h"
 

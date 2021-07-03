@@ -1,5 +1,3 @@
-#include "pch.h"
-
 #include "samplers/sampler.h"
 
 namespace yart

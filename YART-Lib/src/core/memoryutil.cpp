@@ -1,4 +1,3 @@
-#include "pch.h"
 #include "core/memoryutil.h"
 
 #if defined(PLATFORM_LINUX)
