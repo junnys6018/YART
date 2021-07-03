@@ -1,3 +1,12 @@
 [submodule "YART-Lib/vendor/spdlog"]
 	path = YART-Lib/vendor/spdlog
 	url = https://github.com/gabime/spdlog
+[submodule "YART-Lib/vendor/openexr"]
+	path = YART-Lib/vendor/openexr
+	url = https://github.com/AcademySoftwareFoundation/openexr.git
+[submodule "YART-Lib/vendor/Imath"]
+	path = YART-Lib/vendor/Imath
+	url = https://github.com/AcademySoftwareFoundation/Imath.git
+[submodule "YART-Lib/vendor/zlib"]
+	path = YART-Lib/vendor/zlib
+	url = https://github.com/mitsuba-renderer/zlib.git

@@ -13,7 +13,16 @@ source_group(geometry REGULAR_EXPRESSION "(src|include)/geometry/.*")
 source_group(math REGULAR_EXPRESSION "(src|include)/math/.*")
 source_group(samplers REGULAR_EXPRESSION "(src|include)/samplers/.*")
 
-target_include_directories(YART-Lib PUBLIC src include vendor/spdlog/include)
+target_include_directories(YART-Lib PUBLIC 
+	src
+	include
+	vendor/spdlog/include
+	vendor/openexr/src/lib/OpenEXR
+	vendor/openexr/src/lib/Iex
+	vendor/Imath/src/Imath
+	${CMAKE_CURRENT_BINARY_DIR}/vendor/openexr/cmake
+	${CMAKE_CURRENT_BINARY_DIR}/vendor/Imath/config
+	)
 
 target_precompile_headers(YART-Lib 
     PRIVATE
