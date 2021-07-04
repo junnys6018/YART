@@ -3,7 +3,7 @@ file(GLOB_RECURSE SOURCES src/*)
 add_executable(YART-Cli ${SOURCES})
 
 target_include_directories(YART-Cli PUBLIC ../YART-Lib/include)
-target_link_libraries(YART-Cli PUBLIC YART-Lib)
+target_link_libraries(YART-Cli PUBLIC YART-Lib zlibstatic Imath OpenEXR)
 
 target_precompile_headers(YART-Cli 
     PRIVATE

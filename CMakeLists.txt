@@ -61,6 +61,8 @@ add_library(ZLIB::ZLIB ALIAS zlibstatic)
 include_directories(YART-Lib/vendor/zlib ${CMAKE_CURRENT_BINARY_DIR}/YART-Lib/vendor/zlib) # yuck, but so openexr/ptex can find zlib.h...
 
 # Imath
+set(BUILD_SHARED_LIBS            OFF CACHE BOOL " " FORCE)
+
 add_subdirectory (YART-Lib/vendor/Imath)
 
 # openexr

@@ -3,7 +3,7 @@ Test:
 	orthographic camera
 	rng
 	StratifiedSampler
-	IndependantSampler
+	IndependentSampler
 	filters
 	film
 	

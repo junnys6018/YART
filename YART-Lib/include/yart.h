@@ -1,4 +1,6 @@
 // Core
+#include "core/film.h"
+#include "core/imageio.h"
 #include "core/interaction.h"
 #include "core/memoryutil.h"
 #include "core/primitive.h"
@@ -19,3 +21,9 @@
 
 // Accelerators
 #include "accelerators/bvh.h"
+
+// Filters
+#include "filters/box.h"
+#include "filters/filter.h"
+#include "filters/gaussian.h"
+#include "filters/triangle.h"

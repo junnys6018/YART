@@ -1,6 +1,8 @@
 #pragma once
 #include "core/yart.h"
 
+#define YART_ALLOCA(TYPE, COUNT) (TYPE*)alloca((COUNT) * sizeof(TYPE))
+
 namespace yart
 {
 	void* AllocAligned(u64 size);

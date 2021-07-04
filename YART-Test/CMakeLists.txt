@@ -15,4 +15,4 @@ source_group(samplers REGULAR_EXPRESSION "(src|include)/samplers/.*")
 source_group(vendor/catch2 FILES ${CATCH})
 
 target_include_directories(YART-Test PUBLIC src vendor/catch2 ../YART-Lib/include)
-target_link_libraries(YART-Test PUBLIC YART-Lib)
+target_link_libraries(YART-Test PUBLIC YART-Lib zlibstatic Imath OpenEXR)
