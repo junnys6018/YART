@@ -1,8 +1,8 @@
 #pragma once
 #include <algorithm>
 #include <array>
-#include <vector>
 #include <cmath>
+#include <vector>
 
 #include "core/assert.h"
 #include "core/yart.h"
@@ -24,7 +24,7 @@ namespace yart
 	public:
 		static constexpr i32 s_Dimensions = dimensions;
 
-		BasisSpectrum(real c = 0)
+		explicit BasisSpectrum(real c = 0)
 		{
 			m_Coefficients.fill(c);
 		}
@@ -42,6 +42,24 @@ namespace yart
 			return *this;
 		}
 
+		BasisSpectrum& operator-=(const BasisSpectrum& other)
+		{
+			ASSERT(!other.HasNaNs());
+			for (i32 i = 0; i < dimensions; i++)
+				m_Coefficients[i] -= other.m_Coefficients[i];
+
+			return *this;
+		}
+
+		BasisSpectrum& operator*=(real other)
+		{
+			ASSERT(!other.HasNaNs());
+			for (i32 i = 0; i < dimensions; i++)
+				m_Coefficients[i] *= other;
+
+			return *this;
+		}
+
 		BasisSpectrum operator+(const BasisSpectrum& other) const
 		{
 			ASSERT(!other.HasNaNs());
@@ -50,8 +68,85 @@ namespace yart
 			return ret;
 		}
 
+		BasisSpectrum operator-(const BasisSpectrum& other) const
+		{
+			ASSERT(!other.HasNaNs());
+			BasisSpectrum ret = *this;
+			ret -= other;
+			return ret;
+		}
+
+		BasisSpectrum operator*(const BasisSpectrum& other) const
+		{
+			ASSERT(!other.HasNaNs());
+			BasisSpectrum ret = *this;
+			for (i32 i = 0; i < dimensions; i++)
+			{
+				ret[i] *= other[i];
+			}
+			return ret;
+		}
+
+		BasisSpectrum operator/(const BasisSpectrum& other) const
+		{
+			ASSERT(!other.HasNaNs());
+			BasisSpectrum ret = *this;
+			for (i32 i = 0; i < dimensions; i++)
+			{
+				ASSERT(other[i] != 0);
+				ret[i] /= other[i];
+			}
+			return ret;
+		}
+
+		BasisSpectrum operator+(real other) const
+		{
+			ASSERT(!other.HasNaNs());
+			BasisSpectrum ret = *this;
+			for (i32 i = 0; i < dimensions; i++)
+			{
+				ret[i] += other;
+			}
+			return ret;
+		}
+
+		BasisSpectrum operator-(real other) const
+		{
+			ASSERT(!other.HasNaNs());
+			BasisSpectrum ret = *this;
+			for (i32 i = 0; i < dimensions; i++)
+			{
+				ret[i] -= other;
+			}
+			return ret;
+		}
+
+		BasisSpectrum operator*(real other) const
+		{
+			ASSERT(!other.HasNaNs());
+			BasisSpectrum ret = *this;
+			for (i32 i = 0; i < dimensions; i++)
+			{
+				ret[i] *= other;
+			}
+			return ret;
+		}
+
+		BasisSpectrum operator/(real other) const
+		{
+			ASSERT(!other.HasNaNs());
+			BasisSpectrum ret = *this;
+			for (i32 i = 0; i < dimensions; i++)
+			{
+				ASSERT(other[i] != 0);
+				ret[i] /= other;
+			}
+			return ret;
+		}
+
 		friend BasisSpectrum operator*(real r, const BasisSpectrum& s)
 		{
+			ASSERT(!s.HasNaNs());
 			BasisSpectrum ret;
 			for (i32 i = 0; i < dimensions; i++)
 				ret[i] = r * s.m_Coefficients[i];
@@ -153,6 +248,9 @@ namespace yart
 		RGBSpectrum(const std::array<real, 3>& rgb) : BasisSpectrum(rgb)
 		{
 		}
+		RGBSpectrum(const BasisSpectrum<3>& other) : BasisSpectrum(other)
+		{
+		}
 
 		std::array<real, 3> ToXYZ() const
 		{
@@ -239,6 +337,9 @@ namespace yart
 	{
 	public:
 		SampledSpectrum(real c = 0) : BasisSpectrum(c)
+		{
+		}
+		SampledSpectrum(const BasisSpectrum<s_NumSpectralSamples>& other) : BasisSpectrum(s_NumSpectralSamples)
 		{
 		}
 
