@@ -23,7 +23,7 @@ namespace yart
 		Bounds2f GetPhysicalExtent() const;
 		template <typename Spectrum>
 		void AddSample(const Vector2f& filmPoint, const Spectrum& L, real sampleWeight = 1);
-		void WriteImage() const;
+		void WriteImage(bool normalize = false) const;
 
 	public:
 		const Vector2i m_Resolution;

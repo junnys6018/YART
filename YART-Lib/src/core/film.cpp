@@ -47,7 +47,7 @@ namespace yart
 		return Bounds2f{{-x / 2, -y / 2}, {x / 2, y / 2}};
 	}
 
-	void Film::WriteImage() const
+	void Film::WriteImage(bool normalize) const
 	{
 		Scope<real[]> pixels(new real[3 * m_CroppedPixelBounds.Area()]);
 		i32 offset = 0;
@@ -72,6 +72,18 @@ namespace yart
 				pixels[3 * offset + 2] = std::max((real)0, pixels[3 * offset + 2] * invWt);
 			}
 			offset++;
+		}
+
+		if (normalize)
+		{
+			u64 length = 3 * m_CroppedPixelBounds.Area();
+			real* begin = pixels.get();
+			real* end = pixels.get() + length;
+
+			real max = *std::max_element(begin, end);
+			if (max != 0)
+				for (u64 i = 0; i < length; i++)
+					pixels[i] /= max;
 		}
 		yart::WriteImage(m_Filename, pixels.get(), m_CroppedPixelBounds, m_Resolution);
 	}

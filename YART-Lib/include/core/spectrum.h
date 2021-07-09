@@ -18,7 +18,7 @@ namespace yart
 	}
 
 	// Represents an SPD in the form of a linear combination of basis functions
-	template <u64 dimensions>
+	template <i32 dimensions>
 	class BasisSpectrum
 	{
 	public:
@@ -242,7 +242,7 @@ namespace yart
 	class RGBSpectrum : public BasisSpectrum<3>
 	{
 	public:
-		RGBSpectrum(real c = 0) : BasisSpectrum(c)
+		explicit RGBSpectrum(real c = 0) : BasisSpectrum(c)
 		{
 		}
 		RGBSpectrum(const std::array<real, 3>& rgb) : BasisSpectrum(rgb)
@@ -336,7 +336,7 @@ namespace yart
 	class SampledSpectrum : public BasisSpectrum<s_NumSpectralSamples>
 	{
 	public:
-		SampledSpectrum(real c = 0) : BasisSpectrum(c)
+		explicit SampledSpectrum(real c = 0) : BasisSpectrum(c)
 		{
 		}
 		SampledSpectrum(const BasisSpectrum<s_NumSpectralSamples>& other) : BasisSpectrum(s_NumSpectralSamples)
