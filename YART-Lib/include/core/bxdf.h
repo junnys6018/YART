@@ -1,4 +1,5 @@
 #pragma once
+#include "core/interaction.h"
 #include "core/spectrum.h"
 #include "math/util.h"
 #include "math/vector.h"
@@ -180,7 +181,7 @@ namespace yart
 		BSDF_DIFFUSE = 1 << 2,
 		BSDF_SPECULAR = 1 << 3,
 		BSDF_GLOSSY = 1 << 4,
-		BDSF_ALL = BSDF_REFLECTION | BSDF_TRANSMISSION | BSDF_DIFFUSE | BSDF_SPECULAR | BSDF_GLOSSY
+		BSDF_ALL = BSDF_REFLECTION | BSDF_TRANSMISSION | BSDF_DIFFUSE | BSDF_SPECULAR | BSDF_GLOSSY
 	};
 
 	template <typename Spectrum>
@@ -216,7 +217,7 @@ namespace yart
 	};
 
 	template <typename Spectrum>
-	class SpecularReflection : public BxDF<Spectrum>
+	class SpecularReflection final : public BxDF<Spectrum>
 	{
 	public:
 		SpecularReflection(const Spectrum& reflectance, Fresnel<Spectrum>* fresnel)
@@ -250,7 +251,7 @@ namespace yart
 	};
 
 	template <typename Spectrum>
-	class SpecularTransmission : public BxDF<Spectrum>
+	class SpecularTransmission final : public BxDF<Spectrum>
 	{
 	public:
 		SpecularTransmission(const Spectrum& transmittance, real etaI, real etaT, TransportMode transportMode)
@@ -289,7 +290,7 @@ namespace yart
 	};
 
 	template <typename Spectrum>
-	class LambertianReflection : public BxDF<Spectrum>
+	class LambertianReflection final : public BxDF<Spectrum>
 	{
 	public:
 		LambertianReflection(const Spectrum& reflectance)
@@ -316,7 +317,7 @@ namespace yart
 	};
 
 	template <typename Spectrum>
-	class LambertianTransmission : public BxDF<Spectrum>
+	class LambertianTransmission final : public BxDF<Spectrum>
 	{
 	public:
 		LambertianTransmission(const Spectrum& transmittance)
@@ -340,5 +341,75 @@ namespace yart
 
 	private:
 		const Spectrum m_Transmittance;
+	};
+
+	template <typename Spectrum>
+	class BSDF
+	{
+	public:
+		BSDF(const SurfaceInteraction& surfaceInteraction, real eta = 1)
+			: m_eta(eta), m_ShadingNormal(surfaceInteraction.m_Shading.m_Normal), m_GeometricNormal(surfaceInteraction.m_Normal),
+			  m_ShadingTangent(surfaceInteraction.m_Shading.m_dpdu), m_ShadingBiTangent(Cross(m_ShadingNormal, m_ShadingTangent))
+		{
+		}
+
+		void Add(BxDF<Spectrum>* bxdf)
+		{
+			ASSERT(m_NumBxDFs < s_MaxBxDFs);
+			m_BxDFs[m_NumBxDFs++] = bxdf;
+		}
+
+		i32 NumCompenents(BxDFType flags = BSDF_ALL) const
+		{
+			return std::count_if(m_BxDFs, m_BxDFs + m_NumBxDFs,
+								 [flags](BxDF<Spectrum>* bxdf) { return bxdf->MatchesFlags(flags); });
+		}
+
+		Vector3f WorldToLocal(const Vector3f& v)
+		{
+			return Vector3f{Dot(v, m_ShadingNormal), Dot(v, m_ShadingTangent), Dot(v, m_ShadingBiTangent)};
+		}
+
+		Vector3f LocalToWorld(const Vector3f& v)
+		{
+			return Vector3f{v.x * m_ShadingNormal.x + v.y * m_ShadingTangent.x + v.z * m_ShadingBiTangent.x,
+							v.x * m_ShadingNormal.y + v.y * m_ShadingTangent.y + v.z * m_ShadingBiTangent.y,
+							v.x * m_ShadingNormal.z + v.y * m_ShadingTangent.z + v.z * m_ShadingBiTangent.z};
+		}
+
+		Spectrum f(const Vector3f& woWorld, const Vector3f& wiWorld, BxDFType flags) const
+		{
+			Vector3f wo = WorldToLocal(woWorld), wi = WorldToLocal(wiWorld);
+			bool reflect = Dot(woWorld, m_GeometricNormal) * Dot(wiWorld, m_GeometricNormal) > 0;
+			Spectrum ret{0};
+
+			for (i32 i = 0; i < m_NumBxDFs; i++)
+			{
+				bool apply = (reflect && (m_BxDFs[i]->m_Type & BSDF_REFLECTION)) ||
+							 (!reflect && ((m_BxDFs[i]->m_Type & BSDF_TRANSMISSION)));
+				if (apply && m_BxDFs[i]->MatchesFlags(flags))
+				{
+					f += m_BxDFs[i]->f(wo, wi);
+				}
+			}
+			return ret;
+		}
+
+	public:
+		const real m_eta;
+
+	private:
+		const Vector3f m_ShadingNormal, m_GeometricNormal;
+		const Vector3f m_ShadingTangent, m_ShadingBiTangent;
+
+		i32 m_NumBxDFs = 0;
+		static constexpr i32 s_MaxBxDFs = 8;
+		BxDF<Spectrum>* m_BxDFs[s_MaxBxDFs];
+
+	private:
+		// BSDF's are allocated by memory arenas, trying to explicity delete a BDSF is therefore not allowed
+		~BSDF()
+		{
+		}
 	};
 }

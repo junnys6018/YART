@@ -56,7 +56,7 @@ namespace yart
 		const AbstractGeometry* m_Geometry = nullptr;
 		const AbstractPrimitive* m_Primitive = nullptr;
 
-		// second instance of geometry data that represents peturbed values
+		// second instance of geometry data that represents peturbed values (from vertex normals or bump mapping)
 		struct
 		{
 			Vector3f m_Normal;
