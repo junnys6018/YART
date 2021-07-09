@@ -122,39 +122,6 @@ namespace yart
 		return (Rp + Rs) / 2;
 	}
 
-	enum BxDFType
-	{
-		BSDF_REFLECTION = 1 << 0,
-		BSDF_TRANSMISSION = 1 << 1,
-		BSDF_DIFFUSE = 1 << 2,
-		BSDF_SPECULAR = 1 << 3,
-		BSDF_GLOSSY = 1 << 4,
-		BDSF_ALL = BSDF_REFLECTION | BSDF_TRANSMISSION | BSDF_DIFFUSE | BSDF_SPECULAR | BSDF_GLOSSY
-	};
-
-	template <typename Spectrum>
-	class BxDF
-	{
-	public:
-		BxDF(BxDFType type) : m_Type(type)
-		{
-		}
-
-		bool MatchesFlags(BxDFType type) const
-		{
-			return (m_Type & type) == m_Type;
-		}
-
-		virtual Spectrum f(const Vector3f& wo, const Vector3f& wi) const = 0;
-		virtual Spectrum Samplef(const Vector3f& wo, Vector3f* wi, const Vector2f& sample, real* pdf,
-								 BxDFType* sampledType) const;
-		virtual Spectrum rho(const Vector3f& wo, i32 numSamples, const Vector2f* samples) const;
-		virtual Spectrum rho(i32 numSamples, const Vector2f* samples1, const Vector2f* samples2) const;
-
-	public:
-		const BxDFType m_Type;
-	};
-
 	template <typename Spectrum>
 	class Fresnel
 	{
@@ -204,6 +171,48 @@ namespace yart
 		{
 			return Spectrum{1};
 		}
+	};
+
+	enum BxDFType
+	{
+		BSDF_REFLECTION = 1 << 0,
+		BSDF_TRANSMISSION = 1 << 1,
+		BSDF_DIFFUSE = 1 << 2,
+		BSDF_SPECULAR = 1 << 3,
+		BSDF_GLOSSY = 1 << 4,
+		BDSF_ALL = BSDF_REFLECTION | BSDF_TRANSMISSION | BSDF_DIFFUSE | BSDF_SPECULAR | BSDF_GLOSSY
+	};
+
+	template <typename Spectrum>
+	class BxDF
+	{
+	public:
+		BxDF(BxDFType type) : m_Type(type)
+		{
+		}
+
+		bool MatchesFlags(BxDFType type) const
+		{
+			return (m_Type & type) == m_Type;
+		}
+
+		virtual Spectrum f(const Vector3f& wo, const Vector3f& wi) const = 0;
+		virtual Spectrum Samplef(const Vector3f& wo, Vector3f* wi, const Vector2f& sample, real* pdf, BxDFType* sampledType) const
+		{
+			// TODO
+		}
+		virtual Spectrum rho(const Vector3f& wo, i32 numSamples, const Vector2f* samples) const
+		{
+			// TODO
+		}
+
+		virtual Spectrum rho(i32 numSamples, const Vector2f* samples1, const Vector2f* samples2) const
+		{
+			// TODO
+		}
+
+	public:
+		const BxDFType m_Type;
 	};
 
 	template <typename Spectrum>
@@ -277,5 +286,59 @@ namespace yart
 		const Spectrum m_Transmittance;
 		const FresnelDielectric<Spectrum> m_Fresnel;
 		const TransportMode m_TransportMode;
+	};
+
+	template <typename Spectrum>
+	class LambertianReflection : public BxDF<Spectrum>
+	{
+	public:
+		LambertianReflection(const Spectrum& reflectance)
+			: BxDF<Spectrum>(BxDFType(BSDF_REFLECTION | BSDF_DIFFUSE)), m_Reflectance(reflectance)
+		{
+		}
+
+		virtual Spectrum f(const Vector3f& wo, const Vector3f& wi) const override
+		{
+			return m_Reflectance * InvPi;
+		}
+
+		virtual Spectrum rho(const Vector3f& wo, i32 numSamples, const Vector2f* samples) const override
+		{
+			return m_Reflectance;
+		}
+		virtual Spectrum rho(i32 numSamples, const Vector2f* samples1, const Vector2f* samples2) const override
+		{
+			return m_Reflectance;
+		}
+
+	private:
+		const Spectrum m_Reflectance;
+	};
+
+	template <typename Spectrum>
+	class LambertianTransmission : public BxDF<Spectrum>
+	{
+	public:
+		LambertianTransmission(const Spectrum& transmittance)
+			: BxDF<Spectrum>(BxDFType(BSDF_TRANSMISSION | BSDF_DIFFUSE)), m_Transmittance(transmittance)
+		{
+		}
+
+		virtual Spectrum f(const Vector3f& wo, const Vector3f& wi) const override
+		{
+			return m_Transmittance * InvPi;
+		}
+
+		virtual Spectrum rho(const Vector3f& wo, i32 numSamples, const Vector2f* samples) const override
+		{
+			return m_Transmittance;
+		}
+		virtual Spectrum rho(i32 numSamples, const Vector2f* samples1, const Vector2f* samples2) const override
+		{
+			return m_Transmittance;
+		}
+
+	private:
+		const Spectrum m_Transmittance;
 	};
 }
