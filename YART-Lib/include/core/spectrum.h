@@ -53,7 +53,7 @@ namespace yart
 
 		BasisSpectrum& operator*=(real other)
 		{
-			ASSERT(!other.HasNaNs());
+			ASSERT(!std::isnan(other));
 			for (i32 i = 0; i < dimensions; i++)
 				m_Coefficients[i] *= other;
 
@@ -101,7 +101,7 @@ namespace yart
 
 		BasisSpectrum operator+(real other) const
 		{
-			ASSERT(!other.HasNaNs());
+			ASSERT(!std::isnan(other));
 			BasisSpectrum ret = *this;
 			for (i32 i = 0; i < dimensions; i++)
 			{
@@ -112,7 +112,7 @@ namespace yart
 
 		BasisSpectrum operator-(real other) const
 		{
-			ASSERT(!other.HasNaNs());
+			ASSERT(!std::isnan(other));
 			BasisSpectrum ret = *this;
 			for (i32 i = 0; i < dimensions; i++)
 			{
@@ -123,7 +123,7 @@ namespace yart
 
 		BasisSpectrum operator*(real other) const
 		{
-			ASSERT(!other.HasNaNs());
+			ASSERT(!std::isnan(other));
 			BasisSpectrum ret = *this;
 			for (i32 i = 0; i < dimensions; i++)
 			{
@@ -134,11 +134,10 @@ namespace yart
 
 		BasisSpectrum operator/(real other) const
 		{
-			ASSERT(!other.HasNaNs());
+			ASSERT(!std::isnan(other) && other != 0);
 			BasisSpectrum ret = *this;
 			for (i32 i = 0; i < dimensions; i++)
 			{
-				ASSERT(other[i] != 0);
 				ret[i] /= other;
 			}
 			return ret;
@@ -146,6 +145,7 @@ namespace yart
 
 		friend BasisSpectrum operator*(real r, const BasisSpectrum& s)
 		{
+			ASSERT(!std::isnan(r));
 			ASSERT(!s.HasNaNs());
 			BasisSpectrum ret;
 			for (i32 i = 0; i < dimensions; i++)

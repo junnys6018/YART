@@ -210,8 +210,8 @@ namespace yart
 	class SpecularReflection : public BxDF<Spectrum>
 	{
 	public:
-		SpecularReflection(const Spectrum& scale, Fresnel<Spectrum>* fresnel)
-			: BxDF(BxDFType(BSDF_REFLECTION | BSDF_SPECULAR)), m_Scale(scale), m_Fresnel(fresnel)
+		SpecularReflection(const Spectrum& reflectance, Fresnel<Spectrum>* fresnel)
+			: BxDF<Spectrum>(BxDFType(BSDF_REFLECTION | BSDF_SPECULAR)), m_Reflectance(reflectance), m_Fresnel(fresnel)
 		{
 		}
 
@@ -226,11 +226,11 @@ namespace yart
 			// Calulate perfect reflected direction wi
 			*wi = Vector3f(-wo.x, -wo.y, wo.z);
 			*pdf = 1;
-			return m_Fresnel->Evaluate(CosTheta(*wi)) * m_Scale / AbsCosTheta(*wi);
+			return m_Fresnel->Evaluate(CosTheta(*wi)) * m_Reflectance / AbsCosTheta(*wi);
 		}
 
 	private:
-		const Spectrum m_Scale;
+		const Spectrum m_Reflectance;
 		const Fresnel<Spectrum>* m_Fresnel;
 	};
 
@@ -244,8 +244,8 @@ namespace yart
 	class SpecularTransmission : public BxDF<Spectrum>
 	{
 	public:
-		SpecularTransmission(const Spectrum& scale, real etaI, real etaT, TransportMode transportMode)
-			: BxDF(BxDFType(BSDF_TRANSMISSION | BSDF_SPECULAR)), m_Scale(scale), m_Fresnel(etaI, etaT),
+		SpecularTransmission(const Spectrum& transmittance, real etaI, real etaT, TransportMode transportMode)
+			: BxDF<Spectrum>(BxDFType(BSDF_TRANSMISSION | BSDF_SPECULAR)), m_Transmittance(transmittance), m_Fresnel(etaI, etaT),
 			  m_TransportMode(transportMode)
 		{
 		}
@@ -266,7 +266,7 @@ namespace yart
 				return 0;
 
 			*pdf = 1;
-			Spectrum ft = m_Scale * (Spectrum{1} - m_Fresnel.Evaluate(CosTheta(*wi)));
+			Spectrum ft = m_Transmittance * (Spectrum{1} - m_Fresnel.Evaluate(CosTheta(*wi)));
 			if (m_TransportMode == TransportMode::Radiance)
 				ft *= (etaI * etaI) / (etaT * etaT);
 
@@ -274,7 +274,7 @@ namespace yart
 		}
 
 	private:
-		const Spectrum m_Scale;
+		const Spectrum m_Transmittance;
 		const FresnelDielectric<Spectrum> m_Fresnel;
 		const TransportMode m_TransportMode;
 	};
