@@ -2,73 +2,73 @@
 
 namespace yart
 {
-	void SortSpectrumSamples(real* lambda, real* values, i32 n)
-	{
-		std::vector<std::pair<real, real>> sort;
-		sort.reserve(n);
-		for (i32 i = 0; i < n; i++)
-			sort.emplace_back(lambda[i], values[i]);
+    void SortSpectrumSamples(real* lambda, real* values, i32 n)
+    {
+        std::vector<std::pair<real, real>> sort;
+        sort.reserve(n);
+        for (i32 i = 0; i < n; i++)
+            sort.emplace_back(lambda[i], values[i]);
 
-		std::sort(sort.begin(), sort.end());
+        std::sort(sort.begin(), sort.end());
 
-		for (i32 i = 0; i < n; i++)
-		{
-			lambda[i] = sort[i].first;
-			values[i] = sort[i].second;
-		}
-	}
+        for (i32 i = 0; i < n; i++)
+        {
+            lambda[i] = sort[i].first;
+            values[i] = sort[i].second;
+        }
+    }
 
-	real AverageSpectrumSamples(const real* lambda, const real* values, i32 n, real lambdaStart, real lambdaEnd)
-	{
-		ASSERT(lambdaStart <= lambdaEnd);
-		// Handle case with out of bounds range or single sample provided
-		if (lambdaEnd <= lambda[0])
-			return values[0];
-		if (lambdaStart >= lambda[n - 1])
-			return values[n - 1];
-		if (n == 1)
-			return values[0];
+    real AverageSpectrumSamples(const real* lambda, const real* values, i32 n, real lambdaStart, real lambdaEnd)
+    {
+        ASSERT(lambdaStart <= lambdaEnd);
+        // Handle case with out of bounds range or single sample provided
+        if (lambdaEnd <= lambda[0])
+            return values[0];
+        if (lambdaStart >= lambda[n - 1])
+            return values[n - 1];
+        if (n == 1)
+            return values[0];
 
-		real sum = 0;
+        real sum = 0;
 
-		// Add Contribution of samples before/after samples
-		if (lambdaStart < lambda[0])
-			sum += values[0] * (lambda[0] - lambdaStart);
+        // Add Contribution of samples before/after samples
+        if (lambdaStart < lambda[0])
+            sum += values[0] * (lambda[0] - lambdaStart);
 
-		if (lambdaEnd > lambda[n - 1])
-			sum += values[n - 1] * (lambdaEnd - lambda[n - 1]);
+        if (lambdaEnd > lambda[n - 1])
+            sum += values[n - 1] * (lambdaEnd - lambda[n - 1]);
 
-		// Advance to first relavant wavelength segment
-		i32 i = 0;
-		while (lambdaStart > lambda[i + 1])
-			i++;
+        // Advance to first relavant wavelength segment
+        i32 i = 0;
+        while (lambdaStart > lambda[i + 1])
+            i++;
 
-		auto lerp = [lambda, values](real t, i32 i) -> real {
-			return Lerp((t - lambda[i]) / (lambda[i + 1] - lambda[i]), values[i], values[i + 1]);
-		};
+        auto lerp = [lambda, values](real t, i32 i) -> real {
+            return Lerp((t - lambda[i]) / (lambda[i + 1] - lambda[i]), values[i], values[i + 1]);
+        };
 
-		for (; i < n - 1 && lambdaEnd >= lambda[i]; i++)
-		{
-			real lambda1 = std::max(lambdaStart, lambda[i]);
-			real lambda2 = std::min(lambdaEnd, lambda[i + 1]);
-			sum += 0.5 * (lerp(lambda1, i) + lerp(lambda2, i)) * (lambda2 - lambda1);
-		}
+        for (; i < n - 1 && lambdaEnd >= lambda[i]; i++)
+        {
+            real lambda1 = std::max(lambdaStart, lambda[i]);
+            real lambda2 = std::min(lambdaEnd, lambda[i + 1]);
+            sum += 0.5 * (lerp(lambda1, i) + lerp(lambda2, i)) * (lambda2 - lambda1);
+        }
 
-		return sum / (lambdaEnd - lambdaStart);
-	}
+        return sum / (lambdaEnd - lambdaStart);
+    }
 
-	SampledSpectrum SampledSpectrum::X;
-	SampledSpectrum SampledSpectrum::Y;
-	SampledSpectrum SampledSpectrum::Z;
+    SampledSpectrum SampledSpectrum::X;
+    SampledSpectrum SampledSpectrum::Y;
+    SampledSpectrum SampledSpectrum::Z;
 
-	void SampledSpectrum::Initialize()
-	{
-		SampledSpectrum::X = SampledSpectrum::FromSortedSamples(CIE_LAMBDA, CIE_X, s_NumCIESamples);
-		SampledSpectrum::Y = SampledSpectrum::FromSortedSamples(CIE_LAMBDA, CIE_Y, s_NumCIESamples);
-		SampledSpectrum::Z = SampledSpectrum::FromSortedSamples(CIE_LAMBDA, CIE_Z, s_NumCIESamples);
-	}
+    void SampledSpectrum::Initialize()
+    {
+        SampledSpectrum::X = SampledSpectrum::FromSortedSamples(CIE_LAMBDA, CIE_X, s_NumCIESamples);
+        SampledSpectrum::Y = SampledSpectrum::FromSortedSamples(CIE_LAMBDA, CIE_Y, s_NumCIESamples);
+        SampledSpectrum::Z = SampledSpectrum::FromSortedSamples(CIE_LAMBDA, CIE_Z, s_NumCIESamples);
+    }
 
-	// clang-format off
+    // clang-format off
 	const real CIE_X[s_NumCIESamples] = {
 		// CIE X function values
 		0.0001299000f,   0.0001458470f,   0.0001638021f,   0.0001840037f,
@@ -822,5 +822,5 @@ namespace yart
 		810, 811, 812, 813, 814, 815, 816, 817, 818, 819, 820, 821, 822, 823, 824,
 		825, 826, 827, 828, 829, 830
 	};
-	// clang-format on
+    // clang-format on
 }

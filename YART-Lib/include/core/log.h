@@ -3,24 +3,27 @@
 // This ignores all warnings raised inside External headers
 #pragma warning(push, 0)
 #include <spdlog/spdlog.h>
+
 #include <spdlog/fmt/ostr.h>
 #pragma warning(pop)
 
 #include "core/yart.h"
 
-
 namespace yart
 {
-	class Log
-	{
-	public:
-		static void Initialize();
+    class Log
+    {
+    public:
+        static void Initialize();
 
-		static Ref<spdlog::logger> GetLogger() { return s_Logger; }
+        static Ref<spdlog::logger> GetLogger()
+        {
+            return s_Logger;
+        }
 
-	private:
-		static Ref<spdlog::logger> s_Logger;
-	};
+    private:
+        static Ref<spdlog::logger> s_Logger;
+    };
 }
 
 // log macros

@@ -5,12 +5,12 @@
 
 namespace yart
 {
-	template <typename Spectrum>
-	class AbstractMaterial
-	{
-	public:
-		using MaterialInteraction = MaterialInteraction<Spectrum>;
-		virtual void ComputeScatteringFunctions(MaterialInteraction* materialInteraction, MemoryArena& arena, TransportMode mode,
-												bool allowMultipleLobes) const = 0;
-	};
+    template <typename Spectrum>
+    class AbstractMaterial
+    {
+    public:
+        using MaterialInteraction = MaterialInteraction<Spectrum>;
+        virtual void ComputeScatteringFunctions(MaterialInteraction* materialInteraction, MemoryArena& arena, TransportMode mode,
+                                                bool allowMultipleLobes) const = 0;
+    };
 }

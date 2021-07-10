@@ -3,9 +3,9 @@
 
 namespace yart
 {
-	void Initialize()
-	{
-		Log::Initialize();
-		SampledSpectrum::Initialize();
-	}
+    void Initialize()
+    {
+        Log::Initialize();
+        SampledSpectrum::Initialize();
+    }
 }

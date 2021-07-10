@@ -2,9 +2,9 @@
 
 namespace yart
 {
-	void StratifiedSampler::StartPixel(const Vector2i& pixel)
-	{
+    void StratifiedSampler::StartPixel(const Vector2i& pixel)
+    {
 
-		AbstractSampler::StartPixel(pixel);
-	}
+        AbstractSampler::StartPixel(pixel);
+    }
 }

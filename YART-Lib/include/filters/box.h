@@ -3,16 +3,16 @@
 
 namespace yart
 {
-	class BoxFilter final : public Filter
-	{
-	public:
-		BoxFilter(const Vector2f& radius) : Filter(radius)
-		{
-		}
+    class BoxFilter final : public Filter
+    {
+    public:
+        BoxFilter(const Vector2f& radius) : Filter(radius)
+        {
+        }
 
-		virtual real Evaluate(const Vector2f& point) const override
-		{
-			return 1;
-		}
-	};
+        virtual real Evaluate(const Vector2f& point) const override
+        {
+            return 1;
+        }
+    };
 }

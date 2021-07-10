@@ -6,24 +6,24 @@
 
 namespace yart
 {
-	class Scene
-	{
-	public:
-		Scene(Ref<AbstractPrimitive> aggregate);
-		bool IntersectRay(const Ray& ray, SurfaceInteraction* surfaceInteraction) const
-		{
-			return m_Aggregate->IntersectRay(ray, surfaceInteraction);
-		}
+    class Scene
+    {
+    public:
+        Scene(Ref<AbstractPrimitive> aggregate);
+        bool IntersectRay(const Ray& ray, SurfaceInteraction* surfaceInteraction) const
+        {
+            return m_Aggregate->IntersectRay(ray, surfaceInteraction);
+        }
 
-		bool IntersectRay(const Ray& ray) const
-		{
-			return m_Aggregate->IntersectRay(ray);
-		}
+        bool IntersectRay(const Ray& ray) const
+        {
+            return m_Aggregate->IntersectRay(ray);
+        }
 
-	public:
-		const Bounds3f m_WorldBound;
+    public:
+        const Bounds3f m_WorldBound;
 
-	private:
-		Ref<AbstractPrimitive> m_Aggregate;
-	};
+    private:
+        Ref<AbstractPrimitive> m_Aggregate;
+    };
 }
