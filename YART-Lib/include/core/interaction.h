@@ -1,12 +1,14 @@
 #pragma once
-#include "math/vector.h"
 #include "core/yart.h"
+#include "math/vector.h"
 
 namespace yart
 {
 	// Forward declaration to avoid circular dependancy
 	class AbstractGeometry;
 	class AbstractPrimitive;
+	template <typename Spectrum>
+	class BSDF;
 
 	class Interaction
 	{
@@ -34,16 +36,17 @@ namespace yart
 	class SurfaceInteraction : public Interaction
 	{
 	public:
-		SurfaceInteraction() = default; 
+		SurfaceInteraction() = default;
 
 		SurfaceInteraction(const Vector3f& point, const Vector3f& ptError, const Vector2f& uv, const Vector3f& wo,
-						   const Vector3f& dpdu, const Vector3f& dpdv, const Vector3f& dndu, const Vector3f& dndv,
-						   real time, const AbstractGeometry* geometry);
+						   const Vector3f& dpdu, const Vector3f& dpdv, const Vector3f& dndu, const Vector3f& dndv, real time,
+						   const AbstractGeometry* geometry);
 
-		void SetShadingGeometry(const Vector3f& dpdu, const Vector3f& dpdv, const Vector3f& dndu,
-								const Vector3f& dndv, bool orientationIsAuthoritative);
+		void SetShadingGeometry(const Vector3f& dpdu, const Vector3f& dpdv, const Vector3f& dndu, const Vector3f& dndv,
+								bool orientationIsAuthoritative);
+
 	public:
-		// (u,v) coordinates of the parameterisation of the surface  
+		// (u,v) coordinates of the parameterisation of the surface
 		Vector2f m_uv;
 
 		// partial derivatives of the position vector w.r.t u and v
@@ -64,4 +67,23 @@ namespace yart
 			Vector3f m_dndu, m_dndv;
 		} m_Shading;
 	};
+
+	template <typename Spectrum>
+	class MaterialInteraction : public SurfaceInteraction
+	{
+	public:
+		MaterialInteraction() = default;
+
+		MaterialInteraction(const Vector3f& point, const Vector3f& ptError, const Vector2f& uv, const Vector3f& wo,
+							const Vector3f& dpdu, const Vector3f& dpdv, const Vector3f& dndu, const Vector3f& dndv, real time,
+							const AbstractGeometry* geometry)
+			: SurfaceInteraction(point, ptError, uv, wo, dpdu, dpdv, dndu, dndv, time, geometry)
+		{
+		}
+
+	public:
+		using BSDF = yart::BSDF<Spectrum>;
+		BSDF m_bsdf = nullptr;
+	};
+
 }

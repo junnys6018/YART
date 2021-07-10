@@ -19,6 +19,8 @@ namespace yart
 
 			ray->o = m_CameraToWorld.AppPoint(cameraPoint);
 			ray->d = m_CameraToWorld.AppVec(Vector3f{0, 0, 1});
+
+			return 1;
 		}
 
 	private:

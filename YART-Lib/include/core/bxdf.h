@@ -220,8 +220,11 @@ namespace yart
 	class SpecularReflection final : public BxDF<Spectrum>
 	{
 	public:
-		SpecularReflection(const Spectrum& reflectance, Fresnel<Spectrum>* fresnel)
-			: BxDF<Spectrum>(BxDFType(BSDF_REFLECTION | BSDF_SPECULAR)), m_Reflectance(reflectance), m_Fresnel(fresnel)
+		using BxDF = yart::BxDF<Spectrum>;
+		using Fresnel = yart::Fresnel<Spectrum>;
+
+		SpecularReflection(const Spectrum& reflectance, Fresnel* fresnel)
+			: BxDF(BxDFType(BSDF_REFLECTION | BSDF_SPECULAR)), m_Reflectance(reflectance), m_Fresnel(fresnel)
 		{
 		}
 
@@ -241,7 +244,7 @@ namespace yart
 
 	private:
 		const Spectrum m_Reflectance;
-		const Fresnel<Spectrum>* m_Fresnel;
+		const Fresnel* m_Fresnel;
 	};
 
 	enum class TransportMode
@@ -254,8 +257,11 @@ namespace yart
 	class SpecularTransmission final : public BxDF<Spectrum>
 	{
 	public:
+		using BxDF = yart::BxDF<Spectrum>;
+		using FresnelDielectric = yart::FresnelDielectric<Spectrum>;
+
 		SpecularTransmission(const Spectrum& transmittance, real etaI, real etaT, TransportMode transportMode)
-			: BxDF<Spectrum>(BxDFType(BSDF_TRANSMISSION | BSDF_SPECULAR)), m_Transmittance(transmittance), m_Fresnel(etaI, etaT),
+			: BxDF(BxDFType(BSDF_TRANSMISSION | BSDF_SPECULAR)), m_Transmittance(transmittance), m_Fresnel(etaI, etaT),
 			  m_TransportMode(transportMode)
 		{
 		}
@@ -285,7 +291,7 @@ namespace yart
 
 	private:
 		const Spectrum m_Transmittance;
-		const FresnelDielectric<Spectrum> m_Fresnel;
+		const FresnelDielectric m_Fresnel;
 		const TransportMode m_TransportMode;
 	};
 
@@ -293,8 +299,10 @@ namespace yart
 	class LambertianReflection final : public BxDF<Spectrum>
 	{
 	public:
+		using BxDF = yart::BxDF<Spectrum>;
+
 		LambertianReflection(const Spectrum& reflectance)
-			: BxDF<Spectrum>(BxDFType(BSDF_REFLECTION | BSDF_DIFFUSE)), m_Reflectance(reflectance)
+			: BxDF(BxDFType(BSDF_REFLECTION | BSDF_DIFFUSE)), m_Reflectance(reflectance)
 		{
 		}
 
@@ -320,8 +328,10 @@ namespace yart
 	class LambertianTransmission final : public BxDF<Spectrum>
 	{
 	public:
+		using BxDF = yart::BxDF<Spectrum>;
+
 		LambertianTransmission(const Spectrum& transmittance)
-			: BxDF<Spectrum>(BxDFType(BSDF_TRANSMISSION | BSDF_DIFFUSE)), m_Transmittance(transmittance)
+			: BxDF(BxDFType(BSDF_TRANSMISSION | BSDF_DIFFUSE)), m_Transmittance(transmittance)
 		{
 		}
 
@@ -347,13 +357,15 @@ namespace yart
 	class BSDF
 	{
 	public:
+		using BxDF = yart::BxDF<Spectrum>;
+
 		BSDF(const SurfaceInteraction& surfaceInteraction, real eta = 1)
 			: m_eta(eta), m_ShadingNormal(surfaceInteraction.m_Shading.m_Normal), m_GeometricNormal(surfaceInteraction.m_Normal),
 			  m_ShadingTangent(surfaceInteraction.m_Shading.m_dpdu), m_ShadingBiTangent(Cross(m_ShadingNormal, m_ShadingTangent))
 		{
 		}
 
-		void Add(BxDF<Spectrum>* bxdf)
+		void Add(BxDF* bxdf)
 		{
 			ASSERT(m_NumBxDFs < s_MaxBxDFs);
 			m_BxDFs[m_NumBxDFs++] = bxdf;
@@ -362,7 +374,7 @@ namespace yart
 		i32 NumCompenents(BxDFType flags = BSDF_ALL) const
 		{
 			return std::count_if(m_BxDFs, m_BxDFs + m_NumBxDFs,
-								 [flags](BxDF<Spectrum>* bxdf) { return bxdf->MatchesFlags(flags); });
+								 [flags](BxDF* bxdf) { return bxdf->MatchesFlags(flags); });
 		}
 
 		Vector3f WorldToLocal(const Vector3f& v)
@@ -404,7 +416,7 @@ namespace yart
 
 		i32 m_NumBxDFs = 0;
 		static constexpr i32 s_MaxBxDFs = 8;
-		BxDF<Spectrum>* m_BxDFs[s_MaxBxDFs];
+		BxDF* m_BxDFs[s_MaxBxDFs];
 
 	private:
 		// BSDF's are allocated by memory arenas, trying to explicity delete a BDSF is therefore not allowed

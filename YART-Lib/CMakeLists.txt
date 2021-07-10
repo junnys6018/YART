@@ -12,6 +12,9 @@ source_group(filters REGULAR_EXPRESSION "(src|include)/filters/.*")
 source_group(geometry REGULAR_EXPRESSION "(src|include)/geometry/.*")
 source_group(math REGULAR_EXPRESSION "(src|include)/math/.*")
 source_group(samplers REGULAR_EXPRESSION "(src|include)/samplers/.*")
+source_group(materials REGULAR_EXPRESSION "(src|include)/materials/.*")
+source_group(integrators REGULAR_EXPRESSION "(src|include)/integrators/.*")
+source_group(textures REGULAR_EXPRESSION "(src|include)/textures/.*")
 
 target_include_directories(YART-Lib PUBLIC 
 	src

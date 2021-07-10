@@ -111,7 +111,7 @@ namespace yart
 		// Check if the hit point is out of the spheres bounds
 		if ((m_zMin > -m_Radius && pHit.z < m_zMin) || (m_zMax < m_Radius && pHit.z > m_zMax) || phi > m_PhiMax)
 		{
-			// First hit point is out of the sphers bounds
+			// First hit point is out of the sphere's bounds
 			// Check the second hit point
 			if (tShapeHit == t2)
 				return false;

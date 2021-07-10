@@ -2,6 +2,7 @@
 #include "core/yart.h"
 
 #define YART_ALLOCA(TYPE, COUNT) (TYPE*)alloca((COUNT) * sizeof(TYPE))
+#define ARENA_ALLOC(arena, TYPE) new (arena.Alloc(sizeof(TYPE))) TYPE
 
 namespace yart
 {

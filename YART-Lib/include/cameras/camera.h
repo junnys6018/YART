@@ -62,7 +62,7 @@ namespace yart
 		{
 			m_ScreenToRaster = Scale({(real)film->m_Resolution.x, (real)film->m_Resolution.y, 1}) *
 							   Scale({1 / (screenWindow.m_MaxBound.x - screenWindow.m_MinBound.x),
-									  1 / (screenWindow.m_MaxBound.y - screenWindow.m_MinBound.y), 1}) *
+									  -1 / (screenWindow.m_MaxBound.y - screenWindow.m_MinBound.y), 1}) *
 							   Translate({-screenWindow.m_MinBound.x, -screenWindow.m_MaxBound.y, 0});
 			m_RasterToScreen = Inverse(m_ScreenToRaster);
 			m_RasterToCamera = Inverse(m_CameraToScreen) * m_RasterToScreen;
