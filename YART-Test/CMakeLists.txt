@@ -16,3 +16,5 @@ source_group(vendor/catch2 FILES ${CATCH})
 
 target_include_directories(YART-Test PUBLIC src vendor/catch2 ../YART-Lib/include)
 target_link_libraries(YART-Test PUBLIC YART-Lib zlibstatic Imath OpenEXR)
+
+target_precompile_headers(YART-Test REUSE_FROM YART-Cli)

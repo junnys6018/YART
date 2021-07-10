@@ -1,5 +1,5 @@
 #define CATCH_CONFIG_RUNNER
-#include "yart.h"
+#include <yart.h>
 #include <catch_amalgamated.hpp>
 using namespace yart;
 
