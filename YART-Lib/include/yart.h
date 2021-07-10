@@ -27,3 +27,14 @@
 #include "filters/filter.h"
 #include "filters/gaussian.h"
 #include "filters/triangle.h"
+
+// Integrators
+#include "integrators/integrator.h"
+
+// Cameras
+#include "cameras/camera.h"
+#include "cameras/orthographic.h"
+
+// Samplers
+#include "samplers/independent.h"
+#include "samplers/sampler.h"
