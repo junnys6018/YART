@@ -83,7 +83,7 @@ namespace yart
 
     public:
         using BSDF = yart::BSDF<Spectrum>;
-        BSDF m_bsdf = nullptr;
+        BSDF* m_bsdf = nullptr;
     };
 
 }
