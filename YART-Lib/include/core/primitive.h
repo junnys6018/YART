@@ -10,7 +10,7 @@ namespace yart
     {
     public:
         virtual Bounds3f WorldBound() const = 0;
-        virtual bool IntersectRay(const Ray& ray, SurfaceInteraction* surfaceInt) const = 0;
+        virtual bool IntersectRay(const Ray& ray, SurfaceInteraction* surfaceInteraction) const = 0;
         virtual bool IntersectRay(const Ray& ray) const = 0;
 
         // Return nullptr if the primitive is not emmisive
@@ -18,7 +18,7 @@ namespace yart
 
         // virtual const Material* GetMaterial() const = 0;
 
-        // virtual void ComputeScatteringFuctions(SurfaceInteraction* surfaceInt, MemoryArena& arena,
+        // virtual void ComputeScatteringFuctions(SurfaceInteraction* surfaceInteraction, MemoryArena& arena,
         //									   TransportMode mode, bool allowMultipleLobes) const = 0;
     };
 
@@ -30,7 +30,7 @@ namespace yart
         }
 
         virtual Bounds3f WorldBound() const override;
-        virtual bool IntersectRay(const Ray& ray, SurfaceInteraction* surfaceInt) const override;
+        virtual bool IntersectRay(const Ray& ray, SurfaceInteraction* surfaceInteraction) const override;
         virtual bool IntersectRay(const Ray& ray) const override;
 
     private:

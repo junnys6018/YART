@@ -34,7 +34,7 @@ namespace yart
         return Bounds3f{};
     }
 
-    bool BVHAccelerator::IntersectRay(const Ray& ray, SurfaceInteraction* surfaceInt) const
+    bool BVHAccelerator::IntersectRay(const Ray& ray, SurfaceInteraction* surfaceInteraction) const
     {
         if (!m_BVHTree)
             return false;
@@ -67,7 +67,7 @@ namespace yart
                 else
                 {
                     for (i32 i = 0; i < node->m_NumPrimitives; i++)
-                        if (m_Primitives[node->m_FirstPrimOffset + i]->IntersectRay(ray, surfaceInt))
+                        if (m_Primitives[node->m_FirstPrimOffset + i]->IntersectRay(ray, surfaceInteraction))
                             hit = true;
 
                     if (unvisitedOffset == 0)

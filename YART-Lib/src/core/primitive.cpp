@@ -7,18 +7,18 @@ namespace yart
         return m_Geometry->WorldBound();
     }
 
-    bool GeometricPrimitive::IntersectRay(const Ray& ray, SurfaceInteraction* surfaceInt) const
+    bool GeometricPrimitive::IntersectRay(const Ray& ray, SurfaceInteraction* surfaceInteraction) const
     {
         real tHit;
-        if (!m_Geometry->IntersectRay(ray, &tHit, surfaceInt))
+        if (!m_Geometry->IntersectRay(ray, &tHit, surfaceInteraction))
         {
             return false;
         }
         ray.m_Tmax = tHit;
 
-        if (surfaceInt)
+        if (surfaceInteraction)
         {
-            surfaceInt->m_Primitive = this;
+            surfaceInteraction->m_Primitive = this;
         }
 
         return true;

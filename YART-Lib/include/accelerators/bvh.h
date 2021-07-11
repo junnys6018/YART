@@ -100,7 +100,7 @@ namespace yart
         }
 
         virtual Bounds3f WorldBound() const override;
-        virtual bool IntersectRay(const Ray& ray, SurfaceInteraction* surfaceInt) const override;
+        virtual bool IntersectRay(const Ray& ray, SurfaceInteraction* surfaceInteraction) const override;
         virtual bool IntersectRay(const Ray& ray) const override;
 
     private:

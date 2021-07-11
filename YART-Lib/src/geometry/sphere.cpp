@@ -9,7 +9,7 @@ namespace yart
         return Bounds3f(Vector3f(-m_Radius, -m_Radius, m_zMin), Vector3f(m_Radius, m_Radius, m_zMax));
     }
 
-    bool Sphere::IntersectRay(const Ray& ray, real* tHit, SurfaceInteraction* surfaceInt, bool testAlphaTexture) const
+    bool Sphere::IntersectRay(const Ray& ray, real* tHit, SurfaceInteraction* surfaceInteraction, bool testAlphaTexture) const
     {
         IntersectionData isect;
         bool hit = IntersectRayImplementation(ray, testAlphaTexture, &isect);
@@ -51,8 +51,8 @@ namespace yart
         Vector3f dndu = (f * F - e * G) * invEGF2 * dpdu + (e * F - f * E) * invEGF2 * dpdv;
         Vector3f dndv = (g * F - f * G) * invEGF2 * dpdu + (f * F - g * E) * invEGF2 * dpdv;
 
-        if (surfaceInt)
-            *surfaceInt = m_ObjectToWorld->AppSI(
+        if (surfaceInteraction)
+            *surfaceInteraction = m_ObjectToWorld->AppSI(
                 SurfaceInteraction(isect.pHit, Vector3f{}, Vector2f(u, v), -ray.d, dpdu, dpdv, dndu, dndv, ray.m_Time, this));
         if (tHit)
             *tHit = isect.tShapeHit;

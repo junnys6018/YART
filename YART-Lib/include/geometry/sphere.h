@@ -18,7 +18,7 @@ namespace yart
 
         virtual Bounds3f ObjectBound() const override;
         // virtual Bounds3f WorldBound() const;
-        virtual bool IntersectRay(const Ray& ray, real* tHit, SurfaceInteraction* surfaceInt,
+        virtual bool IntersectRay(const Ray& ray, real* tHit, SurfaceInteraction* surfaceInteraction,
                                   bool testAlphaTexture = true) const override;
         virtual bool IntersectRay(const Ray& ray, bool testAlphaTexture = true) const override;
         virtual real SurfaceArea() const override;
