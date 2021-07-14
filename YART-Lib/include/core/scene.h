@@ -6,9 +6,14 @@
 
 namespace yart
 {
+
+    template <typename Spectrum>
     class Scene
     {
     public:
+        using AbstractPrimitive = yart::AbstractPrimitive<Spectrum>;
+        using SurfaceInteraction = yart::SurfaceInteraction<Spectrum>;
+
         Scene(Ref<AbstractPrimitive> aggregate);
         bool IntersectRay(const Ray& ray, SurfaceInteraction* surfaceInteraction) const
         {
@@ -26,4 +31,9 @@ namespace yart
     private:
         Ref<AbstractPrimitive> m_Aggregate;
     };
+
+    template <typename Spectrum>
+    Scene<Spectrum>::Scene(Ref<AbstractPrimitive> aggregate) : m_Aggregate(aggregate), m_WorldBound(aggregate->WorldBound())
+    {
+    }
 }

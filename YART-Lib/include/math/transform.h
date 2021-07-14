@@ -85,30 +85,31 @@ namespace yart
             return Ray(o, d, ray.m_Tmax, ray.m_Time);
         }
 
-        SurfaceInteraction AppSI(const SurfaceInteraction& si) const
+        template <typename Spectrum>
+        SurfaceInteraction<Spectrum> AppSI(const SurfaceInteraction<Spectrum>& surfaceInteraction) const
         {
             // TODO: Error bounds
             const Transform& t = *this;
-            SurfaceInteraction ret;
+            SurfaceInteraction<Spectrum> ret;
 
-            ret.m_Point = t.AppPoint(si.m_Point);
-            ret.m_Normal = Normalize(t.AppNorm(si.m_Normal));
-            ret.m_PtError = si.m_PtError;
-            ret.m_wo = t.AppVec(si.m_wo);
-            ret.m_Time = si.m_Time;
-            ret.m_uv = si.m_uv;
-            ret.m_dpdu = t.AppVec(si.m_dpdu);
-            ret.m_dpdv = t.AppVec(si.m_dpdv);
-            ret.m_dndv = t.AppNorm(si.m_dndv);
-            ret.m_dndu = t.AppNorm(si.m_dndv);
-            ret.m_Geometry = si.m_Geometry;
+            ret.m_Point = t.AppPoint(surfaceInteraction.m_Point);
+            ret.m_Normal = Normalize(t.AppNorm(surfaceInteraction.m_Normal));
+            ret.m_PtError = surfaceInteraction.m_PtError;
+            ret.m_wo = t.AppVec(surfaceInteraction.m_wo);
+            ret.m_Time = surfaceInteraction.m_Time;
+            ret.m_uv = surfaceInteraction.m_uv;
+            ret.m_dpdu = t.AppVec(surfaceInteraction.m_dpdu);
+            ret.m_dpdv = t.AppVec(surfaceInteraction.m_dpdv);
+            ret.m_dndv = t.AppNorm(surfaceInteraction.m_dndv);
+            ret.m_dndu = t.AppNorm(surfaceInteraction.m_dndv);
+            ret.m_Geometry = surfaceInteraction.m_Geometry;
 
-            ret.m_Shading.m_Normal = Normalize(t.AppNorm(si.m_Shading.m_Normal));
+            ret.m_Shading.m_Normal = Normalize(t.AppNorm(surfaceInteraction.m_Shading.m_Normal));
             ret.m_Shading.m_Normal = FaceForward(ret.m_Shading.m_Normal, ret.m_Normal);
-            ret.m_Shading.m_dpdu = t.AppVec(si.m_Shading.m_dpdu);
-            ret.m_Shading.m_dpdv = t.AppVec(si.m_Shading.m_dpdv);
-            ret.m_Shading.m_dndv = t.AppNorm(si.m_Shading.m_dndv);
-            ret.m_Shading.m_dndu = t.AppNorm(si.m_Shading.m_dndv);
+            ret.m_Shading.m_dpdu = t.AppVec(surfaceInteraction.m_Shading.m_dpdu);
+            ret.m_Shading.m_dpdv = t.AppVec(surfaceInteraction.m_Shading.m_dpdv);
+            ret.m_Shading.m_dndv = t.AppNorm(surfaceInteraction.m_Shading.m_dndv);
+            ret.m_Shading.m_dndu = t.AppNorm(surfaceInteraction.m_Shading.m_dndv);
 
             return ret;
         }

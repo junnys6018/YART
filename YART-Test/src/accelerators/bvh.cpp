@@ -6,9 +6,13 @@ using namespace yart;
 
 static Transform transform{};
 
-class TestGeometry : public AbstractGeometry
+template <typename Spectrum>
+class TestGeometry : public AbstractGeometry<Spectrum>
 {
 public:
+    using AbstractGeometry = yart::AbstractGeometry<Spectrum>;
+    using SurfaceInteraction = yart::SurfaceInteraction<Spectrum>;
+
     TestGeometry(const Bounds3f& bounds) : AbstractGeometry(&transform, &transform, false), m_Bounds(bounds)
     {
     }
@@ -56,18 +60,18 @@ private:
     Bounds3f m_Bounds;
 };
 
-inline Ref<AbstractPrimitive> CreatePrimitive(const Bounds3f& bound)
+inline Ref<AbstractPrimitive<RGBSpectrum>> CreatePrimitive(const Bounds3f& bound)
 {
-    Ref<AbstractGeometry> geometry = CreateRef<TestGeometry>(bound);
-    return CreateRef<GeometricPrimitive>(geometry);
+    auto geometry = CreateRef<TestGeometry<RGBSpectrum>>(bound);
+    return CreateRef<GeometricPrimitive<RGBSpectrum>>(geometry);
 }
 
 TEST_CASE("Intersect with one primitive", "[accelerators][bvh]")
 {
     Bounds3f bound({0, 0, 0}, {3, 4, 5});
-    Ref<AbstractPrimitive> primitive = CreatePrimitive(bound);
+    auto primitive = CreatePrimitive(bound);
 
-    std::vector<Ref<AbstractPrimitive>> primitives;
+    std::vector<Ref<AbstractPrimitive<RGBSpectrum>>> primitives;
     primitives.push_back(primitive);
 
     BVHAccelerator bvh(primitives, 1, SplitMethod::Middle);
@@ -78,7 +82,7 @@ TEST_CASE("Intersect with one primitive", "[accelerators][bvh]")
 
     SECTION("Surface Interaction Overload")
     {
-        SurfaceInteraction surfaceInt;
+        SurfaceInteraction<RGBSpectrum> surfaceInt;
 
         CHECK(!bvh.IntersectRay(miss, &surfaceInt));
 
@@ -101,7 +105,7 @@ TEST_CASE("Intersect with one primitive", "[accelerators][bvh]")
 
 TEST_CASE("No Primitives Provided", "[accelerators][bvh]")
 {
-    std::vector<Ref<AbstractPrimitive>> primitives;
+    std::vector<Ref<AbstractPrimitive<RGBSpectrum>>> primitives;
     BVHAccelerator bvh(primitives, 1, SplitMethod::Middle);
 
     CHECK(Bounds3fAreEqual(Bounds3f{}, bvh.WorldBound()));
@@ -112,7 +116,7 @@ TEST_CASE("No Primitives Provided", "[accelerators][bvh]")
 
     SECTION("Surface Interaction Overload")
     {
-        SurfaceInteraction surfaceInt;
+        SurfaceInteraction<RGBSpectrum> surfaceInt;
         CHECK(!bvh.IntersectRay(ray1, &surfaceInt));
         CHECK(!bvh.IntersectRay(ray2, &surfaceInt));
         CHECK(!bvh.IntersectRay(ray3, &surfaceInt));
@@ -131,10 +135,10 @@ TEST_CASE("All Primitive Centers in one spot", "[accelerators][bvh]")
     Bounds3f bound1({-1, -1, -1}, {1, 1, 1});
     Bounds3f bound2({-2, -2, -2}, {2, 2, 2});
 
-    Ref<AbstractPrimitive> primitive1 = CreatePrimitive(bound1);
-    Ref<AbstractPrimitive> primitive2 = CreatePrimitive(bound2);
+    auto primitive1 = CreatePrimitive(bound1);
+    auto primitive2 = CreatePrimitive(bound2);
 
-    std::vector<Ref<AbstractPrimitive>> primitives;
+    std::vector<Ref<AbstractPrimitive<RGBSpectrum>>> primitives;
     primitives.push_back(primitive1);
     primitives.push_back(primitive2);
 
@@ -153,7 +157,7 @@ TEST_CASE("All Primitive Centers in one spot", "[accelerators][bvh]")
 
     SECTION("Surface Interaction Overload")
     {
-        SurfaceInteraction surfaceInt;
+        SurfaceInteraction<RGBSpectrum> surfaceInt;
         CHECK(!bvh.IntersectRay(miss, &surfaceInt));
 
         CHECK(bvh.IntersectRay(hitFromOutside, &surfaceInt));
@@ -182,7 +186,7 @@ TEST_CASE("End to End", "[accelerators][bvh]")
 {
     const int gridSize = 20;
 
-    std::vector<Ref<AbstractPrimitive>> primitives;
+    std::vector<Ref<AbstractPrimitive<RGBSpectrum>>> primitives;
     for (int i = 0; i < gridSize; i++)
         for (int j = 0; j < gridSize; j++)
             for (int k = 0; k < gridSize; k++)
@@ -191,11 +195,11 @@ TEST_CASE("End to End", "[accelerators][bvh]")
                 Vector3f upperBound = lowerBound + Vector3f{2, 2, 2};
 
                 Bounds3f bound{lowerBound, upperBound};
-                Ref<AbstractPrimitive> primitive = CreatePrimitive(bound);
+                auto primitive = CreatePrimitive(bound);
                 primitives.push_back(primitive);
             }
 
-    SurfaceInteraction surfaceInt;
+    SurfaceInteraction<RGBSpectrum> surfaceInt;
     BVHAccelerator bvh(primitives, 1, SplitMethod::Middle);
 
     SECTION("From inside primitives")

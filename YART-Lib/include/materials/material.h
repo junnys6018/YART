@@ -9,8 +9,8 @@ namespace yart
     class AbstractMaterial
     {
     public:
-        using MaterialInteraction = yart::MaterialInteraction<Spectrum>;
-        virtual void ComputeScatteringFunctions(MaterialInteraction* materialInteraction, MemoryArena& arena, TransportMode mode,
+        using SurfaceInteraction = yart::SurfaceInteraction<Spectrum>;
+        virtual void ComputeScatteringFunctions(SurfaceInteraction* surfaceInteraction, MemoryArena& arena, TransportMode mode,
                                                 bool allowMultipleLobes) const = 0;
     };
 }

@@ -10,6 +10,8 @@ namespace yart
     class AbstractIntegrator
     {
     public:
+        using Scene = yart::Scene<Spectrum>;
+
         virtual void Render(const Scene& scene) = 0;
     };
 
@@ -17,7 +19,9 @@ namespace yart
     class SamplerIntegrator : public AbstractIntegrator<Spectrum>
     {
     public:
-        SamplerIntegrator(Ref<AbstractCamera> camera, Ref<AbstractSampler> sampler) : m_Camera(camera), m_Sampler(sampler)
+        using Scene = yart::Scene<Spectrum>;
+        SamplerIntegrator(const Ref<AbstractCamera>& camera, const Ref<AbstractSampler>& sampler)
+            : m_Camera(camera), m_Sampler(sampler)
         {
         }
 
@@ -57,6 +61,7 @@ namespace yart
                     L = Spectrum{0};
                 }
                 m_Camera->m_Film->AddSample(cameraSample.m_FilmPoint, L, rayWeight);
+                arena.Reset();
             } while (m_Sampler->StartNextSample());
         }
 

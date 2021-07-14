@@ -51,4 +51,58 @@ namespace yart
     {
         return std::make_shared<T>(std::forward<Args>(args)...);
     }
+
+    enum class TransportMode
+    {
+        Radiance,
+        Importance
+    };
+
+    // template class declarations
+    template <typename Spectrum>
+    class BVHAccelerator;
+    template <typename Spectrum>
+    class Fresnel;
+    template <typename Spectrum>
+    class FresnelConductor;
+    template <typename Spectrum>
+    class FresnelDielectric;
+    template <typename Spectrum>
+    class FresnelNoOp;
+    template <typename Spectrum>
+    class BxDF;
+    template <typename Spectrum>
+    class SpecularReflection;
+    template <typename Spectrum>
+    class SpecularTransmission;
+    template <typename Spectrum>
+    class LambertianReflection;
+    template <typename Spectrum>
+    class LambertianTransmission;
+    template <typename Spectrum>
+    class BSDF;
+    template <typename Spectrum>
+    class SurfaceInteraction;
+    template <typename Spectrum>
+    class AbstractPrimitive;
+    template <typename Spectrum>
+    class GeometricPrimitive;
+    template <typename Spectrum>
+    class AbstractAggregate;
+    template <typename Spectrum>
+    class Scene;
+    template <typename Spectrum>
+    class AbstractGeometry;
+    template <typename Spectrum>
+    class Sphere;
+    template <typename Spectrum>
+    class AbstractIntegrator;
+    template <typename Spectrum>
+    class SamplerIntegrator;
+    template <typename Spectrum>
+    class WhittedIntegrator;
+    template <typename Spectrum>
+    class AbstractMaterial;
+    template <typename Spectrum>
+    class MatteMaterial;
 }

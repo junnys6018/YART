@@ -97,7 +97,7 @@ namespace yart
 
     real CalculateFresnelDielectric(real cosThetaI, real etaI, real etaT);
 
-    // Refractive index of conductors are wavelength dependant, so we return a Spectrum here
+    // Refractive index of conductors are wavelength dependent, so we return a Spectrum here
     template <typename Spectrum>
     Spectrum CalculateFresnelConductor(real cosThetaI, const Spectrum& etaI, const Spectrum& etaT, const Spectrum& k)
     {
@@ -247,12 +247,6 @@ namespace yart
         const Fresnel* m_Fresnel;
     };
 
-    enum class TransportMode
-    {
-        Radiance,
-        Importance
-    };
-
     template <typename Spectrum>
     class SpecularTransmission final : public BxDF<Spectrum>
     {
@@ -358,6 +352,7 @@ namespace yart
     {
     public:
         using BxDF = yart::BxDF<Spectrum>;
+        using SurfaceInteraction = yart::SurfaceInteraction<Spectrum>;
 
         BSDF(const SurfaceInteraction& surfaceInteraction, real eta = 1)
             : m_eta(eta), m_ShadingNormal(surfaceInteraction.m_Shading.m_Normal), m_GeometricNormal(surfaceInteraction.m_Normal),

@@ -50,6 +50,8 @@ template <typename Spectrum>
 class TestIntegrator final : public SamplerIntegrator<Spectrum>
 {
 public:
+	using Scene = yart::Scene<Spectrum>;
+
 	TestIntegrator(Ref<AbstractCamera> camera, Ref<AbstractSampler> sampler) : SamplerIntegrator<Spectrum>(camera, sampler)
 	{
 	}
@@ -66,6 +68,12 @@ public:
 
 int main(int argc, char** argv)
 {
+	using AbstractGeometry = yart::AbstractGeometry<RGBSpectrum>;
+	using GeometricPrimitive = yart::GeometricPrimitive<RGBSpectrum>;
+	using AbstractPrimitive = yart::AbstractPrimitive<RGBSpectrum>;
+	using Sphere = yart::Sphere<RGBSpectrum>;
+	using Scene = yart::Scene<RGBSpectrum>;
+
 	yart::Initialize();
 	const i32 x = 320, y = 320, spp = 20;
 
