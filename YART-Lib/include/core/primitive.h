@@ -13,17 +13,17 @@ namespace yart
     public:
         using AbstractMaterial = yart::AbstractMaterial<Spectrum>;
         using SurfaceInteraction = yart::SurfaceInteraction<Spectrum>;
+        virtual ~AbstractPrimitive()
+        {
+        }
         virtual Bounds3f WorldBound() const = 0;
         virtual bool IntersectRay(const Ray& ray, SurfaceInteraction* surfaceInteraction) const = 0;
         virtual bool IntersectRay(const Ray& ray) const = 0;
         // virtual const AreaLight* GetAreaLight() const = 0; // Return nullptr if the primitive is not emmisive
         // virtual const AbstractMaterial* GetMaterial() const = 0;
-        //virtual void ComputeScatteringFuctions(SurfaceInteraction* surfaceInteraction, MemoryArena& arena, TransportMode mode,
+        // virtual void ComputeScatteringFuctions(SurfaceInteraction* surfaceInteraction, MemoryArena& arena, TransportMode mode,
         //                                       bool allowMultipleLobes) const = 0;
     };
-
-    template <typename Spectrum>
-    class GeometricPrimitive;
 
     template <typename Spectrum>
     class GeometricPrimitive : public AbstractPrimitive<Spectrum>

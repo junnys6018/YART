@@ -12,6 +12,9 @@ namespace yart
     public:
         using Scene = yart::Scene<Spectrum>;
 
+        virtual ~AbstractIntegrator()
+        {
+        }
         virtual void Render(const Scene& scene) = 0;
     };
 

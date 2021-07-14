@@ -16,6 +16,9 @@ namespace yart
               m_TransformSwapsHandedness(objectToWorld->SwapsHandedness())
         {
         }
+        virtual ~AbstractGeometry()
+        {
+        }
 
         virtual Bounds3f ObjectBound() const = 0;
         virtual Bounds3f WorldBound() const;

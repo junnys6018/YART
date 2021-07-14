@@ -18,6 +18,9 @@ namespace yart
         AbstractCamera(const Transform& cameraToWorld, Film* film) : m_CameraToWorld(cameraToWorld), m_Film(film)
         {
         }
+        virtual ~AbstractCamera()
+        {
+        }
 
         virtual real GenerateRay(const CameraSample& sample, Ray* ray) const = 0;
 

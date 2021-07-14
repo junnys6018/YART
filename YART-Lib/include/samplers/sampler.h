@@ -11,6 +11,9 @@ namespace yart
         AbstractSampler(i64 samplesPerPixel) : m_SamplesPerPixel(samplesPerPixel)
         {
         }
+        virtual ~AbstractSampler()
+        {
+        }
 
         virtual void StartPixel(const Vector2i& pixel);
         virtual real Get1D() = 0;

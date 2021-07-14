@@ -10,6 +10,9 @@ namespace yart
     {
     public:
         using SurfaceInteraction = yart::SurfaceInteraction<Spectrum>;
+        virtual ~AbstractMaterial()
+        {
+        }
         virtual void ComputeScatteringFunctions(SurfaceInteraction* surfaceInteraction, MemoryArena& arena, TransportMode mode,
                                                 bool allowMultipleLobes) const = 0;
     };
