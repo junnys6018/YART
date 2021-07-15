@@ -157,7 +157,7 @@ namespace yart
 
         virtual Spectrum Evaluate(real cosThetaI) const override
         {
-            return CalculateFresnelDielectric(std::abs(cosThetaI), m_etaI, m_etaT);
+            return Spectrum{CalculateFresnelDielectric(std::abs(cosThetaI), m_etaI, m_etaT)};
         }
 
     public:
@@ -201,15 +201,18 @@ namespace yart
         virtual Spectrum Samplef(const Vector3f& wo, Vector3f* wi, const Vector2f& sample, real* pdf, BxDFType* sampledType) const
         {
             // TODO
+            return Spectrum{0};
         }
         virtual Spectrum rho(const Vector3f& wo, i32 numSamples, const Vector2f* samples) const
         {
             // TODO
+            return Spectrum{0};
         }
 
         virtual Spectrum rho(i32 numSamples, const Vector2f* samples1, const Vector2f* samples2) const
         {
             // TODO
+            return Spectrum{0};
         }
 
     public:
@@ -273,7 +276,7 @@ namespace yart
             real etaT = entering ? m_Fresnel.m_etaT : m_Fresnel.m_etaI;
 
             if (!Refract(wo, FaceForward(Vector3f{0, 0, 1}, wo), etaI / etaT, wi))
-                return 0;
+                return Spectrum{0};
 
             *pdf = 1;
             Spectrum ft = m_Transmittance * (Spectrum{1} - m_Fresnel.Evaluate(CosTheta(*wi)));
@@ -371,12 +374,12 @@ namespace yart
             return std::count_if(m_BxDFs, m_BxDFs + m_NumBxDFs, [flags](BxDF* bxdf) { return bxdf->MatchesFlags(flags); });
         }
 
-        Vector3f WorldToLocal(const Vector3f& v)
+        Vector3f WorldToLocal(const Vector3f& v) const
         {
             return Vector3f{Dot(v, m_ShadingNormal), Dot(v, m_ShadingTangent), Dot(v, m_ShadingBiTangent)};
         }
 
-        Vector3f LocalToWorld(const Vector3f& v)
+        Vector3f LocalToWorld(const Vector3f& v) const
         {
             return Vector3f{v.x * m_ShadingNormal.x + v.y * m_ShadingTangent.x + v.z * m_ShadingBiTangent.x,
                             v.x * m_ShadingNormal.y + v.y * m_ShadingTangent.y + v.z * m_ShadingBiTangent.y,
@@ -395,7 +398,7 @@ namespace yart
                              (!reflect && ((m_BxDFs[i]->m_Type & BSDF_TRANSMISSION)));
                 if (apply && m_BxDFs[i]->MatchesFlags(flags))
                 {
-                    f += m_BxDFs[i]->f(wo, wi);
+                    ret += m_BxDFs[i]->f(wo, wi);
                 }
             }
             return ret;

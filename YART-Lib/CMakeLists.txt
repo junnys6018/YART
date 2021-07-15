@@ -2,7 +2,19 @@
 file(GLOB_RECURSE SOURCES src/*)
 file(GLOB_RECURSE HEADERS include/*)
 
-add_library(YART-Lib STATIC ${SOURCES} ${HEADERS})
+set(GENERATED_FILES "${CMAKE_CURRENT_BINARY_DIR}/templatedeclaration.h" "${CMAKE_CURRENT_BINARY_DIR}/templatebuild.cpp")
+
+# Generate configuration file
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/include/yart.h.in" "${CMAKE_CURRENT_SOURCE_DIR}/include/yart.h")
+
+# Auto generate template declaration and instantiation code
+message(STATUS "Generating template code")
+execute_process(
+    COMMAND python GenerateTemplates.py templates.json -o ${CMAKE_CURRENT_BINARY_DIR}
+    WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/scripts"
+)
+
+add_library(YART-Lib STATIC ${SOURCES} ${HEADERS} ${GENERATED_FILES})
 
 source_group(" " REGULAR_EXPRESSION "(src|include)/[^/]+\.(h|cpp)")
 source_group(accelerators REGULAR_EXPRESSION "(src|include)/accelerators/.*")
@@ -17,15 +29,15 @@ source_group(integrators REGULAR_EXPRESSION "(src|include)/integrators/.*")
 source_group(textures REGULAR_EXPRESSION "(src|include)/textures/.*")
 
 target_include_directories(YART-Lib PUBLIC 
-	src
-	include
-	vendor/spdlog/include
-	vendor/openexr/src/lib/OpenEXR
-	vendor/openexr/src/lib/Iex
-	vendor/Imath/src/Imath
-	${CMAKE_CURRENT_BINARY_DIR}/vendor/openexr/cmake
-	${CMAKE_CURRENT_BINARY_DIR}/vendor/Imath/config
-	)
+    src
+    include
+    vendor/spdlog/include
+    vendor/openexr/src/lib/OpenEXR
+    vendor/openexr/src/lib/Iex
+    vendor/Imath/src/Imath
+    ${CMAKE_CURRENT_BINARY_DIR}/vendor/openexr/cmake
+    ${CMAKE_CURRENT_BINARY_DIR}/vendor/Imath/config
+)
 
 target_precompile_headers(YART-Lib 
     PRIVATE

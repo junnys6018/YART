@@ -47,6 +47,7 @@ namespace yart
 
         void ComputeScatteringFunctions(MemoryArena& arena, TransportMode mode, bool allowMultipleLobes)
         {
+            // TODO
         }
 
     public:
@@ -73,6 +74,7 @@ namespace yart
             Vector3f m_dndu, m_dndv;
         } m_Shading;
     };
+
     template <typename Spectrum>
     SurfaceInteraction<Spectrum>::SurfaceInteraction(const Vector3f& point, const Vector3f& ptError, const Vector2f& uv,
                                                      const Vector3f& wo, const Vector3f& dpdu, const Vector3f& dpdv,

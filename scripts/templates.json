@@ -1,0 +1,31 @@
+{
+    "templateClasses": [
+        "BVHAccelerator",
+        "Fresnel",
+        "FresnelConductor",
+        "FresnelDielectric",
+        "FresnelNoOp",
+        "BxDF",
+        "SpecularReflection",
+        "SpecularTransmission",
+        "LambertianReflection",
+        "LambertianTransmission",
+        "BSDF",
+        "SurfaceInteraction",
+        "AbstractPrimitive",
+        "GeometricPrimitive",
+        "AbstractAggregate",
+        "Scene",
+        "AbstractGeometry",
+        "Sphere",
+        "AbstractIntegrator",
+        "SamplerIntegrator",
+        "WhittedIntegrator",
+        "AbstractMaterial",
+        "MatteMaterial"
+    ],
+    "spectra": [
+        "RGBSpectrum",
+        "SampledSpectrum"
+    ]
+}

@@ -63,7 +63,7 @@ include_directories(YART-Lib/vendor/zlib ${CMAKE_CURRENT_BINARY_DIR}/YART-Lib/ve
 # Imath
 set(BUILD_SHARED_LIBS            OFF CACHE BOOL " " FORCE)
 
-add_subdirectory (YART-Lib/vendor/Imath)
+add_subdirectory(YART-Lib/vendor/Imath)
 
 # openexr
 set(ILMBASE_NAMESPACE_VERSIONING OFF CACHE BOOL " " FORCE)
@@ -83,6 +83,7 @@ set_property(TARGET Imath Iex IlmThread OpenEXR OpenEXRUtil zlibstatic PROPERTY 
 
 # ---------- Add Subdirectories ----------
 
+message(STATUS "Building YART")
 add_subdirectory(YART-Lib)
 add_subdirectory(YART-Cli)
 add_subdirectory(YART-Test)

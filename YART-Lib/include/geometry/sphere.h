@@ -47,14 +47,14 @@ namespace yart
     };
 
     template <typename Spectrum>
-    inline Bounds3f Sphere<Spectrum>::ObjectBound() const
+    Bounds3f Sphere<Spectrum>::ObjectBound() const
     {
         // TODO: A tigher bound can be made for phi < 3pi/2
         return Bounds3f(Vector3f(-m_Radius, -m_Radius, m_zMin), Vector3f(m_Radius, m_Radius, m_zMax));
     }
 
     template <typename Spectrum>
-    inline bool Sphere<Spectrum>::IntersectRay(const Ray& ray, real* tHit, SurfaceInteraction* surfaceInteraction,
+    bool Sphere<Spectrum>::IntersectRay(const Ray& ray, real* tHit, SurfaceInteraction* surfaceInteraction,
                                         bool testAlphaTexture) const
     {
         IntersectionData isect;
@@ -107,13 +107,13 @@ namespace yart
     }
 
     template <typename Spectrum>
-    inline bool Sphere<Spectrum>::IntersectRay(const Ray& ray, bool testAlphaTexture) const
+    bool Sphere<Spectrum>::IntersectRay(const Ray& ray, bool testAlphaTexture) const
     {
         return IntersectRayImplementation(ray, testAlphaTexture, nullptr);
     }
 
     template <typename Spectrum>
-    inline bool Sphere<Spectrum>::IntersectRayImplementation(const Ray& ray, bool testAlphaTexture, IntersectionData* isect) const
+    bool Sphere<Spectrum>::IntersectRayImplementation(const Ray& ray, bool testAlphaTexture, IntersectionData* isect) const
     {
         // TODO: account for floating point error
         Ray objSpaceRay = m_WorldToObject->AppRay(ray);
@@ -185,7 +185,7 @@ namespace yart
     }
 
     template <typename Spectrum>
-    inline real Sphere<Spectrum>::SurfaceArea() const
+    real Sphere<Spectrum>::SurfaceArea() const
     {
         return m_PhiMax * m_Radius * (m_zMax - m_zMin);
     }

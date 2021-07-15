@@ -14,7 +14,7 @@ namespace yart
         COUNT
     };
 
-    extern const char* const SplitMethodNames[static_cast<i32>(SplitMethod::COUNT)];
+    extern const char* const SplitMethodNames[];
 
     struct BVHBuildNode
     {
@@ -95,13 +95,7 @@ namespace yart
         using SurfaceInteraction = yart::SurfaceInteraction<Spectrum>;
 
         BVHAccelerator(const std::vector<Ref<AbstractPrimitive>>& primitives, i32 maxPrimsInNode, SplitMethod splitMethod);
-        ~BVHAccelerator()
-        {
-            if (m_BVHTree)
-            {
-                FreeAligned(m_BVHTree);
-            }
-        }
+        ~BVHAccelerator();
 
         virtual Bounds3f WorldBound() const override;
         virtual bool IntersectRay(const Ray& ray, SurfaceInteraction* surfaceInteraction) const override;
@@ -142,6 +136,15 @@ namespace yart
     }
 
     template <typename Spectrum>
+    BVHAccelerator<Spectrum>::~BVHAccelerator()
+    {
+        if (m_BVHTree)
+        {
+            FreeAligned(m_BVHTree);
+        }
+    }
+
+    template <typename Spectrum>
     Bounds3f BVHAccelerator<Spectrum>::WorldBound() const
     {
         if (m_BVHTree)
@@ -170,6 +173,7 @@ namespace yart
             {
                 if (node->IsInteriorNode())
                 {
+                    ASSERT(unvisitedOffset < 64);
                     if (dirIsNeg[node->m_SplitAxis])
                     {
                         unvisitedNodes[unvisitedOffset++] = currentNodeOffset + 1;
@@ -298,10 +302,10 @@ namespace yart
                 real midPoint = (centroidBounds.m_MinBound[axis] + centroidBounds.m_MaxBound[axis]) / 2;
                 BVHPrimitiveInfo* ptr = primitiveInfo.data();
                 // clang-format off
-				BVHPrimitiveInfo* midPrimitive = std::partition(ptr + start, ptr + end,
-					[midPoint, axis](const BVHPrimitiveInfo& pInfo) {
-						return pInfo.m_Center[axis] < midPoint;
-					});
+                BVHPrimitiveInfo* midPrimitive = std::partition(ptr + start, ptr + end,
+                    [midPoint, axis](const BVHPrimitiveInfo& pInfo) {
+                        return pInfo.m_Center[axis] < midPoint;
+                    });
                 // clang-format on
                 mid = midPrimitive - ptr;
 
@@ -315,10 +319,10 @@ namespace yart
                 mid = (start + end) / 2;
                 BVHPrimitiveInfo* ptr = primitiveInfo.data();
                 // clang-format off
-				std::nth_element(ptr + start, ptr + mid, ptr + end,
-					[axis](const BVHPrimitiveInfo& a, const BVHPrimitiveInfo& b) {
-						return a.m_Center[axis] < b.m_Center[axis];
-					});
+                std::nth_element(ptr + start, ptr + mid, ptr + end,
+                    [axis](const BVHPrimitiveInfo& a, const BVHPrimitiveInfo& b) {
+                        return a.m_Center[axis] < b.m_Center[axis];
+                    });
                 // clang-format on
                 break;
             }

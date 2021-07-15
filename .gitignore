@@ -1,6 +1,4 @@
 .vs
 
-compile_commands
-compile_commands.json
-
+YART-Lib/include/yart.h
 build

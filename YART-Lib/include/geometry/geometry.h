@@ -16,9 +16,7 @@ namespace yart
               m_TransformSwapsHandedness(objectToWorld->SwapsHandedness())
         {
         }
-        virtual ~AbstractGeometry()
-        {
-        }
+        virtual ~AbstractGeometry();
 
         virtual Bounds3f ObjectBound() const = 0;
         virtual Bounds3f WorldBound() const;
@@ -33,6 +31,11 @@ namespace yart
         const bool m_ReverseOrientation;
         const bool m_TransformSwapsHandedness;
     };
+
+    template <typename Spectrum>
+    AbstractGeometry<Spectrum>::~AbstractGeometry()
+    {
+    }
 
     template <typename Spectrum>
     Bounds3f AbstractGeometry<Spectrum>::WorldBound() const

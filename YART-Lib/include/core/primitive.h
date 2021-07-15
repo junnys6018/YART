@@ -13,9 +13,7 @@ namespace yart
     public:
         using AbstractMaterial = yart::AbstractMaterial<Spectrum>;
         using SurfaceInteraction = yart::SurfaceInteraction<Spectrum>;
-        virtual ~AbstractPrimitive()
-        {
-        }
+        virtual ~AbstractPrimitive();
         virtual Bounds3f WorldBound() const = 0;
         virtual bool IntersectRay(const Ray& ray, SurfaceInteraction* surfaceInteraction) const = 0;
         virtual bool IntersectRay(const Ray& ray) const = 0;
@@ -55,6 +53,11 @@ namespace yart
     {
         // Override GetAreaLight(), GetMaterial() and ComputeScatteringFunctions() here when implemented
     };
+
+    template <typename Spectrum>
+    AbstractPrimitive<Spectrum>::~AbstractPrimitive()
+    {
+    }
 
     template <typename Spectrum>
     Bounds3f GeometricPrimitive<Spectrum>::WorldBound() const

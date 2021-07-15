@@ -30,6 +30,7 @@
 
 // Integrators
 #include "integrators/integrator.h"
+#include "integrators/whitted.h"
 
 // Cameras
 #include "cameras/camera.h"
@@ -38,3 +39,9 @@
 // Samplers
 #include "samplers/independent.h"
 #include "samplers/sampler.h"
+
+// Materials
+#include "materials/material.h"
+#include "materials/matte.h"
+
+#include "${CMAKE_CURRENT_BINARY_DIR}/templatedeclaration.h"
