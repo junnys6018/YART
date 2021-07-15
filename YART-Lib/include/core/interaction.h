@@ -5,6 +5,8 @@
 
 namespace yart
 {
+    class AbstractGeometry;
+
     class Interaction
     {
     public:
@@ -28,27 +30,19 @@ namespace yart
         // TODO: Medium interface (see 2.10 and 11.3.1)
     };
 
-    template <typename Spectrum>
+    // We split the generic and the non generic part of surface interactions into 2 classes, SurfaceInteraction and
+    // MaterialInteraction this is so that we can pass the non generic part of interactions to code that doesnt need to be aware
+    // of the particular type of spectrum being used (for example Texture::Evaulate(), and AbstractGeometry::IntersectRay())
     class SurfaceInteraction : public Interaction
     {
     public:
-        using BSDF = yart::BSDF<Spectrum>;
-        using AbstractPrimitive = yart::AbstractPrimitive<Spectrum>;
-        using AbstractGeometry = yart::AbstractGeometry<Spectrum>;
-
         SurfaceInteraction() = default;
-
         SurfaceInteraction(const Vector3f& point, const Vector3f& ptError, const Vector2f& uv, const Vector3f& wo,
                            const Vector3f& dpdu, const Vector3f& dpdv, const Vector3f& dndu, const Vector3f& dndv, real time,
                            const AbstractGeometry* geometry);
 
         void SetShadingGeometry(const Vector3f& dpdu, const Vector3f& dpdv, const Vector3f& dndu, const Vector3f& dndv,
                                 bool orientationIsAuthoritative);
-
-        void ComputeScatteringFunctions(MemoryArena& arena, TransportMode mode, bool allowMultipleLobes)
-        {
-            // TODO
-        }
 
     public:
         // (u,v) coordinates of the parameterisation of the surface
@@ -60,12 +54,6 @@ namespace yart
         // partial derivatives of the normal vector w.r.t u and v
         Vector3f m_dndu, m_dndv;
 
-        // Reference to the geometry and primitive the point lies on
-        const AbstractGeometry* m_Geometry = nullptr;
-        const AbstractPrimitive* m_Primitive = nullptr;
-
-        BSDF* m_bsdf = nullptr;
-
         // second instance of geometry data that represents peturbed values (from vertex normals or bump mapping)
         struct
         {
@@ -73,55 +61,39 @@ namespace yart
             Vector3f m_dpdu, m_dpdv;
             Vector3f m_dndu, m_dndv;
         } m_Shading;
+
+        const AbstractGeometry* m_Geometry = nullptr;
     };
 
     template <typename Spectrum>
-    SurfaceInteraction<Spectrum>::SurfaceInteraction(const Vector3f& point, const Vector3f& ptError, const Vector2f& uv,
-                                                     const Vector3f& wo, const Vector3f& dpdu, const Vector3f& dpdv,
-                                                     const Vector3f& dndu, const Vector3f& dndv, real time,
-                                                     const AbstractGeometry* geometry)
-        : Interaction(point, Normalize(Cross(dpdu, dpdv)), ptError, wo, time), m_uv(uv), m_dpdu(dpdu), m_dpdv(dpdv), m_dndu(dndu),
-          m_dndv(dndv), m_Geometry(geometry)
+    class MaterialInteraction : public SurfaceInteraction
     {
-        m_Shading.m_Normal = m_Normal;
-        m_Shading.m_dpdu = dpdu;
-        m_Shading.m_dpdv = dpdv;
-        m_Shading.m_dndu = dndu;
-        m_Shading.m_dndv = dndv;
+    public:
+        using BSDF = yart::BSDF<Spectrum>;
+        using AbstractPrimitive = yart::AbstractPrimitive<Spectrum>;
 
-        // Adjust normal to ensure to normal points outwards in closed shapes
-        if (m_Geometry && (m_Geometry->m_ReverseOrientation ^ m_Geometry->m_TransformSwapsHandedness))
+        MaterialInteraction() = default;
+        MaterialInteraction(const Vector3f& point, const Vector3f& ptError, const Vector2f& uv, const Vector3f& wo,
+                            const Vector3f& dpdu, const Vector3f& dpdv, const Vector3f& dndu, const Vector3f& dndv, real time,
+                            const AbstractGeometry* geometry);
+
+        void ComputeScatteringFunctions(MemoryArena& arena, TransportMode mode, bool allowMultipleLobes)
         {
-            m_Normal *= -1;
-            m_Shading.m_Normal *= -1;
+            // TODO
         }
-    }
+
+    public:
+        // Reference to the primitive point lies on
+        const AbstractPrimitive* m_Primitive = nullptr;
+        BSDF* m_bsdf = nullptr;
+    };
+
     template <typename Spectrum>
-    void SurfaceInteraction<Spectrum>::SetShadingGeometry(const Vector3f& dpdu, const Vector3f& dpdv, const Vector3f& dndu,
-                                                          const Vector3f& dndv, bool orientationIsAuthoritative)
+    MaterialInteraction<Spectrum>::MaterialInteraction(const Vector3f& point, const Vector3f& ptError, const Vector2f& uv,
+                                                       const Vector3f& wo, const Vector3f& dpdu, const Vector3f& dpdv,
+                                                       const Vector3f& dndu, const Vector3f& dndv, real time,
+                                                       const AbstractGeometry* geometry)
+        : SurfaceInteraction(point, ptError, uv, wo, dpdu, dpdv, dndu, dndv, time, geometry)
     {
-        m_Shading.m_Normal = Normalize(Cross(dpdu, dpdv));
-
-        // Adjust normal to ensure to normal points outwards in closed shapes
-        if (m_Geometry && (m_Geometry->m_ReverseOrientation ^ m_Geometry->m_TransformSwapsHandedness))
-        {
-            m_Normal *= -1;
-        }
-        // Ensure shading normal and surface normal lie in the same hemisphere
-        // bool orientationIsAuthoritative determines which normal to flip if they dont lie
-        // in the same hemisphere
-        if (orientationIsAuthoritative)
-        {
-            m_Normal = FaceForward(m_Normal, m_Shading.m_Normal);
-        }
-        else
-        {
-            m_Shading.m_Normal = FaceForward(m_Shading.m_Normal, m_Normal);
-        }
-
-        m_Shading.m_dpdu = dpdu;
-        m_Shading.m_dpdv = dpdv;
-        m_Shading.m_dndu = dndu;
-        m_Shading.m_dndv = dndv;
     }
 }

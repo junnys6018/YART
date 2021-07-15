@@ -12,12 +12,12 @@ namespace yart
     {
     public:
         using AbstractPrimitive = yart::AbstractPrimitive<Spectrum>;
-        using SurfaceInteraction = yart::SurfaceInteraction<Spectrum>;
+        using MaterialInteraction = yart::MaterialInteraction<Spectrum>;
 
         Scene(Ref<AbstractPrimitive> aggregate);
-        bool IntersectRay(const Ray& ray, SurfaceInteraction* surfaceInteraction) const
+        bool IntersectRay(const Ray& ray, MaterialInteraction* materialInteraction) const
         {
-            return m_Aggregate->IntersectRay(ray, surfaceInteraction);
+            return m_Aggregate->IntersectRay(ray, materialInteraction);
         }
 
         bool IntersectRay(const Ray& ray) const

@@ -85,12 +85,11 @@ namespace yart
             return Ray(o, d, ray.m_Tmax, ray.m_Time);
         }
 
-        template <typename Spectrum>
-        SurfaceInteraction<Spectrum> AppSI(const SurfaceInteraction<Spectrum>& surfaceInteraction) const
+        SurfaceInteraction AppSI(const SurfaceInteraction& surfaceInteraction) const
         {
             // TODO: Error bounds
             const Transform& t = *this;
-            SurfaceInteraction<Spectrum> ret;
+            SurfaceInteraction ret;
 
             ret.m_Point = t.AppPoint(surfaceInteraction.m_Point);
             ret.m_Normal = Normalize(t.AppNorm(surfaceInteraction.m_Normal));

@@ -82,7 +82,7 @@ namespace yart
     template <typename Spectrum>
     class BSDF;
     template <typename Spectrum>
-    class SurfaceInteraction;
+    class MaterialInteraction;
     template <typename Spectrum>
     class AbstractPrimitive;
     template <typename Spectrum>
@@ -91,10 +91,6 @@ namespace yart
     class AbstractAggregate;
     template <typename Spectrum>
     class Scene;
-    template <typename Spectrum>
-    class AbstractGeometry;
-    template <typename Spectrum>
-    class Sphere;
     template <typename Spectrum>
     class AbstractIntegrator;
     template <typename Spectrum>

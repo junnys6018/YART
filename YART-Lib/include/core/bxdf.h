@@ -355,7 +355,6 @@ namespace yart
     {
     public:
         using BxDF = yart::BxDF<Spectrum>;
-        using SurfaceInteraction = yart::SurfaceInteraction<Spectrum>;
 
         BSDF(const SurfaceInteraction& surfaceInteraction, real eta = 1)
             : m_eta(eta), m_ShadingNormal(surfaceInteraction.m_Shading.m_Normal), m_GeometricNormal(surfaceInteraction.m_Normal),

@@ -92,13 +92,13 @@ namespace yart
     {
     public:
         using AbstractPrimitive = yart::AbstractPrimitive<Spectrum>;
-        using SurfaceInteraction = yart::SurfaceInteraction<Spectrum>;
+        using MaterialInteraction = yart::MaterialInteraction<Spectrum>;
 
         BVHAccelerator(const std::vector<Ref<AbstractPrimitive>>& primitives, i32 maxPrimsInNode, SplitMethod splitMethod);
         ~BVHAccelerator();
 
         virtual Bounds3f WorldBound() const override;
-        virtual bool IntersectRay(const Ray& ray, SurfaceInteraction* surfaceInteraction) const override;
+        virtual bool IntersectRay(const Ray& ray, MaterialInteraction* materialInteraction) const override;
         virtual bool IntersectRay(const Ray& ray) const override;
 
     private:
@@ -154,7 +154,7 @@ namespace yart
     }
 
     template <typename Spectrum>
-    bool BVHAccelerator<Spectrum>::IntersectRay(const Ray& ray, SurfaceInteraction* surfaceInteraction) const
+    bool BVHAccelerator<Spectrum>::IntersectRay(const Ray& ray, MaterialInteraction* materialInteraction) const
     {
         if (!m_BVHTree)
             return false;
@@ -188,7 +188,7 @@ namespace yart
                 else
                 {
                     for (i32 i = 0; i < node->m_NumPrimitives; i++)
-                        if (m_Primitives[node->m_FirstPrimOffset + i]->IntersectRay(ray, surfaceInteraction))
+                        if (m_Primitives[node->m_FirstPrimOffset + i]->IntersectRay(ray, materialInteraction))
                             hit = true;
 
                     if (unvisitedOffset == 0)

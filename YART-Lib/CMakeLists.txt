@@ -9,8 +9,12 @@ configure_file("${CMAKE_CURRENT_SOURCE_DIR}/include/yart.h.in" "${CMAKE_CURRENT_
 
 # Auto generate template declaration and instantiation code
 message(STATUS "Generating template code")
+
+find_package(PythonInterp 3.4 REQUIRED)
+find_package(PythonLibs 3.4 REQUIRED)
+
 execute_process(
-    COMMAND python GenerateTemplates.py templates.json -o ${CMAKE_CURRENT_BINARY_DIR}
+    COMMAND ${PYTHON_EXECUTABLE} GenerateTemplates.py templates.json -o ${CMAKE_CURRENT_BINARY_DIR}
     WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/scripts"
 )
 

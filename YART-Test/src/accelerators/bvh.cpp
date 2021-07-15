@@ -6,13 +6,9 @@ using namespace yart;
 
 static Transform transform{};
 
-template <typename Spectrum>
-class TestGeometry : public AbstractGeometry<Spectrum>
+class TestGeometry : public AbstractGeometry
 {
 public:
-    using AbstractGeometry = yart::AbstractGeometry<Spectrum>;
-    using SurfaceInteraction = yart::SurfaceInteraction<Spectrum>;
-
     TestGeometry(const Bounds3f& bounds) : AbstractGeometry(&transform, &transform, false), m_Bounds(bounds)
     {
     }
@@ -62,7 +58,7 @@ private:
 
 inline Ref<AbstractPrimitive<RGBSpectrum>> CreatePrimitive(const Bounds3f& bound)
 {
-    auto geometry = CreateRef<TestGeometry<RGBSpectrum>>(bound);
+    auto geometry = CreateRef<TestGeometry>(bound);
     return CreateRef<GeometricPrimitive<RGBSpectrum>>(geometry);
 }
 
@@ -82,15 +78,15 @@ TEST_CASE("Intersect with one primitive", "[accelerators][bvh]")
 
     SECTION("Surface Interaction Overload")
     {
-        SurfaceInteraction<RGBSpectrum> surfaceInt;
+        MaterialInteraction<RGBSpectrum> materialInteraction;
 
-        CHECK(!bvh.IntersectRay(miss, &surfaceInt));
+        CHECK(!bvh.IntersectRay(miss, &materialInteraction));
 
-        CHECK(bvh.IntersectRay(hitOnce, &surfaceInt));
-        CHECK(Vector3fAreEqual(hitOnce(1), surfaceInt.m_Point));
+        CHECK(bvh.IntersectRay(hitOnce, &materialInteraction));
+        CHECK(Vector3fAreEqual(hitOnce(1), materialInteraction.m_Point));
 
-        CHECK(bvh.IntersectRay(hitTwice, &surfaceInt));
-        CHECK(Vector3fAreEqual(hitTwice(1), surfaceInt.m_Point));
+        CHECK(bvh.IntersectRay(hitTwice, &materialInteraction));
+        CHECK(Vector3fAreEqual(hitTwice(1), materialInteraction.m_Point));
     }
 
     SECTION("Predicate Overload")
@@ -116,10 +112,10 @@ TEST_CASE("No Primitives Provided", "[accelerators][bvh]")
 
     SECTION("Surface Interaction Overload")
     {
-        SurfaceInteraction<RGBSpectrum> surfaceInt;
-        CHECK(!bvh.IntersectRay(ray1, &surfaceInt));
-        CHECK(!bvh.IntersectRay(ray2, &surfaceInt));
-        CHECK(!bvh.IntersectRay(ray3, &surfaceInt));
+        MaterialInteraction<RGBSpectrum> materialInteraction;
+        CHECK(!bvh.IntersectRay(ray1, &materialInteraction));
+        CHECK(!bvh.IntersectRay(ray2, &materialInteraction));
+        CHECK(!bvh.IntersectRay(ray3, &materialInteraction));
     }
 
     SECTION("Predicate Overload")
@@ -157,17 +153,17 @@ TEST_CASE("All Primitive Centers in one spot", "[accelerators][bvh]")
 
     SECTION("Surface Interaction Overload")
     {
-        SurfaceInteraction<RGBSpectrum> surfaceInt;
-        CHECK(!bvh.IntersectRay(miss, &surfaceInt));
+        MaterialInteraction<RGBSpectrum> materialInteraction;
+        CHECK(!bvh.IntersectRay(miss, &materialInteraction));
 
-        CHECK(bvh.IntersectRay(hitFromOutside, &surfaceInt));
-        CHECK(Vector3fAreEqual(hitFromOutsidePt, surfaceInt.m_Point));
+        CHECK(bvh.IntersectRay(hitFromOutside, &materialInteraction));
+        CHECK(Vector3fAreEqual(hitFromOutsidePt, materialInteraction.m_Point));
 
-        CHECK(bvh.IntersectRay(hitFromCenter, &surfaceInt));
-        CHECK(Vector3fAreEqual(hitFromCenterPt, surfaceInt.m_Point));
+        CHECK(bvh.IntersectRay(hitFromCenter, &materialInteraction));
+        CHECK(Vector3fAreEqual(hitFromCenterPt, materialInteraction.m_Point));
 
-        CHECK(bvh.IntersectRay(hitFromMiddle, &surfaceInt));
-        CHECK(Vector3fAreEqual(hitFromMiddlePt, surfaceInt.m_Point));
+        CHECK(bvh.IntersectRay(hitFromMiddle, &materialInteraction));
+        CHECK(Vector3fAreEqual(hitFromMiddlePt, materialInteraction.m_Point));
     }
 
     SECTION("Predicate Overload")
@@ -199,7 +195,7 @@ TEST_CASE("End to End", "[accelerators][bvh]")
                 primitives.push_back(primitive);
             }
 
-    SurfaceInteraction<RGBSpectrum> surfaceInt;
+    MaterialInteraction<RGBSpectrum> materialInteraction;
     BVHAccelerator bvh(primitives, 1, SplitMethod::Middle);
 
     SECTION("From inside primitives")
@@ -215,7 +211,7 @@ TEST_CASE("End to End", "[accelerators][bvh]")
                     Ray ray(o, {1, 0, 0});
                     Vector3f intersection = Vector3f(4 * i, 4 * j, 4 * k) + Vector3f{3, 2, 2};
 
-                    bool hit = bvh.IntersectRay(ray, &surfaceInt);
+                    bool hit = bvh.IntersectRay(ray, &materialInteraction);
                     ray.m_Tmax = Infinity;
                     bool hitP = bvh.IntersectRay(ray);
 
@@ -223,7 +219,7 @@ TEST_CASE("End to End", "[accelerators][bvh]")
                         allHit = false;
                     if (!hitP)
                         allHitP = false;
-                    if (!Vector3fAreEqual(intersection, surfaceInt.m_Point))
+                    if (!Vector3fAreEqual(intersection, materialInteraction.m_Point))
                         allIntersectionsCorrect = false;
                 }
 
@@ -245,7 +241,7 @@ TEST_CASE("End to End", "[accelerators][bvh]")
                     Ray ray(o, {0, 0, 1});
                     Vector3f intersection = Vector3f(4 * i, 4 * j, 4 * k) + Vector3f{2, 2, 1};
 
-                    bool hit = bvh.IntersectRay(ray, &surfaceInt);
+                    bool hit = bvh.IntersectRay(ray, &materialInteraction);
                     ray.m_Tmax = Infinity;
                     bool hitP = bvh.IntersectRay(ray);
 
@@ -253,7 +249,7 @@ TEST_CASE("End to End", "[accelerators][bvh]")
                         allHit = false;
                     if (!hitP)
                         allHitP = false;
-                    if (!Vector3fAreEqual(intersection, surfaceInt.m_Point))
+                    if (!Vector3fAreEqual(intersection, materialInteraction.m_Point))
                         allIntersectionsCorrect = false;
                 }
 
@@ -274,7 +270,7 @@ TEST_CASE("End to End", "[accelerators][bvh]")
                     Vector3f o = Vector3f(4 * i, 4 * j, 4 * k);
                     Ray ray(o, {0, 0, 1});
 
-                    bool hit = bvh.IntersectRay(ray, &surfaceInt);
+                    bool hit = bvh.IntersectRay(ray, &materialInteraction);
                     ray.m_Tmax = Infinity;
                     bool hitP = bvh.IntersectRay(ray);
 

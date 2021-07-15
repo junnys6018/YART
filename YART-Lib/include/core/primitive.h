@@ -12,10 +12,10 @@ namespace yart
     {
     public:
         using AbstractMaterial = yart::AbstractMaterial<Spectrum>;
-        using SurfaceInteraction = yart::SurfaceInteraction<Spectrum>;
+        using MaterialInteraction = yart::MaterialInteraction<Spectrum>;
         virtual ~AbstractPrimitive();
         virtual Bounds3f WorldBound() const = 0;
-        virtual bool IntersectRay(const Ray& ray, SurfaceInteraction* surfaceInteraction) const = 0;
+        virtual bool IntersectRay(const Ray& ray, MaterialInteraction* materialInteraction) const = 0;
         virtual bool IntersectRay(const Ray& ray) const = 0;
         // virtual const AreaLight* GetAreaLight() const = 0; // Return nullptr if the primitive is not emmisive
         // virtual const AbstractMaterial* GetMaterial() const = 0;
@@ -27,15 +27,14 @@ namespace yart
     class GeometricPrimitive : public AbstractPrimitive<Spectrum>
     {
     public:
-        using AbstractGeometry = yart::AbstractGeometry<Spectrum>;
-        using SurfaceInteraction = yart::SurfaceInteraction<Spectrum>;
+        using MaterialInteraction = yart::MaterialInteraction<Spectrum>;
 
         GeometricPrimitive(const Ref<AbstractGeometry>& geometry) : m_Geometry(geometry)
         {
         }
 
         virtual Bounds3f WorldBound() const override;
-        virtual bool IntersectRay(const Ray& ray, SurfaceInteraction* surfaceInteraction) const override;
+        virtual bool IntersectRay(const Ray& ray, MaterialInteraction* materialInteraction) const override;
         virtual bool IntersectRay(const Ray& ray) const override;
 
     private:
@@ -66,18 +65,18 @@ namespace yart
     }
 
     template <typename Spectrum>
-    bool GeometricPrimitive<Spectrum>::IntersectRay(const Ray& ray, SurfaceInteraction* surfaceInteraction) const
+    bool GeometricPrimitive<Spectrum>::IntersectRay(const Ray& ray, MaterialInteraction* materialInteraction) const
     {
         real tHit;
-        if (!m_Geometry->IntersectRay(ray, &tHit, surfaceInteraction))
+        if (!m_Geometry->IntersectRay(ray, &tHit, materialInteraction))
         {
             return false;
         }
         ray.m_Tmax = tHit;
 
-        if (surfaceInteraction)
+        if (materialInteraction)
         {
-            surfaceInteraction->m_Primitive = this;
+            materialInteraction->m_Primitive = this;
         }
 
         return true;

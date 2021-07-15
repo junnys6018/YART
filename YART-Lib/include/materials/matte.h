@@ -9,7 +9,7 @@ namespace yart
     class MatteMaterial final : public AbstractMaterial<Spectrum>
     {
     public:
-        using SurfaceInteraction = yart::SurfaceInteraction<Spectrum>;
+        using MaterialInteraction = yart::MaterialInteraction<Spectrum>;
         using BSDF = yart::BSDF<Spectrum>;
         using LambertianReflection = yart::LambertianReflection<Spectrum>;
 
@@ -17,12 +17,12 @@ namespace yart
         {
         }
 
-        virtual void ComputeScatteringFunctions(SurfaceInteraction* surfaceInteraction, MemoryArena& arena, TransportMode mode,
+        virtual void ComputeScatteringFunctions(MaterialInteraction* materialInteraction, MemoryArena& arena, TransportMode mode,
                                                 bool allowMultipleLobes) const override
         {
-            surfaceInteraction->m_bsdf = ARENA_ALLOC(arena, BSDF)(*surfaceInteraction);
-            Spectrum Kd = Clamp(m_Kd->Evaluate(*surfaceInteraction));
-            surfaceInteraction->m_bsdf->Add(ARENA_ALLOC(arena, LambertianReflection)(Kd));
+            materialInteraction->m_bsdf = ARENA_ALLOC(arena, BSDF)(*materialInteraction);
+            Spectrum Kd = Clamp(m_Kd->Evaluate(*materialInteraction));
+            materialInteraction->m_bsdf->Add(ARENA_ALLOC(arena, LambertianReflection)(Kd));
         }
 
     private:

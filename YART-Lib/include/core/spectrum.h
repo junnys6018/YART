@@ -378,6 +378,7 @@ namespace yart
         {
             ASSERT(false);
             // TODO
+            return SampledSpectrum{0};
         }
 
         RGBSpectrum ToRGBSpectrum() const

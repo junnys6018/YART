@@ -6,11 +6,9 @@
 
 namespace yart
 {
-    template <typename Spectrum>
     class AbstractGeometry
     {
     public:
-        using SurfaceInteraction = yart::SurfaceInteraction<Spectrum>;
         AbstractGeometry(const Transform* objectToWorld, const Transform* worldToObject, bool reverseOrientation)
             : m_ObjectToWorld(objectToWorld), m_WorldToObject(worldToObject), m_ReverseOrientation(reverseOrientation),
               m_TransformSwapsHandedness(objectToWorld->SwapsHandedness())
@@ -31,21 +29,4 @@ namespace yart
         const bool m_ReverseOrientation;
         const bool m_TransformSwapsHandedness;
     };
-
-    template <typename Spectrum>
-    AbstractGeometry<Spectrum>::~AbstractGeometry()
-    {
-    }
-
-    template <typename Spectrum>
-    Bounds3f AbstractGeometry<Spectrum>::WorldBound() const
-    {
-        return m_ObjectToWorld->AppBB(ObjectBound());
-    }
-
-    template <typename Spectrum>
-    bool AbstractGeometry<Spectrum>::IntersectRay(const Ray& ray, bool testAlphaTexture) const
-    {
-        return IntersectRay(ray, nullptr, nullptr, testAlphaTexture);
-    }
 }

@@ -68,10 +68,8 @@ public:
 
 int main(int argc, char** argv)
 {
-	using AbstractGeometry = yart::AbstractGeometry<RGBSpectrum>;
 	using GeometricPrimitive = yart::GeometricPrimitive<RGBSpectrum>;
 	using AbstractPrimitive = yart::AbstractPrimitive<RGBSpectrum>;
-	using Sphere = yart::Sphere<RGBSpectrum>;
 	using Scene = yart::Scene<RGBSpectrum>;
 
 	yart::Initialize();
